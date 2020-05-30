@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{59537CC0-B2CB-4CFE-AE56-7B3633D69DD1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tourBD.Web", "Applications\tourBD.Web\tourBD.Web.csproj", "{3052C52C-71B1-447F-94C7-D54E8462D44A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{F7D3EB4A-087E-427C-BD23-7391E6940C9C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6FC3A69A-3D21-4CCC-BD58-4CD8DC5D2F97}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3052C52C-71B1-447F-94C7-D54E8462D44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3052C52C-71B1-447F-94C7-D54E8462D44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3052C52C-71B1-447F-94C7-D54E8462D44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3052C52C-71B1-447F-94C7-D54E8462D44A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3052C52C-71B1-447F-94C7-D54E8462D44A} = {59537CC0-B2CB-4CFE-AE56-7B3633D69DD1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F55E09FD-7475-4D6E-8575-42038B8609DC}
+	EndGlobalSection
+EndGlobal
