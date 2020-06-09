@@ -8,17 +8,24 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
-using tourBD.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using tourBD.Membership.Contexts;
+using tourBD.Membership.Entities;
+using tourBD.Membership.Services;
+using tourBD.Membership;
 
 namespace tourBD.Web
 {
     public class Startup
     {
+        public string connectionStringName = "DefaultConnection";
+        public string connectionString;
+        public string migrationAssemblyName;
+
         public Startup(IWebHostEnvironment env)
         {
             // In ASP.NET Core 3.0 `env` will be an IWebHostEnvironment, not IHostingEnvironment.
@@ -28,6 +35,9 @@ namespace tourBD.Web
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             this.Configuration = builder.Build();
+
+            connectionString = Configuration.GetConnectionString(connectionStringName);
+            migrationAssemblyName = typeof(Startup).Assembly.FullName;
         }
 
         public IConfiguration Configuration { get; }
@@ -38,10 +48,18 @@ namespace tourBD.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName))
+            );
+
+            services
+                .AddIdentity<ApplicationUser, Role>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddUserManager<UserManager>()
+                .AddRoleManager<RoleManager>()
+                .AddSignInManager<SignInManager>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -49,7 +67,7 @@ namespace tourBD.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             // Register your own things directly with Autofac, like:
-            //builder.RegisterModule(new MyApplicationModule());
+            builder.RegisterModule(new MembershipModule(connectionString, migrationAssemblyName));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
