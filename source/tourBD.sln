@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6FC3A69A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tourBD.Core", "Libraries\tourBD.Core\tourBD.Core.csproj", "{C9BE0FA7-B0DA-40A5-94A3-DE522306FD9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tourBD.Membership", "Libraries\tourBD.Membership\tourBD.Membership.csproj", "{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C9BE0FA7-B0DA-40A5-94A3-DE522306FD9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9BE0FA7-B0DA-40A5-94A3-DE522306FD9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9BE0FA7-B0DA-40A5-94A3-DE522306FD9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3052C52C-71B1-447F-94C7-D54E8462D44A} = {59537CC0-B2CB-4CFE-AE56-7B3633D69DD1}
 		{C9BE0FA7-B0DA-40A5-94A3-DE522306FD9E} = {F7D3EB4A-087E-427C-BD23-7391E6940C9C}
+		{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD} = {F7D3EB4A-087E-427C-BD23-7391E6940C9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F55E09FD-7475-4D6E-8575-42038B8609DC}
