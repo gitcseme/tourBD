@@ -61,6 +61,7 @@ namespace tourBD.Web
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
             services.AddRazorPages();
         }
 

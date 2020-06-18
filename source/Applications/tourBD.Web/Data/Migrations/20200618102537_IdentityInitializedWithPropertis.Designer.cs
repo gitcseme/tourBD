@@ -10,8 +10,8 @@ using tourBD.Membership.Contexts;
 namespace tourBD.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200609034222_IdentityInialization")]
-    partial class IdentityInialization
+    [Migration("20200618102537_IdentityInitializedWithPropertis")]
+    partial class IdentityInitializedWithPropertis
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,6 +49,9 @@ namespace tourBD.Web.Data.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsImageFetchedExternally")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

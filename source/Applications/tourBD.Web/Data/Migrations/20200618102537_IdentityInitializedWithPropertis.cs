@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace tourBD.Web.Data.Migrations
 {
-    public partial class IdentityInialization : Migration
+    public partial class IdentityInitializedWithPropertis : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,8 @@ namespace tourBD.Web.Data.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ImageUrl = table.Column<string>(nullable: true),
                     FullName = table.Column<string>(nullable: true),
-                    Address = table.Column<string>(nullable: true)
+                    Address = table.Column<string>(nullable: true),
+                    IsImageFetchedExternally = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
