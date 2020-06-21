@@ -10,7 +10,6 @@ namespace tourBD.Membership.Entities
         public string ImageUrl { get; set; }
         public string FullName { get; set; }
         public string Address { get; set; }
-        public bool IsImageFetchedExternally { get; set; }
 
         public ApplicationUser()
                     : base()

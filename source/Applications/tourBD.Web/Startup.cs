@@ -17,6 +17,7 @@ using tourBD.Membership.Contexts;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
 using tourBD.Membership;
+using Microsoft.CodeAnalysis.Options;
 
 namespace tourBD.Web
 {
@@ -63,6 +64,20 @@ namespace tourBD.Web
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
             services.AddRazorPages();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequiredLength = 6;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

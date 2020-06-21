@@ -12,9 +12,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <title>tourBD - @ViewBag.Title</title>
 
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css" />
+    <link href="~/admin/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <!-- Theme style -->
-    <link rel="stylesheet" href="/css/adminlte.min.css" />
+    <link href="~/admin/css/adminlte.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600&display=swap"
           rel="stylesheet" />
     @RenderSection("styles", false)
@@ -35,25 +35,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="navbar navbar-expand">
             <!-- Brand Logo -->
             <a href="https://devskill.com" class="border-light brand-link">
-                <img src="/img/img_logo_ds_sm.svg"
-                     alt="DevSkill"
-                     class="brand-image-xl logo-xs" />
-                <img src="/img/logo.png"
-                     alt="DevSkill"
-                     class="brand-image-xs logo-xl" />
+                @*<img src="~/img/tourBD-sm.PNG"
+                     alt="tourBD"
+                     class="brand-image-xl logo-xs" />*@
+                <img src="~/img/tourBD-big.PNG"
+                     alt="tourBD"
+                     class="brand-image-xs logo-xs" />
             </a>
             <ul class="ml-auto mr-sm-auto navbar-nav">
                 <li class="nav-item">
-                    <a href="#" class="nav-link text-body text-lg font-weight-bold">COURSES</a>
+                    <a href="#" class="nav-link text-body text-lg font-weight-bold">HOME</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link text-body text-lg font-weight-bold">BLOG</a>
+                    <a href="#" class="nav-link text-body text-lg font-weight-bold">FORUM</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link text-body text-lg font-weight-bold">FAQ</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link text-body text-lg font-weight-bold">HIRE</a>
+                    <a href="#" class="nav-link text-body text-lg font-weight-bold">CONTACT</a>
                 </li>
             </ul>
         </div>
@@ -61,25 +61,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!--/top nav-->
     @RenderBody()
     <!-- Main Footer -->
-    <footer class="bg-light border-top container-fluid p-3">
+    <footer class="bg-light border-top container-fluid p-3" style="height:auto">
         <div class="d-flex flex-row">
-            <div>© 2020 <a href="https://devskill.com">Dev Skill</a></div>
+            <div>© 2020 <a href="#">tourBD</a></div>
             <div class="text-right col">
-                <a href="facebook.com/devskillbd">
+                @*<a href="facebook.com/devskillbd">
                     <img width="100"
                          src="/img/FindUs-FB-RGB.svg"
                          alt="Facebook Page" />
-                </a>
+                </a>*@
             </div>
         </div>
     </footer>
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
-    <script src="/plugins/jquery/jquery.min.js"></script>
+    <script src="~/admin/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="/js/adminlte.min.js"></script>
+    <script src="~/admin/js/adminlte.min.js"></script>
     @RenderSection("Scripts",false)
 </body>
 </html>
