@@ -26,14 +26,14 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Register(string returnUrl = null)
+        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
         {
             var model = new RegisterModel() { ReturnUrl = returnUrl };
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterModel model)
+        public async Task<IActionResult> RegisterAsync(RegisterModel model)
         {
             model.ReturnUrl = model.ReturnUrl ?? Url.Content("~/");
 
@@ -55,7 +55,7 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {
             var model = new LoginModel();
             model.ReturnUrl = returnUrl ?? Url.Content("~/");
@@ -67,7 +67,7 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> LoginAsync(LoginModel model)
         {
             model.ReturnUrl = model.ReturnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
@@ -87,7 +87,7 @@ namespace tourBD.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> LogoutAsync()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
