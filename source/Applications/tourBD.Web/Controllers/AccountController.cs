@@ -2,12 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using tourBD.Membership.Entities;
-using tourBD.Membership.Services;
 using tourBD.Web.Models;
 
 namespace tourBD.Web.Controllers
