@@ -1,0 +1,80 @@
+﻿@model tourBD.Web.Models.LoginModel
+
+@{
+    Layout = "_AccountLayout";
+    ViewData["Title"] = "Signin";
+}
+
+@section styles
+{
+    <style>
+        .row .d-none img.register-pic {
+            padding: 10px;
+            width: 100%;
+            margin: 0px;
+            height: 100%;
+        }
+    </style>
+}
+
+<!-- page content-->
+<div class="container flex-grow-1">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block">
+                            <img src="~/img/tourBD-big.PNG"
+                                 alt="tourBD"
+                                 class="register-pic" />
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="p-5 py-lg-12">
+                                <form id="account" method="post" class="mt-2">
+                                    <div asp-validation-summary="All" class="text-danger mt-2"></div>
+                                    <div class="form-group">
+                                        <label asp-for="Email">Email Address</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               name="Email"
+                                               id="Email"
+                                               placeholder="name@example.com" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Password">Password</label>
+                                        <input type="password"
+                                               class="form-control"
+                                               name="Password"
+                                               id="Password" />
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label asp-for="RememberMe">
+                                                <input asp-for="RememberMe" />
+                                                @Html.DisplayNameFor(m => m.RememberMe)
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        Sign In
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
