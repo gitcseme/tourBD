@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using tourBD.Core;
 
 namespace tourBD.Membership.Entities
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>, IEntity<Guid>
     {
         public string ImageUrl { get; set; }
         public string FullName { get; set; }

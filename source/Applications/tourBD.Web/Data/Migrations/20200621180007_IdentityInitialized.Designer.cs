@@ -10,8 +10,8 @@ using tourBD.Membership.Contexts;
 namespace tourBD.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200609034222_IdentityInialization")]
-    partial class IdentityInialization
+    [Migration("20200621180007_IdentityInitialized")]
+    partial class IdentityInitialized
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

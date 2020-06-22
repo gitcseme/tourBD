@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace tourBD.Web.Data.Migrations
 {
-    public partial class IdentityInialization : Migration
+    public partial class IdentityInitialized : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
