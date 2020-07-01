@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using tourBD.Membership.Entities;
 using tourBD.Web.Models;
@@ -13,12 +17,18 @@ namespace tourBD.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger)
+        public AccountController(
+            SignInManager<ApplicationUser> signInManager, 
+            UserManager<ApplicationUser> userManager, 
+            ILogger<AccountController> logger,
+            IWebHostEnvironment environment)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
+            _webHostEnvironment = environment;
         }
 
         [HttpGet]
@@ -40,7 +50,7 @@ namespace tourBD.Web.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("RegistrationForm", user);
                 }
 
                 foreach (var error in result.Errors)
@@ -87,6 +97,67 @@ namespace tourBD.Web.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RegistrationForm(IdentityUser user)
+        {
+            ViewBag.Name = user.Email;
+            ViewBag.ImageUrl = @"\img\avatar.png";
+            ViewBag.UserEmail = user.Email;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegistrationForm(RegistrationFormModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
+                if (user != null)
+                {
+                    user.IsVarified = true;
+                    user.FullName = model.Name;
+                    user.Email = model.Email;
+                    user.PhoneNumber = model.Mobile;
+                    user.Address = model.Address;
+                    user.ImageUrl = await GetSavedImageUrlAsync(model.ImageFile);
+
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                        return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return View(model);
+        }
+
+        public async Task<string> GetSavedImageUrlAsync(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                var imagePath = @"\img\upload\";
+                var uploadPath = _webHostEnvironment.WebRootPath + imagePath;
+
+                // Create directory
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                // Create unique file name
+                var guid = Guid.NewGuid().ToString();
+                var uniqueFileName = Path.Combine(guid + "." + file.FileName.Split(".")[1].ToLower());
+                var fullPath = uploadPath + uniqueFileName;
+
+                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+
+                return fullPath;
+            }
+            else
+                return @"\img\avatar.png";
         }
     }
 }
