@@ -117,6 +117,7 @@ namespace tourBD.Web.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
                 if (user != null)
                 {
+                    user.IsVarified = true;
                     user.FullName = model.Name;
                     user.Email = model.Email;
                     user.PhoneNumber = model.Mobile;
