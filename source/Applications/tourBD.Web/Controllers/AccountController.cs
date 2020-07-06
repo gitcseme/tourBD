@@ -148,13 +148,14 @@ namespace tourBD.Web.Controllers
                 var guid = Guid.NewGuid().ToString();
                 var uniqueFileName = Path.Combine(guid + "." + file.FileName.Split(".")[1].ToLower());
                 var fullPath = uploadPath + uniqueFileName;
+                var imageVirtualPath = imagePath + uniqueFileName;
 
                 using (var fileStream = new FileStream(fullPath, FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
                 }
 
-                return fullPath;
+                return imageVirtualPath;
             }
             else
                 return @"\img\avatar.png";
