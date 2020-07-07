@@ -15,6 +15,8 @@ namespace tourBD.Forum.Entities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Post can't be empty")]
         public string Message { get; set; }
 
+        public int LikeCount { get; set; }
+
         public virtual IList<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

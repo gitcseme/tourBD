@@ -9,6 +9,7 @@ namespace tourBD.Forum.Entities
     public class Comment : EntityBase<Guid>
     {
         public Guid PostId { get; set; }
+        public virtual Post Post { get; set; }
 
         public Guid AuthorId { get; set; }
 

@@ -9,6 +9,7 @@ namespace tourBD.Forum.Entities
         public Guid AuthorId { get; set; }
 
         public Guid CommentId { get; set; }
+        public virtual Comment Comment { get; set; }
 
         public DateTime CreationDate { get; set; }
 
