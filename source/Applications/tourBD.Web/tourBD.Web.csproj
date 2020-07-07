@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\tourBD.Forum\tourBD.Forum.csproj" />
     <ProjectReference Include="..\..\Libraries\tourBD.Membership\tourBD.Membership.csproj" />
   </ItemGroup>
 
