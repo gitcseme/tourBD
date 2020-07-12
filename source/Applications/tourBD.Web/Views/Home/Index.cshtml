@@ -1,6 +1,20 @@
 ﻿
 @section Styles {
+    <style>
+        .card #post-profile-pic {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
 
+        .card .card-footer .post-likes {
+            width: 80px;
+        }
+
+        .cmt-user-name {
+            color: chocolate
+        }
+    </style>
 }
 
 <!-- Main content -->
@@ -9,6 +23,9 @@
         <div class="row">
             <div class="col-lg-9">
                 <div class="card">
+                    <div class="card-header">
+                        <img src="~/img/avatar.png" id="post-profile-pic" />
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">Card title</h5>
 
@@ -17,23 +34,50 @@
                             content.
                         </p>
 
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                    <div class="card-footer">
+                        <button class="post-likes btn btn-sm btn-light"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button> <span class="like-count">25</span> Likes
+                        <hr />
+
+                        <div class="comment-container">
+                            <div class="single-comment">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <img src="~/admin/img/user3-128x128.jpg" id="post-profile-pic" /> <span class="cmt-user-name">Rafiq Juwel</span>
+                                    </div>
+                                    <div class="col">
+                                        <p>
+                                            Best of luck with ur journey. Bootstrap includes several predefined button styles, each serving its own semantic purpose,
+                                            with a few extras thrown in for more control.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="replay-container">
+                                    <div class="single-replay">
+                                        <div class="row">
+                                            <div class="col-auto offset-1">
+                                                <img src="~/admin/img/user4-128x128.jpg" id="post-profile-pic" /> <span class="cmt-user-name">Seri Cate</span>
+                                            </div>
+                                            <div class="col">
+                                                <p>I also visited this place several times. Go enjoy</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="single-comment">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <img src="~/admin/img/user1-128x128.jpg" id="post-profile-pic" /> <span class="cmt-user-name">Hasan Feros</span>
+                                    </div>
+                                    <div class="col">
+                                        <p>I also visited this place several times. Go enjoy</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="card card-primary card-outline">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-
-                        <p class="card-text">
-                            Some quick example text to build on the card title and make up the bulk of the card's
-                            content.
-                        </p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                </div><!-- /.card -->
             </div>
             <!-- /.col-md-6 -->
             <div class="col-lg-3">
@@ -69,5 +113,5 @@
 <!-- /.content -->
 
 @section Scripts {
-    
+
 }
