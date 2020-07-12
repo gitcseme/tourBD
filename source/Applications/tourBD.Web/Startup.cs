@@ -11,6 +11,8 @@ using tourBD.Membership.Contexts;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
 using tourBD.Membership;
+using tourBD.Forum.Contexts;
+using tourBD.Forum;
 
 namespace tourBD.Web
 {
@@ -42,6 +44,10 @@ namespace tourBD.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName))
+            );
+
+            services.AddDbContext<ForumContext>(options =>
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName))
             );
 
@@ -77,6 +83,7 @@ namespace tourBD.Web
         {
             // Register your own things directly with Autofac, like:
             builder.RegisterModule(new MembershipModule(connectionString, migrationAssemblyName));
+            builder.RegisterModule(new ForumModule(connectionString, migrationAssemblyName));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
