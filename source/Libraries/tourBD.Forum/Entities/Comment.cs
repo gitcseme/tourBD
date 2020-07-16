@@ -12,7 +12,8 @@ namespace tourBD.Forum.Entities
         public virtual Post Post { get; set; }
 
         public Guid AuthorId { get; set; }
-
+        public string AuthorName { get; set; }
+        public string AuthorImageUrl { get; set; }
         public DateTime CreationDate { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Comment can't be empty")]

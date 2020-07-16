@@ -1,19 +1,37 @@
-﻿
+﻿@model IEnumerable<tourBD.Forum.Entities.Post>
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
+@inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+
 @section Styles {
     <style>
-        .card #post-profile-pic {
+        .card img#author-profile-pic {
             width: 30px;
             height: 30px;
             border-radius: 50%;
         }
 
-        .card .card-footer .post-likes {
+        .card .card-footer #post-likes {
             width: 80px;
         }
 
-        .cmt-user-name {
+        .commment-user-name {
             color: chocolate
         }
+
+        .post-user-name {
+            color: darkorange
+        }
+
+        .post-container .single-post .card {
+            width: 100%
+        }
+
+        .comment-box #default-comment-box {
+            width: 100%
+        }
+
     </style>
 }
 
@@ -21,66 +39,89 @@
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-9">
-                <div class="card">
-                    <div class="card-header">
-                        <img src="~/img/avatar.png" id="post-profile-pic" />
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-
-                        <p class="card-text">
-                            Some quick example text to build on the card title and make up the bulk of the card's
-                            content.
-                        </p>
-
-                    </div>
-                    <div class="card-footer">
-                        <button class="post-likes btn btn-sm btn-light"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button> <span class="like-count">25</span> Likes
-                        <hr />
-
-                        <div class="comment-container">
-                            <div class="single-comment">
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <img src="~/admin/img/user3-128x128.jpg" id="post-profile-pic" /> <span class="cmt-user-name">Rafiq Juwel</span>
+            <div class="col-lg-8">
+                <div class="post-container">
+                    @foreach (var post in Model)
+                    {
+                        <div class="single-post">
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="post-author-pic">
+                                            <img src="@post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="post-user-name">@post.AuthorName</span>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <p>
-                                            Best of luck with ur journey. Bootstrap includes several predefined button styles, each serving its own semantic purpose,
-                                            with a few extras thrown in for more control.
+                                    <div class="card-body">
+                                        <p class="card-text">
+                                            @post.Message
                                         </p>
                                     </div>
-                                </div>
-                                <div class="replay-container">
-                                    <div class="single-replay">
-                                        <div class="row">
-                                            <div class="col-auto offset-1">
-                                                <img src="~/admin/img/user4-128x128.jpg" id="post-profile-pic" /> <span class="cmt-user-name">Seri Cate</span>
-                                            </div>
-                                            <div class="col">
-                                                <p>I also visited this place several times. Go enjoy</p>
-                                            </div>
+                                    <div class="card-footer">
+                                        <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@post.Id.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button> 
+                                        <span id="like-count">@post.Likes.Count</span> Likes
+                                        <hr />
+                                        <div class="comment-container">
+                                            @if(_signInManager.IsSignedIn(User))
+                                            {
+                                                var user = await _userManager.GetUserAsync(User);
+                                                <div class="row">
+                                                    <div class="col-auto">
+                                                        <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                    </div>
+                                                    <div class="comment-box col">
+                                                        <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this)">
+                                                            <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            @foreach (var comment in post.Comments)
+                                            {
+                                                <div class="single-comment">
+                                                    <div class="row">
+                                                        <div class="comment-autor-pic col-auto">
+                                                            <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
+                                                        </div>
+                                                        <div class="col">
+                                                            <p>
+                                                                @comment.Message
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="replay-container">
+                                                        @foreach (var replay in comment.Replays)
+                                                        {
+                                                            <div class="single-replay">
+                                                                <div class="row">
+                                                                    <div class="replay-author-pic col-auto offset-1">
+                                                                        <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <p>
+                                                                            @replay.Message
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="single-comment">
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <img src="~/admin/img/user1-128x128.jpg" id="post-profile-pic" /> <span class="cmt-user-name">Hasan Feros</span>
-                                    </div>
-                                    <div class="col">
-                                        <p>I also visited this place several times. Go enjoy</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
-            <!-- /.col-md-6 -->
-            <div class="col-lg-3">
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="m-0">Featured</h5>
@@ -105,7 +146,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /.col-md-6 -->
+            <!-- /.col-lg-4 -->
         </div>
         <!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -113,5 +154,46 @@
 <!-- /.content -->
 
 @section Scripts {
+    <script type="text/javascript">
 
+        $(document).ready(function () {
+
+            //$('#btn-add-comment').on('click', function (e) {
+            //    let newComment = $('#default-comment-box')[0].value;
+
+            //    //if (newComment != "") {
+            //    //    $.ajax({
+            //    //        url: '/Home/AddComment',
+            //    //        type: 'POST',
+            //    //        data: { message: newComment },
+            //    //        success: function (data, status, xhr) {
+
+            //    //        }
+            //    //    });
+            //    //}
+
+            //    console.log(e.currentTarget);
+            //});
+
+        });
+
+        function AjaxComment(item) {
+            let x = $(item).parent().siblings('.comment-box').children()[0].value;
+            console.log(x);
+        }
+
+        function countLikesAjax(btn, postId) {
+            let elem = $(btn).siblings('#like-count');
+            let x = elem[0].innerText;
+            let likes = parseInt(x) + 1;
+            elem.text(likes);
+
+            $.ajax({
+                url: '/Home/AddLike',
+                type: 'POST',
+                data: { Id: postId }
+            });
+        }
+
+    </script>
 }

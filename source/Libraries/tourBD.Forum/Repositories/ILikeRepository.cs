@@ -4,9 +4,10 @@ using System.Text;
 using tourBD.Core;
 using tourBD.Forum.Entities;
 
-namespace tourBD.Forum.Services
+namespace tourBD.Forum.Repositories
 {
-    public interface ICommentService : IService<Comment>
+    public interface ILikeRepository : IRepositoryBase<Like, Guid>
     {
+
     }
 }

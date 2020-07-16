@@ -220,6 +220,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <p>Sign out</p>
                                         </a>
                                     </li>
+
+                                    var user = await _userManager.GetUserAsync(User);
+                                    <li class="nav-item">
+                                        <a asp-controller="Home" asp-action="CreatePost" asp-route-userId="@user.Id" class="nav-link">
+                                            <i class="fa fa-paper-plane nav-icon" aria-hidden="true"></i>
+                                            <p>Create Post</p>
+                                        </a>
+                                    </li>
                                 }
                                 else
                                 {

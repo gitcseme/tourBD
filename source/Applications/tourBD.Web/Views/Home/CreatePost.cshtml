@@ -1,0 +1,26 @@
+﻿@model tourBD.Web.Models.PostModels.CreatePostViewModel
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="card" style="width: 500px">
+                <form method="post" asp-controller="Home" asp-action="CreatePost">
+                    <div class="form-group">
+                        <input asp-for="UserId" hidden />
+                        <input asp-for="AuthorImageUrl" hidden />
+                        <input asp-for="AuthorName" hidden />
+                        <div class="card-header">
+                            <label class="label" asp-for="Message">Create a tour post</label>
+                        </div>
+                        <div class="card-body">
+                            <textarea name="Message" cols="10" rows="5" class="form-control" id="Message" placeholder="Describe your tour plan/offer"></textarea>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Create post</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,10 +6,8 @@ using tourBD.Forum.Repositories;
 
 namespace tourBD.Forum.UnitOfWorks
 {
-    public interface IPostUnitOfWork : IUnitOfWorkBase
+    public interface ILikeUnitOfWork : IUnitOfWorkBase
     {
-        IPostRepository Posts { get; }
-        ICommentRepository Comments { get; }
         ILikeRepository Likes { get; }
     }
 }
