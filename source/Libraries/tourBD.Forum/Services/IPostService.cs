@@ -13,9 +13,9 @@ namespace tourBD.Forum.Services
         Task<IEnumerable<Post>> GetAllAsync();
         IEnumerable<Post> GetAll();
 
-        void AddLike(string Id);
+        Task AddLikeAsync(Post post, Like like);
 
-        Task<IEnumerable<Post>> GetAllIncludePropertiesAsync(Expression<Func<Post, bool>> filter = null, string orderingColumn = "", string orderDirection = "", string includeProperties = "", bool isTrackingOff = false);
+        Task<IEnumerable<Post>> GetAllIncludePropertiesAsync();
         (IEnumerable<Post>, int, int) GetPosts(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
         Task<(IEnumerable<Post>, int, int)> GetPostsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
     }

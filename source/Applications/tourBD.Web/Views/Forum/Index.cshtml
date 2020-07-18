@@ -1,0 +1,229 @@
+﻿@model IEnumerable<tourBD.Web.Models.PostModels.PostViewModel>
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
+@inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+
+@section Styles {
+    <style>
+        .card img#author-profile-pic {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .card .card-footer #post-likes {
+            width: 80px;
+        }
+
+        .commment-user-name {
+            color: chocolate
+        }
+
+        .post-user-name {
+            color: darkorange
+        }
+
+        .post-container .single-post .card {
+            width: 100%
+        }
+
+        .comment-box #default-comment-box {
+            width: 100%
+        }
+
+        .afterLike {
+            color: blue !important;
+            cursor: pointer !important;
+        }
+
+    </style>
+}
+
+<!-- Main content -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="post-container">
+                    @foreach (var item in Model)
+                    {
+                        <div class="single-post">
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="post-author-pic">
+                                            <img src="@item.Post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="post-user-name">@item.Post.AuthorName</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">
+                                            @item.Post.Message
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="comment-container">
+                                            @if (_signInManager.IsSignedIn(User))
+                                            {
+                                                var user = await _userManager.GetUserAsync(User);
+                                                if (user != null)
+                                                {
+                                                    if (item.IsLikedBy)
+                                                    {
+                                                        <div>
+                                                            <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                            <span id="like-count">@item.Post.Likes.Count</span> <small>Like</small>
+                                                            <hr />
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div>
+                                                            <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                            <span id="like-count">@item.Post.Likes.Count</span> Likes
+                                                            <hr />
+                                                        </div>
+                                                    }
+
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                                            <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                        </div>
+                                                        <div class="comment-box col">
+                                                            <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this)">
+                                                                <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    @foreach (var comment in item.Post.Comments)
+                                                    {
+                                                        <div class="single-comment">
+                                                            <div class="row">
+                                                                <div class="comment-autor-pic col-auto">
+                                                                    <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <p>
+                                                                        @comment.Message
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="replay-container">
+                                                                @foreach (var replay in comment.Replays)
+                                                                {
+                                                                    <div class="single-replay">
+                                                                        <div class="row">
+                                                                            <div class="replay-author-pic col-auto offset-1">
+                                                                                <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <p>
+                                                                                    @replay.Message
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="m-0">Featured</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">Special title treatment</h6>
+
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h5 class="m-0">Featured</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">Special title treatment</h6>
+
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content -->
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            //$('#btn-add-comment').on('click', function (e) {
+            //    let newComment = $('#default-comment-box')[0].value;
+
+            //    //if (newComment != "") {
+            //    //    $.ajax({
+            //    //        url: '/Home/AddComment',
+            //    //        type: 'POST',
+            //    //        data: { message: newComment },
+            //    //        success: function (data, status, xhr) {
+
+            //    //        }
+            //    //    });
+            //    //}
+
+            //    console.log(e.currentTarget);
+            //});
+
+        });
+
+        function AjaxComment(item) {
+            let x = $(item).parent().siblings('.comment-box').children()[0].value;
+            console.log(x);
+        }
+
+        function countLikesAjax(btn, postId) {
+
+            $.ajax({
+                url: '/Forum/AddLike',
+                type: 'POST',
+                dataType: 'text',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: { postId: postId },
+                success: function (response) {
+                    let elem = $(btn).siblings('#like-count');
+                    let likes = parseInt(elem[0].innerText) + 1;
+                    elem.text(likes);
+
+                    $(btn).addClass('afterLike');
+                },
+                error(data, status, xhr) {
+                    console.log(status);
+                }
+            });
+        }
+
+    </script>
+}

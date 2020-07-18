@@ -31,12 +31,10 @@ namespace tourBD.Forum.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Post>().HasMany(p => p.Comments).WithOne(c => c.Post);
-
             modelBuilder.Entity<Like>()
-                .HasOne(c => c.Post)
+                .HasOne(l => l.Post)
                 .WithMany(p => p.Likes)
-                .HasForeignKey(c => c.PostId);
+                .HasForeignKey(l => l.PostId);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Post)
