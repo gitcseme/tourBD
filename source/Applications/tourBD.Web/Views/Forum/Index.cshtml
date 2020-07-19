@@ -92,7 +92,7 @@
                                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                                     </div>
                                                     <div class="col-auto">
-                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()')">
+                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@user.ImageUrl', '@user.FullName')">
                                                             <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
                                                         </button>
                                                     </div>
@@ -180,37 +180,34 @@
 
         $(document).ready(function () {
 
-            //$('#btn-add-comment').on('click', function (e) {
-            //    let newComment = $('#default-comment-box')[0].value;
-
-            //    //if (newComment != "") {
-            //    //    $.ajax({
-            //    //        url: '/Home/AddComment',
-            //    //        type: 'POST',
-            //    //        data: { message: newComment },
-            //    //        success: function (data, status, xhr) {
-
-            //    //        }
-            //    //    });
-            //    //}
-
-            //    console.log(e.currentTarget);
-            //});
-
         });
 
-        function AjaxComment(btn, postId) {
-            let cmt = $(btn).parent().siblings('.comment-box').children()[0].value;
+        function AjaxComment(btn, postId, imageUrl, name) {
+            let box = $(btn).parent().siblings('.comment-box').children()[0];
+            let message = box.value;
+            box.value = "";
+            imageUrl = "\\img\\" + imageUrl.substring(3);
 
             $.ajax({
                 url: '/Forum/AddComment',
                 type: 'POST',
                 dataType: 'text',
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-                data: { postId: postId, message: cmt },
+                data: { postId: postId, message: message },
                 success: function (response) {
-                    console.log(cmt);
+                    console.log(message);
+                    console.log(imageUrl);
+                    console.log(name);
+                    let commentHtml = `<div class="row">
+                                            <div class="comment-autor-pic col-auto">
+                                                <img src="`+ imageUrl +`" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">`+ name +`</span>
+                                            </div>
+                                            <div class="col">
+                                                <p>`+ message +`</p>
+                                            </div>
+                                        </div>`;
 
+                    $(btn).parent().parent().siblings('.comment-container').append(commentHtml);
                 },
                 error: function (data, status, xhr) {
                     console.log(status);
