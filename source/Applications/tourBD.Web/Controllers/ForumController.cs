@@ -79,15 +79,32 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> AddLikeAsync(string postId)
         {
-            var loogedInUser = await _userManager.GetUserAsync(HttpContext.User);
-            var post = _postService.Get(new Guid(postId));
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
             var like = new Like()
             {
-                AuthorId = loogedInUser.Id,
+                AuthorId = loggedInUser.Id,
                 PostId = new Guid(postId)
             };
 
-            await _postService.AddLikeAsync(post, like);
+            await _postService.AddLikeAsync(like);
+
+            return RedirectToAction("Index", "Forum");
+        }
+
+        public async Task<IActionResult> AddComment(string postId, string message)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
+            var comment = new Comment()
+            {
+                AuthorId = loggedInUser.Id,
+                AuthorName = loggedInUser.FullName,
+                AuthorImageUrl = loggedInUser.ImageUrl,
+                CreationDate = DateTime.Now,
+                Message = message,
+                PostId = new Guid(postId)
+            };
+
+            await _postService.AddCommentAsync(comment);
 
             return RedirectToAction("Index", "Forum");
         }

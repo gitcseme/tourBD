@@ -66,14 +66,16 @@ namespace tourBD.Forum.Services
             return await _postUnitOfWork.Posts.GetAsync(null, "", "", "", pageIndex, pageSize, true);
         }
 
-        public async Task AddLikeAsync(Post post, Like like)
+        public async Task AddLikeAsync(Like like)
         {
-            await Task.Run(() =>
-            {
-                _postUnitOfWork.Likes.AddAsync(like);
-                post.Likes.Add(like);
-                _postUnitOfWork.SaveAsync();
-            });
+                await _postUnitOfWork.Likes.AddAsync(like);
+                await _postUnitOfWork.SaveAsync();
+        }
+
+        public async Task AddCommentAsync(Comment comment)
+        {
+                await _postUnitOfWork.Comments.AddAsync(comment);
+                await _postUnitOfWork.SaveAsync();
         }
 
         public async Task<IEnumerable<Post>> GetAllIncludePropertiesAsync()

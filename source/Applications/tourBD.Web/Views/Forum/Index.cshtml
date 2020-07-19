@@ -62,77 +62,77 @@
                                         </p>
                                     </div>
                                     <div class="card-footer">
-                                        <div class="comment-container">
-                                            @if (_signInManager.IsSignedIn(User))
-                                            {
-                                                var user = await _userManager.GetUserAsync(User);
-                                                if (user != null)
-                                                {
-                                                    if (item.IsLikedBy)
-                                                    {
-                                                        <div>
-                                                            <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                            <span id="like-count">@item.Post.Likes.Count</span> <small>Like</small>
-                                                            <hr />
-                                                        </div>
-                                                    }
-                                                    else
-                                                    {
-                                                        <div>
-                                                            <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                            <span id="like-count">@item.Post.Likes.Count</span> Likes
-                                                            <hr />
-                                                        </div>
-                                                    }
+                                        @{
+                                            var user = await _userManager.GetUserAsync(User);
 
+                                            if (user != null)
+                                            {
+                                                if (item.IsLikedBy)
+                                                {
+                                                    <div>
+                                                        <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="afterLike">Like</small>
+                                                        <hr />
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div>
+                                                        <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="afterLikeInstant">Like</small>
+                                                        <hr />
+                                                    </div>
+                                                }
+
+                                                <div class="row">
+                                                    <div class="col-auto">
+                                                        <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                    </div>
+                                                    <div class="comment-box col">
+                                                        <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()')">
+                                                            <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        <div class="comment-container">
+
+                                            @foreach (var comment in item.Post.Comments)
+                                            {
+                                                <div class="single-comment">
                                                     <div class="row">
-                                                        <div class="col-auto">
-                                                            <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                        <div class="comment-autor-pic col-auto">
+                                                            <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
                                                         </div>
-                                                        <div class="comment-box col">
-                                                            <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this)">
-                                                                <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
-                                                            </button>
+                                                        <div class="col">
+                                                            <p>
+                                                                @comment.Message
+                                                            </p>
                                                         </div>
                                                     </div>
 
-                                                    @foreach (var comment in item.Post.Comments)
-                                                    {
-                                                        <div class="single-comment">
-                                                            <div class="row">
-                                                                <div class="comment-autor-pic col-auto">
-                                                                    <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <p>
-                                                                        @comment.Message
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="replay-container">
-                                                                @foreach (var replay in comment.Replays)
-                                                                {
-                                                                    <div class="single-replay">
-                                                                        <div class="row">
-                                                                            <div class="replay-author-pic col-auto offset-1">
-                                                                                <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <p>
-                                                                                    @replay.Message
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
+                                                    <div class="replay-container">
+                                                        @foreach (var replay in comment.Replays)
+                                                        {
+                                                            <div class="single-replay">
+                                                                <div class="row">
+                                                                    <div class="replay-author-pic col-auto offset-1">
+                                                                        <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
                                                                     </div>
-                                                                }
+                                                                    <div class="col">
+                                                                        <p>
+                                                                            @replay.Message
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    }
-                                                }
+                                                        }
+                                                    </div>
+                                                </div>
                                             }
                                         </div>
                                     </div>
@@ -199,9 +199,23 @@
 
         });
 
-        function AjaxComment(item) {
-            let x = $(item).parent().siblings('.comment-box').children()[0].value;
-            console.log(x);
+        function AjaxComment(btn, postId) {
+            let cmt = $(btn).parent().siblings('.comment-box').children()[0].value;
+
+            $.ajax({
+                url: '/Forum/AddComment',
+                type: 'POST',
+                dataType: 'text',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: { postId: postId, message: cmt },
+                success: function (response) {
+                    console.log(cmt);
+
+                },
+                error: function (data, status, xhr) {
+                    console.log(status);
+                }
+            });
         }
 
         function countLikesAjax(btn, postId) {
@@ -218,6 +232,8 @@
                     elem.text(likes);
 
                     $(btn).addClass('afterLike');
+                    $(btn).siblings('.afterLikeInstant').addClass('afterLike');
+                    btn.disabled = true;
                 },
                 error(data, status, xhr) {
                     console.log(status);

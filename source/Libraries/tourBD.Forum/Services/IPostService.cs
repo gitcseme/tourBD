@@ -13,7 +13,8 @@ namespace tourBD.Forum.Services
         Task<IEnumerable<Post>> GetAllAsync();
         IEnumerable<Post> GetAll();
 
-        Task AddLikeAsync(Post post, Like like);
+        Task AddLikeAsync(Like like);
+        Task AddCommentAsync(Comment comment);
 
         Task<IEnumerable<Post>> GetAllIncludePropertiesAsync();
         (IEnumerable<Post>, int, int) GetPosts(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
