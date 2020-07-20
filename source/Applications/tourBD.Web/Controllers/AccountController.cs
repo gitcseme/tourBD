@@ -81,7 +81,7 @@ namespace tourBD.Web.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Forum");
                 }
                 else
                 {
@@ -103,7 +103,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> RegistrationForm(IdentityUser user)
         {
             ViewBag.Name = user.Email;
-            ViewBag.ImageUrl = @"\img\avatar.png";
+            ViewBag.ImageUrl = @"\img\no-profile.png";
             ViewBag.UserEmail = user.Email;
 
             return View();
@@ -137,7 +137,7 @@ namespace tourBD.Web.Controllers
         {
             if (file != null && file.Length > 0)
             {
-                var imagePath = @"\img\upload\";
+                var imagePath = @"\img\Upload\";
                 var uploadPath = _webHostEnvironment.WebRootPath + imagePath;
 
                 // Create directory
@@ -145,7 +145,7 @@ namespace tourBD.Web.Controllers
                     Directory.CreateDirectory(uploadPath);
 
                 // Create unique file name
-                var guid = Guid.NewGuid().ToString();
+                var guid = "pic" + Guid.NewGuid().ToString();
                 var uniqueFileName = Path.Combine(guid + "." + file.FileName.Split(".")[1].ToLower());
                 var fullPath = uploadPath + uniqueFileName;
                 var imageVirtualPath = imagePath + uniqueFileName;
@@ -158,7 +158,7 @@ namespace tourBD.Web.Controllers
                 return imageVirtualPath;
             }
             else
-                return @"\img\avatar.png";
+                return @"\img\no-profile.png";
         }
     }
 }

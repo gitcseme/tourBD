@@ -14,9 +14,11 @@ namespace tourBD.Forum.UnitOfWorks
         {
             Posts = new PostRepository(_dbContext);
             Comments = new CommentRepository(_dbContext);
+            Likes = new LikeRepository(_dbContext);
         }
 
         public IPostRepository Posts { get; protected set; }
         public ICommentRepository Comments { get; protected set; }
+        public ILikeRepository Likes { get; protected set; }
     }
 }

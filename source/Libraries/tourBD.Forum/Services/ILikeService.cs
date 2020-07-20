@@ -6,7 +6,7 @@ using tourBD.Forum.Entities;
 
 namespace tourBD.Forum.Services
 {
-    public interface ICommentService : IService<Comment>
+    public interface ILikeService : IService<Like>
     {
     }
 }

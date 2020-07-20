@@ -31,7 +31,10 @@ namespace tourBD.Forum.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Post>().HasMany(p => p.Comments).WithOne(c => c.Post);
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.Post)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(l => l.PostId);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Post)
@@ -47,5 +50,6 @@ namespace tourBD.Forum.Contexts
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Replay> Replays { get; set; }
+        public DbSet<Like> Likes { get; set; }
     }
 }

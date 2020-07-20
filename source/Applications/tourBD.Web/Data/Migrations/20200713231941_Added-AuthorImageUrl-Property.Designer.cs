@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tourBD.Forum.Contexts;
 
 namespace tourBD.Web.Data.Migrations
 {
     [DbContext(typeof(ForumContext))]
-    partial class ForumContextModelSnapshot : ModelSnapshot
+    [Migration("20200713231941_Added-AuthorImageUrl-Property")]
+    partial class AddedAuthorImageUrlProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,6 @@ namespace tourBD.Web.Data.Migrations
                     b.Property<string>("AuthorImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AuthorName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
@@ -51,25 +50,6 @@ namespace tourBD.Web.Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("tourBD.Forum.Entities.Like", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Likes");
-                });
-
             modelBuilder.Entity("tourBD.Forum.Entities.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -82,11 +62,11 @@ namespace tourBD.Web.Data.Migrations
                     b.Property<string>("AuthorImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AuthorName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -107,9 +87,6 @@ namespace tourBD.Web.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AuthorImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthorName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CommentId")
@@ -133,15 +110,6 @@ namespace tourBD.Web.Data.Migrations
                 {
                     b.HasOne("tourBD.Forum.Entities.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("tourBD.Forum.Entities.Like", b =>
-                {
-                    b.HasOne("tourBD.Forum.Entities.Post", "Post")
-                        .WithMany("Likes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
