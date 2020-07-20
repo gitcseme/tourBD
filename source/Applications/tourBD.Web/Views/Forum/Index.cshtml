@@ -183,10 +183,11 @@
         });
 
         function AjaxComment(btn, postId, imageUrl, name) {
+            console.log(imageUrl);
             let box = $(btn).parent().siblings('.comment-box').children()[0];
             let message = box.value;
             box.value = "";
-            imageUrl = "\\img\\" + imageUrl.substring(3);
+            imageUrl = imageUrl.includes('no-profile') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
 
             $.ajax({
                 url: '/Forum/AddComment',
