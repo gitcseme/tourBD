@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using tourBD.Forum.Contexts;
 using tourBD.Forum.Repositories;
+using tourBD.Forum.Seeds;
 using tourBD.Forum.Services;
 using tourBD.Forum.UnitOfWorks;
 
@@ -67,6 +68,8 @@ namespace tourBD.Forum
             builder.RegisterType<PostService>()
                 .As<IPostService>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<ForumSeed>().SingleInstance();
 
             base.Load(builder);
         }

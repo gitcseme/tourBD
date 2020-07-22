@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using tourBD.Membership.Contexts;
+using tourBD.Membership.Seeds;
 
 namespace tourBD.Membership
 {
@@ -23,6 +24,8 @@ namespace tourBD.Membership
                 .WithParameter("connectionString", _connectionString)
                 .WithParameter("migrationAssemblyName", _migrationAssemblyName)
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<AuthoritySeed>().SingleInstance();
 
             base.Load(builder);
         }
