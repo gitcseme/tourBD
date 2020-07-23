@@ -175,7 +175,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         if (user != null)
                         {
                             <div class="image">
-                                <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image">
+                                <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image"> <span>@user.FullName</span>
                             </div>
                         }
                     }
@@ -201,24 +201,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                             <ul class="nav nav-treeview" id="navigation-sidebar">
-                                @*<li class="nav-item">
-                                    <a href="#" class="nav-link active">
+                                <li class="nav-item">
+                                    <a asp-controller="Forum" asp-action="Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Active Page</p>
+                                        <p>Forum</p>
                                     </a>
-                                </li>*@
+                                </li>
+
                                 @if (_signInManager.IsSignedIn(User))
                                 {
                                     var user = await _userManager.GetUserAsync(User);
                                     if (user != null)
                                     {
-                                        <li class="nav-item">
-                                            <a asp-controller="Forum" asp-action="Index" class="nav-link">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Forum</p>
-                                            </a>
-                                        </li>
-
                                         <li class="nav-item">
                                             <a asp-controller="Forum" asp-action="CreatePost" asp-route-userId="@user.Id" class="nav-link">
                                                 <i class="fa fa-paper-plane nav-icon" aria-hidden="true"></i>

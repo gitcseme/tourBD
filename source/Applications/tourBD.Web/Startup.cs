@@ -15,6 +15,8 @@ using tourBD.Forum.Contexts;
 using tourBD.Forum;
 using tourBD.Membership.Seeds;
 using tourBD.Forum.Seeds;
+using Autofac.Core;
+using Microsoft.CodeAnalysis.Options;
 
 namespace tourBD.Web
 {
@@ -78,6 +80,13 @@ namespace tourBD.Web
 
                 // User settings.
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
             });
         }
 

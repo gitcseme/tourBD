@@ -133,6 +133,11 @@ namespace tourBD.Web.Controllers
             return View(model);
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         public async Task<string> GetSavedImageUrlAsync(IFormFile file)
         {
             if (file != null && file.Length > 0)
