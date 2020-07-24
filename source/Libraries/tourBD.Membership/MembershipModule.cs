@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using tourBD.Membership.Contexts;
+using tourBD.Membership.Repositories;
 using tourBD.Membership.Seeds;
+using tourBD.Membership.UnitOfWorks;
 
 namespace tourBD.Membership
 {
@@ -25,8 +27,37 @@ namespace tourBD.Membership
                 .WithParameter("migrationAssemblyName", _migrationAssemblyName)
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<AuthoritySeed>().SingleInstance();
+            builder.RegisterType<CompanyRepository>()
+                .As<ICompanyRepository>()
+                .InstancePerLifetimeScope();
 
+            builder.RegisterType<TourPackageRepository>()
+                .As<ITourPackageRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<SpotRepository>()
+                .As<ISpotRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CompanyUnitOfWork>()
+                .As<ICompanyUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<TourPackageUnitOfWork>()
+                .As<ITourPackageUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<SpotUnitOfWork>()
+                .As<ISpotUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<AuthoritySeed>().SingleInstance();
             base.Load(builder);
         }
     }

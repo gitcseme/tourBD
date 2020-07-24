@@ -18,8 +18,4 @@
     <ProjectReference Include="..\tourBD.Core\tourBD.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UnitOfWorks\" />
-  </ItemGroup>
-
 </Project>
