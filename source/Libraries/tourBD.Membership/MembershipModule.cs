@@ -39,6 +39,10 @@ namespace tourBD.Membership
                 .As<ISpotRepository>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<CompanyRequestRepository>()
+                .As<ICompanyRequestRepository>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<CompanyUnitOfWork>()
                 .As<ICompanyUnitOfWork>()
                 .WithParameter("connectionString", _connectionString)
@@ -53,6 +57,12 @@ namespace tourBD.Membership
 
             builder.RegisterType<SpotUnitOfWork>()
                 .As<ISpotUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CompanyRequestUnitOfWork>()
+                .As<ICompanyRequestUnitOfWork>()
                 .WithParameter("connectionString", _connectionString)
                 .WithParameter("migrationAssemblyName", _migrationAssemblyName)
                 .InstancePerLifetimeScope();

@@ -1,6 +1,31 @@
-﻿
-@* 
-    Company List will be shown here.    
+﻿@*
+    Company List will be shown here.
 *@
 
-    <p>List of companies</p>
+@section Styles {
+    <style>
+        .request-link a {
+            width: 100%;
+            font-size: 20px;
+            color: currentColor;
+            background: beige;
+        }
+    </style>
+}
+
+<!-- Main content -->
+<div class="content">
+    <div class="container-fluid">
+        <h3>Your companies</h3>
+        <hr />
+        <div class="row">
+            <div class="col-lg-8">
+            </div>
+            <div class="col-lg-4">
+                <div class="request-link">
+                    <a asp-controller="Company" asp-action="RequestCompany" class="btn btn-outline-primary">Request for a company</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
