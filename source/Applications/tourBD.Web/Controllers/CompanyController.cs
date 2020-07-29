@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Services;
 using tourBD.Web.Models.CompanyModels;
 
 namespace tourBD.Web.Controllers
@@ -12,9 +13,12 @@ namespace tourBD.Web.Controllers
     public class CompanyController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public CompanyController(UserManager<ApplicationUser> userManager)
+        private readonly ICompanyRequestService _companyRequestService;
+
+        public CompanyController(UserManager<ApplicationUser> userManager, ICompanyRequestService companyRequestService)
         {
             _userManager = userManager;
+            _companyRequestService = companyRequestService;
         }
 
         public IActionResult Index()
@@ -40,8 +44,11 @@ namespace tourBD.Web.Controllers
                     UserId = user.Id,
                     Description = model.Description,
                     RequestDate = DateTime.Now,
-                    RequestStatus = Membership.Enums.CompanyRequestStatus.Pending
+                    RequestStatus = Membership.Enums.CompanyRequestStatus.Pending.ToString()
                 };
+
+                await _companyRequestService.CreateAsync(request);
+                return RedirectToAction("Index", "Company");
             }
 
             return View(model);
