@@ -45,12 +45,12 @@ namespace tourBD.Membership.Services
 
         public (IEnumerable<CompanyRequest>, int, int) GetRequests(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection)
         {
-            return _companyRequestUnitOfWork.CompanyRequestRepository.Get(null, "", "", "", pageIndex, pageSize, true);
+            return _companyRequestUnitOfWork.CompanyRequestRepository.Get(null, orderingColumn, orderDirection, "", pageIndex, pageSize, isTrackingOff);
         }
 
-        public async Task<(IEnumerable<CompanyRequest>, int, int)> GetPostsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection)
+        public async Task<(IEnumerable<CompanyRequest>, int, int)> GetRequestsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection)
         {
-            return await _companyRequestUnitOfWork.CompanyRequestRepository.GetAsync(null, "", "", "", pageIndex, pageSize, true);
+            return await _companyRequestUnitOfWork.CompanyRequestRepository.GetAsync(null, orderingColumn, orderDirection, "", pageIndex, pageSize, isTrackingOff);
         }
     }
 }

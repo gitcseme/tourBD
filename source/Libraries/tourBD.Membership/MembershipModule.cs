@@ -5,6 +5,7 @@ using System.Text;
 using tourBD.Membership.Contexts;
 using tourBD.Membership.Repositories;
 using tourBD.Membership.Seeds;
+using tourBD.Membership.Services;
 using tourBD.Membership.UnitOfWorks;
 
 namespace tourBD.Membership
@@ -65,6 +66,10 @@ namespace tourBD.Membership
                 .As<ICompanyRequestUnitOfWork>()
                 .WithParameter("connectionString", _connectionString)
                 .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CompanyRequestService>()
+                .As<ICompanyRequestService>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<AuthoritySeed>().SingleInstance();

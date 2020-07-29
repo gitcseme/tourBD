@@ -16,6 +16,6 @@ namespace tourBD.Membership.Entities
 
         public DateTime RequestDate { get; set; }
 
-        public CompanyRequestStatus RequestStatus { get; set; }
+        public string RequestStatus { get; set; }
     }
 }
