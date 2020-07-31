@@ -22,14 +22,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     @RenderSection("Styles", false)
-
-    <style>
-        .user-panel .image img.img-circle.elevation-2 {
-            width: 50px;
-            height: 50px;
-        }
-    </style>
-
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -175,7 +167,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         if (user != null)
                         {
                             <div class="image">
-                                <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image"> <span>@user.FullName</span>
+                                <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image">
+                            </div>
+                            <div class="info">
+                                <a href="#" class="d-block">@user.FullName</a>
                             </div>
                         }
                     }

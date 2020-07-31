@@ -47,12 +47,13 @@ namespace tourBD.Web.Areas.Admin.Controllers
                 data = requestData.Item1.Select(r =>
                        {
                            var user = _userManager.FindByIdAsync(r.UserId.ToString()).Result;
-                           string imageUrl = user.ImageUrl;
+                           string userData = user.FullName + "$" + user.ImageUrl;
+                           string description = r.Description.Length < 40 ? r.Description : r.Description.Substring(0, 35) + "...";
 
                            return new string[]
                            {
-                               imageUrl,
-                               r.Description,
+                               userData,
+                               description,
                                r.RequestDate.ToString(),
                                r.RequestStatus,
                                r.Id.ToString()

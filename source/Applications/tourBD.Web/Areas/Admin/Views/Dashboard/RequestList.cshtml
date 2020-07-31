@@ -12,8 +12,6 @@
     <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 
-    
-
     <script>
         $(function () {
             $('#conpanyRequestTable').DataTable({
@@ -31,15 +29,20 @@
                         'orderable': false,
                         'targets': 0,
                         'render': function (data, type, row) {
-                            return `<img src="` + data + `" alt="" style="height: 40px; width: 40px"/>`;
+                            console.log(data);
+                            var arr = data.split('$');
+                            return `<img src="` + arr[1] + `" alt="" style="height: 30px; width: 30px" class="img-circle elevation-2"/> <span class="text-bold"><a href="#">` + arr[0] + `</a></span>`;
                         }
                     },
                     {
                         'orderable': false,
                         'targets': 4,
                         'render': function (data, type, row) {
-                            return `<a href="/admin/Dashboard/ApproveRequest/${data}" class="btn btn-info btn-sm">Approve</a>
-                                    <a href="/admin/Dashboard/RejectRequest/${data}" class="btn btn-danger btn-sm">Reject</a>`;
+                            return `<div class="d-inline-block row">
+                                        <a href="/admin/Dashboard/Details/${data}" class="btn btn-outline-success btn-sm"><i class="fa fa-eye" aria-hidden="true">View</i></a>
+                                        <a href="/admin/Dashboard/ApproveRequest/${data}" class="btn btn-info btn-sm">Approve</a>
+                                        <a href="/admin/Dashboard/RejectRequest/${data}" class="btn btn-danger btn-sm">Reject</a>
+                                    </div>`;
                         }
                     }
                 ]
