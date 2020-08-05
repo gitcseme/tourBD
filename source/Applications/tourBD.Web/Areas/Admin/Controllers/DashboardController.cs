@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using tourBD.Core;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
+using tourBD.Web.Areas.Admin.Models;
 
 namespace tourBD.Web.Areas.Admin.Controllers
 {
@@ -31,7 +32,6 @@ namespace tourBD.Web.Areas.Admin.Controllers
 
         public IActionResult RequestList()
         {
-
             return View();
         }
 
@@ -62,6 +62,28 @@ namespace tourBD.Web.Areas.Admin.Controllers
             };
 
             return Json(result);
+        }
+
+        public async Task<IActionResult> Details(string Id)
+        {
+            var request = _companyRequestService.Get(new Guid(Id));
+            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            if (user != null)
+            {
+                var model = new CompanyRequestDetailViewModel()
+                {
+                    UserImageUrl = user.ImageUrl,
+                    UserName = user.FullName,
+                    CompanyRequestId = request.Id.ToString(),
+                    Description = request.Description,
+                    RequestedDate = request.RequestDate,
+                    RequestStatus = request.RequestStatus
+                };
+
+                return View(model);
+            }
+
+            return RedirectToAction("RequestList", "Dashboard");
         }
     }
 }
