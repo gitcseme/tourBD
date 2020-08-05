@@ -45,7 +45,7 @@ namespace tourBD.Membership.Services
 
         public (IEnumerable<CompanyRequest>, int, int) GetRequests(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection)
         {
-            return _companyRequestUnitOfWork.CompanyRequestRepository.Get(null, orderingColumn, orderDirection, "", pageIndex, pageSize, isTrackingOff);
+            return _companyRequestUnitOfWork.CompanyRequestRepository.Get(r => r.Description.Contains(searchText), orderingColumn, orderDirection, "", pageIndex, pageSize, isTrackingOff);
         }
 
         public async Task<(IEnumerable<CompanyRequest>, int, int)> GetRequestsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection)
