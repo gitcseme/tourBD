@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using tourBD.Core;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Enums;
 using tourBD.Membership.Services;
 using tourBD.Web.Areas.Admin.Models;
 
@@ -18,11 +19,16 @@ namespace tourBD.Web.Areas.Admin.Controllers
     {
         private readonly ICompanyRequestService _companyRequestService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICompanyService _companyService;
 
-        public DashboardController(UserManager<ApplicationUser> userManager, ICompanyRequestService companyRequestService)
+        public DashboardController(
+            UserManager<ApplicationUser> userManager, 
+            ICompanyRequestService companyRequestService,
+            ICompanyService companyService)
         {
             _companyRequestService = companyRequestService;
             _userManager = userManager;
+            _companyService = companyService;
         }
 
         public IActionResult Index()
@@ -82,6 +88,35 @@ namespace tourBD.Web.Areas.Admin.Controllers
 
                 return View(model);
             }
+
+            return RedirectToAction("RequestList", "Dashboard");
+        }
+
+        public async Task<IActionResult> ApproveRequest(string requestId)
+        {
+            var companyRequestEntity = _companyRequestService.Get(new Guid(requestId));
+            companyRequestEntity.RequestStatus = CompanyRequestStatus.Approved.ToString(); // chnage status to Approved.
+            await _companyRequestService.EditAsync(companyRequestEntity);
+
+            // create a new company
+            Company company = new Company()
+            {
+                Name = "Dummy Name",
+                Address = "Dummy address",
+                CompanyImageUrl = "/img/companyImage.jpg",
+                Reputation = 0,
+                UserId = companyRequestEntity.UserId
+            };
+
+            await _companyService.CreateAsync(company);
+            return RedirectToAction("RequestList", "Dashboard");
+        }
+
+        public async Task<IActionResult> RejectRequest(string requestId)
+        {
+            var companyRequestEntity = _companyRequestService.Get(new Guid(requestId));
+            companyRequestEntity.RequestStatus = CompanyRequestStatus.Rejected.ToString(); // chnage status to Rejected.
+            await _companyRequestService.EditAsync(companyRequestEntity);
 
             return RedirectToAction("RequestList", "Dashboard");
         }
