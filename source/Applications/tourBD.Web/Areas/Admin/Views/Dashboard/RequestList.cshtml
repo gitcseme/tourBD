@@ -29,7 +29,6 @@
                         'orderable': false,
                         'targets': 0,
                         'render': function (data, type, row) {
-                            console.log(data);
                             var arr = data.split('$');
                             return `<img src="` + arr[1] + `" alt="" style="height: 30px; width: 30px" class="img-circle elevation-2"/> <span class="text-bold"><a href="#">` + arr[0] + `</a></span>`;
                         }
@@ -41,6 +40,17 @@
                             return `<div class="d-inline-block">
                                         <a href="/admin/Dashboard/Details/${data}" class="btn btn-outline-success btn-sm"><i class="fa fa-eye" aria-hidden="true" style="color: darkblue"></i> View Details</a>
                                     </div>`;
+                        }
+                    },
+                    {
+                        'orderable': false,
+                        'targets': 3,
+                        'render': function (data, type, row) {
+                            let backColor = 'yellow';
+                            if (data == 'Rejected') backColor = 'red';
+                            else if (data == 'Approved') backColor = 'green';
+
+                            return `<div style="background-color: ` + backColor + `; width: 75%; text-align: center; margin-left: 17px; border-radius: 45%;"><p>` + data + `</p></div>`;
                         }
                     }
                 ]

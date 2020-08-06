@@ -72,6 +72,10 @@ namespace tourBD.Membership
                 .As<ICompanyRequestService>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<CompanyService>()
+                .As<ICompanyService>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<AuthoritySeed>().SingleInstance();
             base.Load(builder);
         }
