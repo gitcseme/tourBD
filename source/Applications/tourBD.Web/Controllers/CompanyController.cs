@@ -14,16 +14,24 @@ namespace tourBD.Web.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICompanyRequestService _companyRequestService;
+        private readonly ICompanyService _companyService;
 
-        public CompanyController(UserManager<ApplicationUser> userManager, ICompanyRequestService companyRequestService)
+        public CompanyController(
+            UserManager<ApplicationUser> userManager, 
+            ICompanyRequestService companyRequestService,
+            ICompanyService companyService)
         {
             _userManager = userManager;
             _companyRequestService = companyRequestService;
+            _companyService = companyService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var companyList = await _companyService.GetUserCompaniesAsync(user.Id);
+
+            return View(companyList);
         }
 
         [HttpGet]
