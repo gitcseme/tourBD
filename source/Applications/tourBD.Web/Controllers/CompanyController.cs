@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
 using tourBD.Web.Models.CompanyModels;
@@ -15,15 +17,18 @@ namespace tourBD.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICompanyRequestService _companyRequestService;
         private readonly ICompanyService _companyService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public CompanyController(
             UserManager<ApplicationUser> userManager, 
             ICompanyRequestService companyRequestService,
-            ICompanyService companyService)
+            ICompanyService companyService,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _companyRequestService = companyRequestService;
             _companyService = companyService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -57,6 +62,31 @@ namespace tourBD.Web.Controllers
 
                 await _companyRequestService.CreateAsync(request);
                 return RedirectToAction("Index", "Company");
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult EditCompany(string companyId)
+        {
+            var model = new EditCompanyViewModel() { Company = _companyService.Get(new Guid(companyId)) };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCompany(EditCompanyViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string imagePath = @"\img\Upload\";
+                string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
+                string demoImage = @"\img\companyImage.jpg";
+
+                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                await _companyService.EditAsync(model.Company);
+
+                return RedirectToAction("EditCompany", "Company"); // should be redirect to [ViewCompany]
             }
 
             return View(model);

@@ -1,0 +1,126 @@
+﻿@model tourBD.Web.Models.CompanyModels.EditCompanyViewModel
+
+@section Styles {
+
+    <style>
+        .image-update {
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+
+        #filePhoto {
+            margin-top: 5px;
+        }
+
+    </style>
+
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10" style="margin: 0 auto">
+            <form enctype="multipart/form-data" method="post" asp-controller="Company" asp-action="EditCompany">
+
+                <input hidden asp-for="@Model.Company.Id" />
+                <input hidden asp-for="@Model.Company.UserId" />
+                <input hidden asp-for="@Model.Company.CompanyImageUrl" />
+                <input hidden asp-for="@Model.Company.Reputation" />
+
+                <div class="image-update row">
+                    <div class="existing-cover-photo">
+                        <img src="@Model.Company.CompanyImageUrl"
+                             alt="Company image"
+                             id="cover-photo" style="width: 100%; height: 100%" />
+                    </div>
+                </div>
+
+                <div class="form-group row" style="margin-left: 0px">
+                    <input type="file" name="ImageFile" id="filePhoto" />
+                </div>
+
+                <div class="form-group row">
+                    <label asp-for="@Model.Company.Name" class="col-lg-2 col-form-label"></label>
+                    <div class="col-lg-10">
+                        <input asp-for="@Model.Company.Name" class="form-control" placeholder="Company Name" />
+                        <span asp-validation-for="@Model.Company.Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label asp-for="@Model.Company.Address" class="col-lg-2 col-form-label"></label>
+                    <div class="col-lg-10">
+                        <input asp-for="@Model.Company.Address" class="form-control" placeholder="Company Address" />
+                        <span asp-validation-for="@Model.Company.Address" class="text-danger"></span>
+                    </div>
+                </div>
+
+                @* Tour packages *@
+
+                <div class="form-group row">
+                    <div class="col-lg-10">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <a asp-controller="Company" asp-action="Index" class="btn btn-outline-danger">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="packageContainer">
+            @foreach (var package in Model.Company.TourPackages)
+            {
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="header-left float-left">
+                                Package Number: @package.PackageNumber
+                                Area: @package.MainArea
+                            </div>
+                            <div class="header-right float-right">
+                                @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
+                                {
+                                    <button disabled class="btn btn-success">package.Availability</button>
+                                }
+                                else {
+                                    <button disabled class="btn btn-danger">package.Availability</button>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>Including spots</p>
+                            <ul class="spot-list">
+                                @foreach (var spot in package.Spots)
+                                {
+                                    <li>@spot.Name</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()">Edit package</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#filePhoto').change(function () {
+
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = (e) => {
+                        $('#cover-photo').attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(this.files[0]);
+                }
+
+            })
+        });
+    </script>
+}
