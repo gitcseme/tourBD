@@ -97,7 +97,8 @@
                             </ul>
                         </div>
                         <div class="card-footer">
-                            <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()">Edit package</a>
+                            <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()">Edit</a>
+                            <a class="btn btn-primary" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()">Delete</a>
                         </div>
                     </div>
                 </div>

@@ -80,13 +80,13 @@ namespace tourBD.Web.Controllers
             if (ModelState.IsValid)
             {
                 string imagePath = @"\img\Upload\";
-                string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
+                string physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
                 string demoImage = @"\img\companyImage.jpg";
 
-                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, imagePath, demoImage);
                 await _companyService.EditAsync(model.Company);
 
-                return RedirectToAction("EditCompany", "Company"); // should be redirect to [ViewCompany]
+                return RedirectToAction("EditCompany", "Company", new { companyId = model.Company.Id.ToString() }); // should be redirect to [ViewCompany]
             }
 
             return View(model);
