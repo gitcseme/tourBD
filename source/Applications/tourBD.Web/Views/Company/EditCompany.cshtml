@@ -12,6 +12,33 @@
             margin-top: 5px;
         }
 
+        .package-list {
+            font-weight: 600;
+            font-size: 20px;
+            border: 1px solid gray;
+            box-shadow: 2px 2px 2px #888888;
+            text-align: center;
+            line-height: 37px;
+        }
+
+        .create-package .package-create-link {
+            width: 400px;
+            text-align: center;
+            margin: 0 auto;
+            box-shadow: 2px 2px 2px #888888;
+        }
+
+        .create-package .package-create-link a {
+            width: 100%;
+            text-align: center;
+        }
+
+        label span.color-ml-3 {
+            margin-left: 3px;
+            color: coral;
+
+        }
+
     </style>
 
 }
@@ -39,16 +66,16 @@
                 </div>
 
                 <div class="form-group row">
-                    <label asp-for="@Model.Company.Name" class="col-lg-2 col-form-label"></label>
-                    <div class="col-lg-10">
+                    <label asp-for="@Model.Company.Name" class="col-lg-1 col-form-label"></label>
+                    <div class="col-lg-6">
                         <input asp-for="@Model.Company.Name" class="form-control" placeholder="Company Name" />
                         <span asp-validation-for="@Model.Company.Name" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label asp-for="@Model.Company.Address" class="col-lg-2 col-form-label"></label>
-                    <div class="col-lg-10">
+                    <label asp-for="@Model.Company.Address" class="col-lg-1 col-form-label"></label>
+                    <div class="col-lg-6">
                         <input asp-for="@Model.Company.Address" class="form-control" placeholder="Company Address" />
                         <span asp-validation-for="@Model.Company.Address" class="text-danger"></span>
                     </div>
@@ -59,51 +86,60 @@
                 <div class="form-group row">
                     <div class="col-lg-10">
                         <button type="submit" class="btn btn-primary">Update</button>
-                        <a asp-controller="Company" asp-action="Index" class="btn btn-outline-danger">Cancel</a>
+                        <a asp-controller="Company" asp-action="Index" class="btn btn-outline-success">Done</a>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <div class="row mt-5">
+        <div class="col-lg-6">
+            <p class="package-list">List of packages</p>
+        </div>
+        <div class="create-package col-lg-6">
+            <div class="package-create-link">
+                <a class="btn btn-primary" asp-controller="Company" asp-action="CreatePackage" asp-route-companyId="@Model.Company.Id.ToString()"><i class="fas fa-plus-square"></i> Create Package</a>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <div class="packageContainer">
-            @foreach (var package in Model.Company.TourPackages)
-            {
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="header-left float-left">
-                                Package Number: @package.PackageNumber
-                                Area: @package.MainArea
-                            </div>
-                            <div class="header-right float-right">
-                                @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
-                                {
-                                    <button disabled class="btn btn-success">package.Availability</button>
-                                }
-                                else {
-                                    <button disabled class="btn btn-danger">package.Availability</button>
-                                }
-                            </div>
+        @foreach (var package in Model.Company.TourPackages)
+        {
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="header-left float-left">
+                            <label>Package Number: <span class="color-ml-3">@package.PackageNumber</span></label> <br />
+                            <label>Area: <span class="color-ml-3">@package.MainArea</span></label>
                         </div>
-                        <div class="card-body">
-                            <p>Including spots</p>
-                            <ul class="spot-list">
-                                @foreach (var spot in package.Spots)
-                                {
-                                    <li>@spot.Name</li>
-                                }
-                            </ul>
-                        </div>
-                        <div class="card-footer">
-                            <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()">Edit</a>
-                            <a class="btn btn-primary" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()">Delete</a>
+                        <div class="header-right float-right">
+                            @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
+                            {
+                                <button class="btn btn-success available">@package.Availability</button>
+                            }
+                            else {
+                                <button class="btn btn-danger available">@package.Availability</button>
+                            }
                         </div>
                     </div>
+                    <div class="card-body">
+                        <p>Including spots</p>
+                        <ul class="spot-list">
+                            @foreach (var spot in package.Spots)
+                            {
+                                <li>@spot.Name</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()" asp-route-companyId="@Model.Company.Id.ToString()">Edit</a>
+                        <a class="btn btn-primary" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()" asp-route-companyId="@Model.Company.Id.ToString()">Delete</a>
+                    </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>
 

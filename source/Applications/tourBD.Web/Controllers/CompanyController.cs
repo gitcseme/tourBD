@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Enums;
 using tourBD.Membership.Services;
 using tourBD.Web.Models.CompanyModels;
 
@@ -17,17 +18,20 @@ namespace tourBD.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICompanyRequestService _companyRequestService;
         private readonly ICompanyService _companyService;
+        private readonly ITourPackageService _tourPackageService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public CompanyController(
             UserManager<ApplicationUser> userManager, 
             ICompanyRequestService companyRequestService,
             ICompanyService companyService,
+            ITourPackageService tourPackageService,
             IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _companyRequestService = companyRequestService;
             _companyService = companyService;
+            _tourPackageService = tourPackageService;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -68,9 +72,13 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditCompany(string companyId)
+        public async Task<IActionResult> EditCompany(string companyId)
         {
-            var model = new EditCompanyViewModel() { Company = _companyService.Get(new Guid(companyId)) };
+            var model = new EditCompanyViewModel() 
+            { 
+                Company = await _companyService.GetWithAllIncludePropertiesAsync(new Guid(companyId))
+            };
+
             return View(model);
         }
 
@@ -90,6 +98,42 @@ namespace tourBD.Web.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult CreatePackage(string companyId)
+        {
+            TourPackage tourPackage = new TourPackage() { CompanyId = new Guid(companyId) };
+            ViewBag.companyId = companyId;
+            return View(tourPackage);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePackage(TourPackage tourPackage)
+        {
+            if (ModelState.IsValid)
+            {
+                tourPackage.Id = Guid.NewGuid();
+                tourPackage.Availability = AvailabilityStatus.Available.ToString();
+                tourPackage.PackageNumber = _companyService.Get(tourPackage.CompanyId).TourPackages.Count + 1;
+                var Spots = tourPackage.Spots;
+                tourPackage.Spots = null; // creates PK_Spot conflict otherwise
+
+                // Create the tourPackage first.
+                await _companyService.CreateTourPackage(tourPackage);
+
+                // Add the spots
+                foreach (var spot in Spots)
+                {
+                    spot.TourPackage = null; // Create PK_Company conflict otherwise
+                    spot.TourPackageId = tourPackage.Id;
+                    await _tourPackageService.AddSpot(spot);
+                }
+
+                return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+            }
+
+            return View(tourPackage);
         }
     }
 }
