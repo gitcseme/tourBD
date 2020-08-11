@@ -46,7 +46,25 @@ namespace tourBD.Membership.Services
 
         public async Task<IEnumerable<Company>> GetUserCompaniesAsync(Guid userId)
         {
-            return await _companyUnitOfWork.CompanyRepository.GetAsync(c => c.UserId == userId, "", "", "", true);
+            var Companies = await _companyUnitOfWork.CompanyRepository.GetAsync(c => c.UserId == userId, "", "", "", true);
+            var propertyIncludedCompanyList = new List<Company>();
+            foreach (var company in Companies)
+            {
+                propertyIncludedCompanyList.Add(await GetWithAllIncludePropertiesAsync(company.Id));
+            }
+
+            return propertyIncludedCompanyList;
+        }
+
+        public async Task CreateTourPackage(TourPackage tourPackage)
+        {
+            await _companyUnitOfWork.TourPackageRepository.AddAsync(tourPackage);
+            await _companyUnitOfWork.SaveAsync();
+        }
+
+        public async Task<Company> GetWithAllIncludePropertiesAsync(Guid companyId)
+        {
+            return await _companyUnitOfWork.CompanyRepository.GetWithAllIncludePropertiesAsync(companyId);
         }
     }
 }

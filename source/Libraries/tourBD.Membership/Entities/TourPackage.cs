@@ -10,6 +10,7 @@ namespace tourBD.Membership.Entities
         [Required(ErrorMessage = "Main area is required")]
         public string MainArea { get; set; }
         public int PackageNumber { get; set; }
+        public string Availability { get; set; }
         public List<Spot> Spots { get; set; } = new List<Spot>();
 
         public Guid CompanyId { get; set; }

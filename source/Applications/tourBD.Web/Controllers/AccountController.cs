@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
 using tourBD.Web.Models;
 
@@ -115,6 +116,10 @@ namespace tourBD.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
+                string imagePath = @"\img\Upload\";
+                string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
+                string demoImage = @"\img\no-profile.png";
+
                 if (user != null)
                 {
                     user.IsVarified = true;
@@ -122,7 +127,7 @@ namespace tourBD.Web.Controllers
                     user.Email = model.Email;
                     user.PhoneNumber = model.Mobile;
                     user.Address = model.Address;
-                    user.ImageUrl = await GetSavedImageUrlAsync(model.ImageFile);
+                    user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
 
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
@@ -138,32 +143,6 @@ namespace tourBD.Web.Controllers
             return View();
         }
 
-        public async Task<string> GetSavedImageUrlAsync(IFormFile file)
-        {
-            if (file != null && file.Length > 0)
-            {
-                var imagePath = @"\img\Upload\";
-                var uploadPath = _webHostEnvironment.WebRootPath + imagePath;
-
-                // Create directory
-                if (!Directory.Exists(uploadPath))
-                    Directory.CreateDirectory(uploadPath);
-
-                // Create unique file name
-                var guid = "pic" + Guid.NewGuid().ToString();
-                var uniqueFileName = Path.Combine(guid + "." + file.FileName.Split(".")[1].ToLower());
-                var fullPath = uploadPath + uniqueFileName;
-                var imageVirtualPath = imagePath + uniqueFileName;
-
-                using (var fileStream = new FileStream(fullPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-
-                return imageVirtualPath;
-            }
-            else
-                return @"\img\no-profile.png";
-        }
+        
     }
 }
