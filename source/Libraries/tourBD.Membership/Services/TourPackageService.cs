@@ -49,5 +49,16 @@ namespace tourBD.Membership.Services
             await _tourPackageUnitOfWork.SpotRepository.AddAsync(spot);
             await _tourPackageUnitOfWork.SaveAsync();
         }
+
+        public async Task<TourPackage> GetPackageWithRelatedSpotsAsync(Guid packageId)
+        {
+            return await _tourPackageUnitOfWork.TourPackageRepository.GetPackageWithRelatedSpotsAsync(packageId);
+        }
+
+        public async Task DeleteSpotAsync(Spot spot)
+        {
+            await _tourPackageUnitOfWork.SpotRepository.RemoveAsync(spot);
+            await _tourPackageUnitOfWork.SaveAsync();
+        }
     }
 }

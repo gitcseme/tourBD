@@ -141,5 +141,18 @@ namespace tourBD.Web.Controllers
 
             return View(tourPackage);
         }
+
+        public async Task<IActionResult> DeletePackage(string packageId)
+        {
+            var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
+            foreach (var spot in tourPackage.Spots.ToList()) // to list creates a copy of the data.
+            {
+                //spot.TourPackage = null; // to avoid PK conflict
+                await _tourPackageService.DeleteSpotAsync(spot);
+            }
+
+            await _tourPackageService.DeleteAsync(tourPackage);
+            return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+        }
     }
 }
