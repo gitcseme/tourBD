@@ -119,15 +119,24 @@
                             <label>Package Number: <span class="color-ml-3">@package.PackageNumber</span></label> <br />
                             <label>Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
                             <label>Package size: <span class="color-ml-3">@package.PackageMemberSize people</span></label> <br />
-                            <label>Price: <span class="color-ml-3">@package.Price tk</span></label>
+
+                            @if (package.DiscountedPrice == 0)
+                            {
+                                <label>Price: <span class="color-ml-3">@package.Price tk</span></label>
+                            }
+                            else
+                            {
+                                double discountedPrice = package.Price - (package.Price * package.DiscountedPrice) / 100;
+                                <label>Price: <span class="ml-2" style="color: red"><s>@package.Price tk</s></span><span style="color: blue" class="ml-2">@discountedPrice tk</span></label>
+                            }
                         </div>
                         <div class="header-right float-right">
                             @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
                             {
-                                <button class="btn btn-success available">@package.Availability</button>
+                                <button class="btn btn-sm btn-success available">@package.Availability</button>
                             }
                             else {
-                                <button class="btn btn-danger available">@package.Availability</button>
+                                <button class="btn btn-sm btn-danger available">@package.Availability</button>
                             }
                         </div>
                     </div>
@@ -143,8 +152,8 @@
                         </div>
                     </div>
                     <div class="card-footer p-2">
-                        <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()">Edit</a>
-                        <a class="btn btn-primary" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()">Delete</a>
+                        <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()"><i class="far fa-edit"></i> Edit</a>
+                        <a class="btn btn-danger" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()"><i class="fas fa-trash-alt"></i> Delete</a>
                     </div>
                 </div>
             </div>

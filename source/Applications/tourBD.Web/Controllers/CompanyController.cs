@@ -147,11 +147,62 @@ namespace tourBD.Web.Controllers
             var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
             foreach (var spot in tourPackage.Spots.ToList()) // to list creates a copy of the data.
             {
-                //spot.TourPackage = null; // to avoid PK conflict
                 await _tourPackageService.DeleteSpotAsync(spot);
             }
 
             await _tourPackageService.DeleteAsync(tourPackage);
+            return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPackage(string packageId)
+        {
+            var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
+            var model = new EditPackageViewModel()
+            {
+                packageId = tourPackage.Id,
+                PackageNumber = tourPackage.PackageNumber,
+                MainArea = tourPackage.MainArea,
+                PackageMemberSize = tourPackage.PackageMemberSize,
+                Price = tourPackage.Price,
+                Availability = tourPackage.Availability,
+                DiscountedPrice = tourPackage.DiscountedPrice,
+                Spots = (from s in tourPackage.Spots
+                        select s.Name).ToList()
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> EditPackage(EditPackageViewModel model)
+        {
+            var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(model.packageId);
+
+            // delete all spots
+            foreach (var spot in tourPackage.Spots.ToList())
+            {
+                await _tourPackageService.DeleteSpotAsync(spot);
+            }
+
+            // Rebuild the package spots from model
+            tourPackage.PackageNumber = model.PackageNumber;
+            tourPackage.MainArea = model.MainArea;
+            tourPackage.PackageMemberSize = model.PackageMemberSize;
+            tourPackage.Price = model.Price;
+            tourPackage.Availability = model.Availability;
+            tourPackage.DiscountedPrice = model.DiscountedPrice;
+            foreach (var spot in model.Spots)
+            {
+                var newSpot = new Spot()
+                {
+                    Name = spot,
+                    TourPackageId = tourPackage.Id
+                };
+
+                await _tourPackageService.AddSpot(newSpot);
+            }
+
+            await _tourPackageService.EditAsync(tourPackage);
             return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
         }
     }

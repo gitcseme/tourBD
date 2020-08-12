@@ -1,0 +1,213 @@
+﻿@model tourBD.Web.Models.CompanyModels.EditPackageViewModel
+
+
+@section Styles {
+    <style>
+        .propertyLabel.col-auto {
+            padding-top: 5px;
+            padding-left: 0px;
+        }
+
+        .submit-package {
+            margin: 0 auto;
+            width: 300px;
+        }
+
+            .submit-package button {
+                width: 100%;
+            }
+    </style>
+}
+
+@{
+    var companyId = ViewBag.companyId;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-9" style="margin: 0 auto">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" asp-action="EditPackage" asp-controller="Company">
+                        <input asp-for="packageId" hidden />
+                        <input asp-for="PackageNumber" hidden />
+                        <div class="form-group row">
+                            <div class="propertyLabel col-auto">
+                                <label asp-for="MainArea">Main location</label>
+                            </div>
+                            <div class="inputBox col-auto">
+                                <input type="text"
+                                       name="MainArea"
+                                       value="@Model.MainArea"
+                                       class="form-control"
+                                       placeholder="Main target location name"
+                                       aria-describedby="Main-area-description" />
+                                <small id="Main-area-description" class="text-muted">
+                                    Suppose the package targets the spots of Syllete divition.
+                                    Hence main area is Syllete
+                                </small>
+                            </div>
+                            <span asp-validation-for="MainArea" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="propertyLabel col-auto">
+                                <label asp-for="PackageMemberSize">Package size</label>
+                            </div>
+                            <div class="inputBox col-auto ml-1">
+                                <input type="text"
+                                       name="PackageMemberSize"
+                                       value="@Model.PackageMemberSize"
+                                       class="form-control"
+                                       placeholder="Put a number"
+                                       aria-describedby="Package-Member-Size" />
+                                <small id="Package-Member-Size" class="text-muted">
+                                    number of people for this package
+                                </small>
+                            </div>
+                            <span asp-validation-for="PackageMemberSize" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="propertyLabel col-auto mr-2">
+                                <label asp-for="Price">Price</label>
+                            </div>
+                            <div class="inputBox col-auto ml-5">
+                                <input type="text"
+                                       name="Price"
+                                       value="@Model.Price"
+                                       class="form-control"
+                                       placeholder="Set the package price" />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="propertyLabel col-auto mr-1">
+                                <label asp-for="DiscountedPrice">Discount(%)</label>
+                            </div>
+                            <div class="inputBox col-auto">
+                                <input type="text"
+                                       name="DiscountedPrice"
+                                       value="@Model.DiscountedPrice"
+                                       class="form-control"
+                                       placeholder="Set the discount" />
+                            </div>
+                            <span asp-validation-for="DiscountedPrice" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="propertyLabel col-auto mr-2">
+                                <label asp-for="Availability">Availability</label>
+                            </div>
+                            <div class="inputBox col-auto ml-1">
+                                @Html.DropDownList("Availability",
+                                        new SelectList(Enum.GetValues(typeof(tourBD.Membership.Enums.AvailabilityStatus)), Model.Availability),
+                                        new { @class = "form-control Is-available" })
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <label>List of spots</label>
+                        </div>
+                        <div id="SpotContainer">
+                            @if (Model.Spots.Count != 0)
+                            {
+                                for (int i = 0; i < Model.Spots.Count; ++i)
+                                {
+                                    string x = "singleSpot" + i;
+                                    string y = "Spots[" + i + "]";
+                                    <div id="@{@x}" class="newSpot row">
+                                        <div class="form-row">
+                                            <div class="col" style="width: 320px">
+                                                <div class="form-group">
+                                                    @Html.TextBox(y, Model.Spots[i], new { @class = "form-control spotName", @placeholder = "spot name" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-auto" id="cancelSpot" onclick="RemoveSpot(this)">
+                                                <a class="btn-day-remove align-items-center btn btn-default d-flex mr-2" style="width: 36px; height: 38px">
+                                                    <i title="Remove"
+                                                       class="fas fa-times text-gray mr-1 mr-sm-0"></i>
+                                                    <span class="d-inline-block d-md-none text-black-50">Remove</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div id="singleSpot0" class="newSpot row">
+                                    <div class="form-row">
+                                        <div class="col" style="width: 320px">
+                                            <div class="form-group">
+                                                @Html.TextBox("Spots[0]", null, new { @class = "form-control spotName", @placeholder = "spot name" })
+                                            </div>
+                                        </div>
+
+                                        <div class="col-auto" id="cancelSpot" onclick="RemoveSpot(this)">
+                                            <a class="btn-day-remove align-items-center btn btn-default d-flex mr-2" style="width: 36px; height: 38px">
+                                                <i title="Remove"
+                                                   class="fas fa-times text-gray mr-1 mr-sm-0"></i>
+                                                <span class="d-inline-block d-md-none text-black-50">Remove</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <a id="addSpot" class="btn btn-outline-primary" style="color: #197fc3">
+                                Add Spot
+                            </a>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="submit-package">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#addSpot').click(function () {
+                var num = $('#SpotContainer').find('.newSpot').length - 1;
+                var newNum = num + 1;
+                var newElem = $('#singleSpot' + num).clone().attr('id', 'singleSpot' + newNum);
+
+                newElem.find('.spotName').attr('name', 'Spots[' + newNum + ']').attr('id', 'id' + newNum).val('');
+
+                $('#singleSpot' + num).after(newElem);
+            });
+
+        });
+
+        function RemoveSpot(item) {
+            var spotNode = $(item).parent().parent();
+            var spots = $('#SpotContainer').find('.newSpot');
+
+            if (spots.length > 1) {
+                spotNode.remove();
+                spots = $('#SpotContainer').find('.newSpot');
+
+                for (i = 0; i < spots.length; ++i) {
+                    let spot = $(spots[i]);
+
+                    spot.find('.spotName').attr('name', 'Spots[' + i + ']').attr('id', 'id' + i);
+                    spot.attr('id', 'singleSpot' + i);
+                }
+            }
+        }
+
+    </script>
+}
