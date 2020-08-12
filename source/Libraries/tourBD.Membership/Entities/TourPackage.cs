@@ -11,6 +11,10 @@ namespace tourBD.Membership.Entities
         public string MainArea { get; set; }
         public int PackageNumber { get; set; }
         public string Availability { get; set; }
+        [Required(ErrorMessage = "Price must be included")]
+        public double Price { get; set; }
+        public double DiscountedPrice { get; set; }
+        public int PackageMemberSize { get; set; }
         public List<Spot> Spots { get; set; } = new List<Spot>();
 
         public Guid CompanyId { get; set; }

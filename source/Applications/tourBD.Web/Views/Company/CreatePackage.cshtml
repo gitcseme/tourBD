@@ -2,7 +2,7 @@
 
 @section Styles {
     <style>
-        .mainAreaLabel.col-auto {
+        .propertyLabel.col-auto {
             padding-top: 5px;
             padding-left: 0px;
         }
@@ -31,7 +31,7 @@
                     <form method="post" asp-action="CreatePackage" asp-controller="Company" asp-route-companyId="companyId">
                         <input asp-for="CompanyId" hidden />
                         <div class="form-group row">
-                            <div class="mainAreaLabel col-auto">
+                            <div class="propertyLabel col-auto">
                                 <label asp-for="MainArea">Main location</label>
                             </div>
                             <div class="inputBox col-auto">
@@ -46,6 +46,36 @@
                                 </small>
                             </div>
                             <span asp-validation-for="MainArea" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="propertyLabel col-auto">
+                                <label asp-for="PackageMemberSize">Package size</label>
+                            </div>
+                            <div class="inputBox col-auto ml-1">
+                                <input type="text"
+                                       name="PackageMemberSize"
+                                       class="form-control"
+                                       placeholder="Put a number"
+                                       aria-describedby="Package-Member-Size" />
+                                <small id="Package-Member-Size" class="text-muted">
+                                    Put a number to describe target number of people for this package
+                                </small>
+                            </div>
+                            <span asp-validation-for="PackageMemberSize" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="propertyLabel col-auto mr-2">
+                                <label asp-for="Price">Price</label>
+                            </div>
+                            <div class="inputBox col-auto ml-5">
+                                <input type="text"
+                                       name="Price"
+                                       class="form-control"
+                                       placeholder="Set the package price" />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
                         </div>
 
                         <div class="row">

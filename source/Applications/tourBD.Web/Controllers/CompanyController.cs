@@ -76,8 +76,14 @@ namespace tourBD.Web.Controllers
         {
             var model = new EditCompanyViewModel() 
             { 
-                Company = await _companyService.GetWithAllIncludePropertiesAsync(new Guid(companyId))
+                Company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId))
             };
+
+            model.Company.TourPackages.Sort((t1, t2) => t1.PackageNumber.CompareTo(t2.PackageNumber));
+            model.Company.TourPackages.ForEach(tp =>
+            {
+                tp.Spots.Sort((s1, s2) => s1.Name.Length.CompareTo(s2.Name.Length));
+            });
 
             return View(model);
         }
@@ -115,7 +121,7 @@ namespace tourBD.Web.Controllers
             {
                 tourPackage.Id = Guid.NewGuid();
                 tourPackage.Availability = AvailabilityStatus.Available.ToString();
-                tourPackage.PackageNumber = _companyService.Get(tourPackage.CompanyId).TourPackages.Count + 1;
+                tourPackage.PackageNumber = (await _companyService.GetCompanyWithAllIncludePropertiesAsync(tourPackage.CompanyId)).TourPackages.Count + 1;
                 var Spots = tourPackage.Spots;
                 tourPackage.Spots = null; // creates PK_Spot conflict otherwise
 

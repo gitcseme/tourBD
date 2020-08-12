@@ -36,7 +36,12 @@
         label span.color-ml-3 {
             margin-left: 3px;
             color: coral;
+        }
 
+        .single-package {
+            min-height: 430px;
+/*            min-width: 400px;
+            max-width: 420px;*/
         }
 
     </style>
@@ -108,11 +113,13 @@
         @foreach (var package in Model.Company.TourPackages)
         {
             <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card single-package">
+                    <div class="card-header p-2">
                         <div class="header-left float-left">
                             <label>Package Number: <span class="color-ml-3">@package.PackageNumber</span></label> <br />
-                            <label>Area: <span class="color-ml-3">@package.MainArea</span></label>
+                            <label>Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
+                            <label>Package size: <span class="color-ml-3">@package.PackageMemberSize people</span></label> <br />
+                            <label>Price: <span class="color-ml-3">@package.Price tk</span></label>
                         </div>
                         <div class="header-right float-right">
                             @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
@@ -124,16 +131,18 @@
                             }
                         </div>
                     </div>
-                    <div class="card-body">
-                        <p>Including spots</p>
-                        <ul class="spot-list">
+                    <div class="card-body p-2">
+                        <label class="mb-1">Including spots</label>
+                        <div class="spot-list">
                             @foreach (var spot in package.Spots)
                             {
-                                <li>@spot.Name</li>
+                                <div class="col-sm-auto float-left btn btn-sm btn-dark mr-1 mb-1">
+                                    @spot.Name
+                                </div>
                             }
-                        </ul>
+                        </div>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer p-2">
                         <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()" asp-route-companyId="@Model.Company.Id.ToString()">Edit</a>
                         <a class="btn btn-primary" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()" asp-route-companyId="@Model.Company.Id.ToString()">Delete</a>
                     </div>

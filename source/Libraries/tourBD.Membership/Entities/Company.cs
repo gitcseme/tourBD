@@ -14,6 +14,6 @@ namespace tourBD.Membership.Entities
         public string CompanyImageUrl { get; set; }
         public int Reputation { get; set; }
 
-        public IList<TourPackage> TourPackages { get; set; } = new List<TourPackage>();
+        public List<TourPackage> TourPackages { get; set; } = new List<TourPackage>();
     }
 }
