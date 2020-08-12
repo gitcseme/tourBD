@@ -10,5 +10,7 @@ namespace tourBD.Membership.Services
     public interface ITourPackageService : IService<TourPackage>
     {
         Task AddSpot(Spot spot);
+        Task DeleteSpotAsync(Spot spot);
+        Task<TourPackage> GetPackageWithRelatedSpotsAsync(Guid packageId);
     }
 }

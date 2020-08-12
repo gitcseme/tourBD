@@ -50,7 +50,7 @@ namespace tourBD.Membership.Services
             var propertyIncludedCompanyList = new List<Company>();
             foreach (var company in Companies)
             {
-                propertyIncludedCompanyList.Add(await GetWithAllIncludePropertiesAsync(company.Id));
+                propertyIncludedCompanyList.Add(await GetCompanyWithAllIncludePropertiesAsync(company.Id));
             }
 
             return propertyIncludedCompanyList;
@@ -62,7 +62,7 @@ namespace tourBD.Membership.Services
             await _companyUnitOfWork.SaveAsync();
         }
 
-        public async Task<Company> GetWithAllIncludePropertiesAsync(Guid companyId)
+        public async Task<Company> GetCompanyWithAllIncludePropertiesAsync(Guid companyId)
         {
             return await _companyUnitOfWork.CompanyRepository.GetWithAllIncludePropertiesAsync(companyId);
         }
