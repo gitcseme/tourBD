@@ -79,7 +79,6 @@ namespace tourBD.Web.Controllers
                 Company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId))
             };
 
-            model.Company.TourPackages.Sort((t1, t2) => t1.PackageNumber.CompareTo(t2.PackageNumber));
             model.Company.TourPackages.ForEach(tp =>
             {
                 tp.Spots.Sort((s1, s2) => s1.Name.Length.CompareTo(s2.Name.Length));
@@ -120,8 +119,8 @@ namespace tourBD.Web.Controllers
             if (ModelState.IsValid)
             {
                 tourPackage.Id = Guid.NewGuid();
+                tourPackage.PackageCode = GeneralUtilityMethods.GeneratePackageCode();
                 tourPackage.Availability = AvailabilityStatus.Available.ToString();
-                tourPackage.PackageNumber = (await _companyService.GetCompanyWithAllIncludePropertiesAsync(tourPackage.CompanyId)).TourPackages.Count + 1;
                 var Spots = tourPackage.Spots;
                 tourPackage.Spots = null; // creates PK_Spot conflict otherwise
 
@@ -161,12 +160,12 @@ namespace tourBD.Web.Controllers
             var model = new EditPackageViewModel()
             {
                 packageId = tourPackage.Id,
-                PackageNumber = tourPackage.PackageNumber,
+                PackageCode = tourPackage.PackageCode,
                 MainArea = tourPackage.MainArea,
-                PackageMemberSize = tourPackage.PackageMemberSize,
+                Days = tourPackage.Days,
                 Price = tourPackage.Price,
                 Availability = tourPackage.Availability,
-                DiscountedPrice = tourPackage.DiscountedPrice,
+                Discount = tourPackage.Discount,
                 Spots = (from s in tourPackage.Spots
                         select s.Name).ToList()
             };
@@ -185,12 +184,11 @@ namespace tourBD.Web.Controllers
             }
 
             // Rebuild the package spots from model
-            tourPackage.PackageNumber = model.PackageNumber;
             tourPackage.MainArea = model.MainArea;
-            tourPackage.PackageMemberSize = model.PackageMemberSize;
+            tourPackage.Days = model.Days;
             tourPackage.Price = model.Price;
             tourPackage.Availability = model.Availability;
-            tourPackage.DiscountedPrice = model.DiscountedPrice;
+            tourPackage.Discount = model.Discount;
             foreach (var spot in model.Spots)
             {
                 var newSpot = new Spot()

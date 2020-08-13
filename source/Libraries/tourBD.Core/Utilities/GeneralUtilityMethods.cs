@@ -33,5 +33,14 @@ namespace tourBD.Core.Utilities
             else
                 return demoImage;
         }
+
+        public static string GeneratePackageCode()
+        {
+            Random random = new Random();
+            string fourDigitNumber = (random.Next(1000, 9999)).ToString();
+            string twoLetter = "" + (char)('A' + random.Next(0, 25)) + (char)('A' + random.Next(0, 25));
+            string code = twoLetter + fourDigitNumber;
+            return code;
+        }
     }
 }

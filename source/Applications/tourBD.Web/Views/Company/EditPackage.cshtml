@@ -13,9 +13,14 @@
             width: 300px;
         }
 
-            .submit-package button {
-                width: 100%;
-            }
+        .submit-package button {
+            width: 100%;
+        }
+
+        .propertyLabel {
+            width: 135px;
+        }
+
     </style>
 }
 
@@ -30,7 +35,6 @@
                 <div class="card-body">
                     <form method="post" asp-action="EditPackage" asp-controller="Company">
                         <input asp-for="packageId" hidden />
-                        <input asp-for="PackageNumber" hidden />
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
                                 <label asp-for="MainArea">Main location</label>
@@ -52,27 +56,27 @@
 
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
-                                <label asp-for="PackageMemberSize">Package size</label>
+                                <label asp-for="Days">Days</label>
                             </div>
-                            <div class="inputBox col-auto ml-1">
+                            <div class="inputBox col-auto">
                                 <input type="text"
-                                       name="PackageMemberSize"
-                                       value="@Model.PackageMemberSize"
+                                       name="Days"
+                                       value="@Model.Days"
                                        class="form-control"
                                        placeholder="Put a number"
-                                       aria-describedby="Package-Member-Size" />
-                                <small id="Package-Member-Size" class="text-muted">
-                                    number of people for this package
+                                       aria-describedby="Package-days" />
+                                <small id="Package-days" class="text-muted">
+                                    package duration (days)
                                 </small>
                             </div>
-                            <span asp-validation-for="PackageMemberSize" class="text-danger"></span>
+                            <span asp-validation-for="Days" class="text-danger"></span>
                         </div>
 
                         <div class="form-group row">
-                            <div class="propertyLabel col-auto mr-2">
+                            <div class="propertyLabel col-auto">
                                 <label asp-for="Price">Price</label>
                             </div>
-                            <div class="inputBox col-auto ml-5">
+                            <div class="inputBox col-auto">
                                 <input type="text"
                                        name="Price"
                                        value="@Model.Price"
@@ -83,24 +87,24 @@
                         </div>
 
                         <div class="form-group row">
-                            <div class="propertyLabel col-auto mr-1">
-                                <label asp-for="DiscountedPrice">Discount(%)</label>
+                            <div class="propertyLabel col-auto">
+                                <label asp-for="Discount">Discount(%)</label>
                             </div>
                             <div class="inputBox col-auto">
                                 <input type="text"
-                                       name="DiscountedPrice"
-                                       value="@Model.DiscountedPrice"
+                                       name="Discount"
+                                       value="@Model.Discount"
                                        class="form-control"
                                        placeholder="Set the discount" />
                             </div>
-                            <span asp-validation-for="DiscountedPrice" class="text-danger"></span>
+                            <span asp-validation-for="Discount" class="text-danger"></span>
                         </div>
 
                         <div class="form-group row">
-                            <div class="propertyLabel col-auto mr-2">
+                            <div class="propertyLabel col-auto">
                                 <label asp-for="Availability">Availability</label>
                             </div>
-                            <div class="inputBox col-auto ml-1">
+                            <div class="inputBox col-auto">
                                 @Html.DropDownList("Availability",
                                         new SelectList(Enum.GetValues(typeof(tourBD.Membership.Enums.AvailabilityStatus)), Model.Availability),
                                         new { @class = "form-control Is-available" })

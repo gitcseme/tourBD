@@ -22,7 +22,6 @@
         }
 
         .create-package .package-create-link {
-            width: 400px;
             text-align: center;
             margin: 0 auto;
             box-shadow: 2px 2px 2px #888888;
@@ -50,7 +49,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-10" style="margin: 0 auto">
+        <div class="col-md-10" style="margin: 0 auto">
             <form enctype="multipart/form-data" method="post" asp-controller="Company" asp-action="EditCompany">
 
                 <input hidden asp-for="@Model.Company.Id" />
@@ -71,16 +70,16 @@
                 </div>
 
                 <div class="form-group row">
-                    <label asp-for="@Model.Company.Name" class="col-lg-1 col-form-label"></label>
-                    <div class="col-lg-6">
+                    <label asp-for="@Model.Company.Name" class="col-md-1 col-form-label"></label>
+                    <div class="col-md-6">
                         <input asp-for="@Model.Company.Name" class="form-control" placeholder="Company Name" />
                         <span asp-validation-for="@Model.Company.Name" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label asp-for="@Model.Company.Address" class="col-lg-1 col-form-label"></label>
-                    <div class="col-lg-6">
+                    <label asp-for="@Model.Company.Address" class="col-md-1 col-form-label"></label>
+                    <div class="col-md-6">
                         <input asp-for="@Model.Company.Address" class="form-control" placeholder="Company Address" />
                         <span asp-validation-for="@Model.Company.Address" class="text-danger"></span>
                     </div>
@@ -89,7 +88,7 @@
                 @* Tour packages *@
 
                 <div class="form-group row">
-                    <div class="col-lg-10">
+                    <div class="col-md-10">
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a asp-controller="Company" asp-action="Index" class="btn btn-outline-success">Done</a>
                     </div>
@@ -98,11 +97,11 @@
         </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-lg-6">
+    <div class="row mt-5 mb-5">
+        <div class="col-md-6">
             <p class="package-list">List of packages</p>
         </div>
-        <div class="create-package col-lg-6">
+        <div class="create-package col-md-6">
             <div class="package-create-link">
                 <a class="btn btn-primary" asp-controller="Company" asp-action="CreatePackage" asp-route-companyId="@Model.Company.Id.ToString()"><i class="fas fa-plus-square"></i> Create Package</a>
             </div>
@@ -112,22 +111,22 @@
     <div class="row">
         @foreach (var package in Model.Company.TourPackages)
         {
-            <div class="col-lg-3">
+            <div class="col-md-3">
                 <div class="card single-package">
                     <div class="card-header p-2">
                         <div class="header-left float-left">
-                            <label>Package Number: <span class="color-ml-3">@package.PackageNumber</span></label> <br />
+                            <label>Package code: <span class="color-ml-3">@package.PackageCode</span></label> <br />
                             <label>Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
-                            <label>Package size: <span class="color-ml-3">@package.PackageMemberSize people</span></label> <br />
+                            <label>Days: <span class="color-ml-3">@package.Days days</span></label> <br />
 
-                            @if (package.DiscountedPrice == 0)
+                            @if (package.Discount == 0)
                             {
-                                <label>Price: <span class="color-ml-3">@package.Price tk</span></label>
+                                <label>Price: <span class="color-ml-3">@package.Price tk</span></label> <span> (per adalt)</span>
                             }
                             else
                             {
-                                double discountedPrice = package.Price - (package.Price * package.DiscountedPrice) / 100;
-                                <label>Price: <span class="ml-2" style="color: red"><s>@package.Price tk</s></span><span style="color: blue" class="ml-2">@discountedPrice tk</span></label>
+                                double discountedPrice = package.Price - (package.Price * package.Discount) / 100;
+                                <label>Price: <span class="ml-2" style="color: red"><s>@package.Price tk</s></span><span style="color: blue" class="ml-2">@discountedPrice tk</span></label> <span> (per adalt)</span>
                             }
                         </div>
                         <div class="header-right float-right">
