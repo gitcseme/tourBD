@@ -10,5 +10,6 @@ namespace tourBD.Forum.UnitOfWorks
     {
         IPostRepository Posts { get; }
         ICommentRepository Comments { get; }
+        ILikeRepository Likes { get; }
     }
 }

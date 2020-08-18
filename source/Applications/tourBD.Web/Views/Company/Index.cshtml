@@ -1,0 +1,82 @@
+﻿@model IEnumerable<tourBD.Membership.Entities.Company>
+
+@section Styles {
+    <style>
+        .request-link a {
+            width: 100%;
+            font-size: 20px;
+            color: currentColor;
+            background: beige;
+        }
+
+        ul.detail-list li {
+            color: darkgoldenrod;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        ul.detail-list li span.ml-3 {
+            color: coral;
+        }
+
+        .footer {
+            margin: 0 auto;
+        }
+    </style>
+}
+
+<!-- Main content -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <h3>Your companies</h3>
+                <hr />
+            </div>
+            <div class="col-lg-4">
+                <div class="request-link">
+                    <a asp-controller="Company" asp-action="RequestCompany" class="btn btn-outline-primary">Request for a company</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @if (Model.Count() == 0)
+            {
+                <div>
+                    <p>No company is created by user yet!</p>
+                    <p>Click the button top-right corner for requesting a company</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var company in Model)
+                {
+                    <div class="col-lg-4">
+                        <div class="card">
+                        <div class="card-header" style="text-align: center">
+                            <div>
+                                <img src="@company.CompanyImageUrl" alt="" style="width: 300px; height: 170px" />
+                            </div>
+                        </div>
+                        <div class="card-body company-details">
+                            <ul style="list-style: none; margin-bottom: 0" class="detail-list">
+                                <li>Name: <span class="ml-3">@company.Name</span></li>
+                                <li>Packages: <span class="ml-3">@company.TourPackages.Count</span></li>
+                                <li>Reputation: <span class="ml-3">@company.Reputation</span></li>
+                                <li>Address: <span class="ml-3">@company.Address</span></li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="footer">
+                                    <a asp-controller="Company" asp-action="ViewCompany" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
+                                    <a asp-controller="Company" asp-action="EditCompany" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary ml-2"><i class="fas fa-edit"></i> Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

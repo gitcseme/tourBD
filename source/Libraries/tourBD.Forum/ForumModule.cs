@@ -1,5 +1,9 @@
 ﻿using Autofac;
 using tourBD.Forum.Contexts;
+using tourBD.Forum.Repositories;
+using tourBD.Forum.Seeds;
+using tourBD.Forum.Services;
+using tourBD.Forum.UnitOfWorks;
 
 namespace tourBD.Forum
 {
@@ -20,6 +24,52 @@ namespace tourBD.Forum
                 .WithParameter("connectionString", _connectionString)
                 .WithParameter("migrationAssemblyName", _migrationAssemblyName)
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<PostRepository>()
+                .As<IPostRepository>()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<CommentRepository>()
+                .As<ICommentRepository>()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<ReplayRepository>()
+                .As<IReplayRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<LikeRepository>()
+                .As<ILikeRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<PostUnitOfWork>()
+                .As<IPostUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CommentUnitOfWork>()
+                .As<ICommentUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<ReplayUnitOfWork>()
+                .As<IReplayUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<LikeUnitOfWork>()
+                .As<ILikeUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<PostService>()
+                .As<IPostService>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<ForumSeed>().SingleInstance();
 
             base.Load(builder);
         }

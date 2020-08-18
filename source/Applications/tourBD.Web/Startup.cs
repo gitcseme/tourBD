@@ -13,6 +13,10 @@ using tourBD.Membership.Services;
 using tourBD.Membership;
 using tourBD.Forum.Contexts;
 using tourBD.Forum;
+using tourBD.Membership.Seeds;
+using tourBD.Forum.Seeds;
+using Autofac.Core;
+using Microsoft.CodeAnalysis.Options;
 
 namespace tourBD.Web
 {
@@ -77,6 +81,13 @@ namespace tourBD.Web
                 // User settings.
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -87,7 +98,9 @@ namespace tourBD.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+            AuthoritySeed authoritySeed,
+            ForumSeed forumSeed)
         {
             this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
@@ -121,6 +134,12 @@ namespace tourBD.Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            // calling seed data.
+            authoritySeed.MigrateAsync().Wait();
+            authoritySeed.SeedAsync().Wait();
+
+            forumSeed.MigrateAsync().Wait();
         }
     }
 }

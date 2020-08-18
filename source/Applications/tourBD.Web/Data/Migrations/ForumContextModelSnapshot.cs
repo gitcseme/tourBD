@@ -28,6 +28,12 @@ namespace tourBD.Web.Data.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AuthorImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AuthorName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
@@ -45,6 +51,25 @@ namespace tourBD.Web.Data.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("tourBD.Forum.Entities.Like", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("tourBD.Forum.Entities.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -54,11 +79,14 @@ namespace tourBD.Web.Data.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AuthorImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AuthorName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("LikeCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -77,6 +105,12 @@ namespace tourBD.Web.Data.Migrations
 
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AuthorName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CommentId")
                         .HasColumnType("uniqueidentifier");
@@ -99,6 +133,15 @@ namespace tourBD.Web.Data.Migrations
                 {
                     b.HasOne("tourBD.Forum.Entities.Post", "Post")
                         .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("tourBD.Forum.Entities.Like", b =>
+                {
+                    b.HasOne("tourBD.Forum.Entities.Post", "Post")
+                        .WithMany("Likes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

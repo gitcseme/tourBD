@@ -22,14 +22,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     @RenderSection("Styles", false)
-
-    <style>
-        .user-panel .image img.img-circle.elevation-2 {
-            width: 50px;
-            height: 50px;
-        }
-    </style>
-
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -42,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
@@ -172,11 +164,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     @if (_signInManager.IsSignedIn(User))
                     {
                         var user = await _userManager.GetUserAsync(User);
-                        var imageUrl = user.ImageUrl;
-
-                        <div class="image">
-                            <img src="@imageUrl" class="img-circle elevation-2" alt="User Image">
-                        </div>
+                        if (user != null)
+                        {
+                            <div class="image">
+                                <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image">
+                            </div>
+                            <div class="info">
+                                <a href="#" class="d-block">@user.FullName</a>
+                            </div>
+                        }
                     }
                     else
                     {
@@ -199,21 +195,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
+                            <ul class="nav nav-treeview" id="navigation-sidebar">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link active">
+                                    <a asp-controller="Forum" asp-action="Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Active Page</p>
+                                        <p>Forum</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Inactive Page</p>
-                                    </a>
-                                </li>
+
                                 @if (_signInManager.IsSignedIn(User))
                                 {
+                                    var user = await _userManager.GetUserAsync(User);
+                                    if (user != null)
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-controller="Forum" asp-action="CreatePost" asp-route-userId="@user.Id" class="nav-link">
+                                                <i class="fa fa-paper-plane nav-icon" aria-hidden="true"></i>
+                                                <p>Create Post</p>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    <li class="nav-item">
+                                        <a asp-controller="Company" asp-action="Index" class="nav-link">
+                                            <i class="fa fa-cubes nav-icon" aria-hidden="true"></i>
+                                            <p>View companies</p>
+                                        </a>
+                                    </li>
+
                                     <li class="nav-item">
                                         <a asp-controller="Account" asp-action="Logout" class="nav-link">
                                             <i class="fa fa-user-times nav-icon" aria-hidden="true"></i>
@@ -282,3 +291,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
     @RenderSection("Scripts", false)
 </body>
 </html>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        let url = window.location.pathname.split(/[\/,?]/);
+        let pathAction = url[url.length - 1];
+
+        // activate navigation menu.
+        $('#navigation-sidebar a').each(function () {
+
+            let linkHref = $(this).attr('href').split(/[\/,?]/);
+            let linkAction = linkHref.length == 2 ? linkHref[1] : linkHref[2];
+
+            if (linkAction == pathAction) {
+                $(this).addClass('active');
+                return false;
+            }
+        });
+
+    });
+
+</script>
