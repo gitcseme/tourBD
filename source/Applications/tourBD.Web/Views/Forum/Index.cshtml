@@ -29,12 +29,40 @@
         }
 
         .comment-box #default-comment-box {
-            width: 100%
+            width: 100%;
+        }
+
+        .comment-box {
+            padding-right: 0;
         }
 
         .afterLike {
             color: blue !important;
             cursor: pointer !important;
+        }
+
+        .row.commentWrapper {
+            height: 30px;
+        }
+
+        .replay-link {
+            width: 50px;
+        }
+
+        .replay-link a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            text-align: left;
+            color: blueviolet;
+            border: 0;
+            font-size: 13px;
+        }
+
+        .replay-link:hover a {
+            text-decoration: underline;
+            color: blueviolet;
         }
 
     </style>
@@ -91,7 +119,7 @@
                                                     <div class="comment-box col">
                                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                                     </div>
-                                                    <div class="col-auto">
+                                                    <div class="col-auto pl-1">
                                                         <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@user.ImageUrl', '@user.FullName')">
                                                             <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
                                                         </button>
@@ -104,7 +132,8 @@
                                             @foreach (var comment in item.Post.Comments)
                                             {
                                                 <div class="single-comment">
-                                                    <div class="row">
+
+                                                    <div class="row commentWrapper">
                                                         <div class="comment-autor-pic col-auto">
                                                             <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
                                                         </div>
@@ -114,6 +143,11 @@
                                                             </p>
                                                         </div>
                                                     </div>
+                                                    <ul class="replay-link p-0" style="margin: 0 0 0 33px; list-style: none; display: inline-block">
+                                                        <li style="display: block">
+                                                            <a href="#" class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@user.ImageUrl', '@user.FullName')">Replay</a>
+                                                        </li>
+                                                    </ul>
 
                                                     <div class="replay-container">
                                                         @foreach (var replay in comment.Replays)
@@ -183,7 +217,7 @@
         });
 
         function AjaxComment(btn, postId, imageUrl, name) {
-            console.log(imageUrl);
+            //console.log(imageUrl);
             let box = $(btn).parent().siblings('.comment-box').children()[0];
             let message = box.value;
             box.value = "";
@@ -214,6 +248,39 @@
                     console.log(status);
                 }
             });
+        }
+
+        let cmtId = '', imgUrl = '', fName = '';
+        function CreateReplayBox(item, commentId, imageUrl, name) {
+            cmtId = commentId;
+            imgUrl = imageUrl;
+            fName = name;
+            imageUrl = imageUrl.includes('no-profile') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
+
+            let replayHtml = `<div class="row default-replay-box">
+                                    <div class="replay-author-pic col-auto offset-1">
+                                        <img src="` + imageUrl + `" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">` + name + `</span>
+                                    </div>
+                                    <div class="comment-box col">
+                                        <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
+                                    </div>
+                                    <div class="col-auto pl-1">
+                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxReplay(this, '` + cmtId + `', '` + imgUrl + `', '` + fName + `')">
+                                            <i class="fa fa-plus-circle" aria-hidden="true"> Replay</i>
+                                        </button>
+                                    </div>
+                                </div>`;
+
+            $(item).parent().parent().siblings('.replay-container').append(replayHtml);
+        }
+
+        function AjaxReplay(item, commentId, imageUrl, name) {
+            imageUrl = imageUrl.includes('no-profile') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
+            console.log(commentId);
+            console.log(imageUrl);
+            console.log(name);
+            let message = $(item).parent().siblings('.comment-box').children()[0].value
+            console.log(message);
         }
 
         function countLikesAjax(btn, postId) {

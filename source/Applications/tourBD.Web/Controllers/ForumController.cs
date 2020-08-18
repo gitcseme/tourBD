@@ -111,6 +111,8 @@ namespace tourBD.Web.Controllers
             return RedirectToAction("Index", "Forum");
         }
 
+
+
         public IActionResult Privacy()
         {
             return View();
