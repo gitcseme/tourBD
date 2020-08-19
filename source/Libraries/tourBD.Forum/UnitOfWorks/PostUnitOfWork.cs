@@ -12,13 +12,15 @@ namespace tourBD.Forum.UnitOfWorks
         public PostUnitOfWork(string connectionString, string migrationAssemblyName) 
             : base(connectionString, migrationAssemblyName)
         {
-            Posts = new PostRepository(_dbContext);
-            Comments = new CommentRepository(_dbContext);
-            Likes = new LikeRepository(_dbContext);
+            PostRepository = new PostRepository(_dbContext);
+            CommentRepository = new CommentRepository(_dbContext);
+            LikeRepository = new LikeRepository(_dbContext);
+            ReplayRepository = new ReplayRepository(_dbContext);
         }
 
-        public IPostRepository Posts { get; protected set; }
-        public ICommentRepository Comments { get; protected set; }
-        public ILikeRepository Likes { get; protected set; }
+        public IPostRepository PostRepository { get; protected set; }
+        public ICommentRepository CommentRepository { get; protected set; }
+        public ILikeRepository LikeRepository { get; protected set; }
+        public IReplayRepository ReplayRepository { get; protected set; }
     }
 }

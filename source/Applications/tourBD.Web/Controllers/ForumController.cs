@@ -111,6 +111,23 @@ namespace tourBD.Web.Controllers
             return RedirectToAction("Index", "Forum");
         }
 
+        public async Task<IActionResult> AddReplay(string commentId, string message)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
+            var replay = new Replay()
+            {
+                AuthorId = loggedInUser.Id,
+                AuthorName = loggedInUser.FullName,
+                AuthorImageUrl = loggedInUser.ImageUrl,
+                CreationDate = DateTime.Now,
+                Message = message,
+                CommentId = new Guid(commentId)
+            };
+
+            await _postService.AddReplayAsync(replay);
+            return RedirectToAction("Index", "Forum");
+        }
+
         public IActionResult Privacy()
         {
             return View();
