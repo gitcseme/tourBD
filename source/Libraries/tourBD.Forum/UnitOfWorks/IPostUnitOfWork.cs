@@ -8,8 +8,9 @@ namespace tourBD.Forum.UnitOfWorks
 {
     public interface IPostUnitOfWork : IUnitOfWorkBase
     {
-        IPostRepository Posts { get; }
-        ICommentRepository Comments { get; }
-        ILikeRepository Likes { get; }
+        IPostRepository PostRepository { get; }
+        ICommentRepository CommentRepository { get; }
+        ILikeRepository LikeRepository { get; }
+        IReplayRepository ReplayRepository { get; }
     }
 }

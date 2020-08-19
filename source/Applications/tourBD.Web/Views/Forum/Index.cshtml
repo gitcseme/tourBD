@@ -63,6 +63,7 @@
         .replay-link:hover a {
             text-decoration: underline;
             color: blueviolet;
+            cursor: pointer;
         }
 
     </style>
@@ -145,7 +146,7 @@
                                                     </div>
                                                     <ul class="replay-link p-0" style="margin: 0 0 0 33px; list-style: none; display: inline-block">
                                                         <li style="display: block">
-                                                            <a href="#" class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@user.ImageUrl', '@user.FullName')">Replay</a>
+                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@user.ImageUrl', '@user.FullName')">Replay</a>
                                                         </li>
                                                     </ul>
 
@@ -155,7 +156,7 @@
                                                             <div class="single-replay">
                                                                 <div class="row">
                                                                     <div class="replay-author-pic col-auto offset-1">
-                                                                        <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
+                                                                        <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@replay.AuthorName</span>
                                                                     </div>
                                                                     <div class="col">
                                                                         <p>
@@ -230,15 +231,12 @@
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 data: { postId: postId, message: message },
                 success: function (response) {
-                    console.log(message);
-                    console.log(imageUrl);
-                    console.log(name);
                     let commentHtml = `<div class="row">
                                             <div class="comment-autor-pic col-auto">
-                                                <img src="`+ imageUrl +`" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">`+ name +`</span>
+                                                <img src="`+ imageUrl + `" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">` + name + `</span>
                                             </div>
                                             <div class="col">
-                                                <p>`+ message +`</p>
+                                                <p>`+ message + `</p>
                                             </div>
                                         </div>`;
 
@@ -276,11 +274,31 @@
 
         function AjaxReplay(item, commentId, imageUrl, name) {
             imageUrl = imageUrl.includes('no-profile') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
-            console.log(commentId);
-            console.log(imageUrl);
-            console.log(name);
-            let message = $(item).parent().siblings('.comment-box').children()[0].value
-            console.log(message);
+            let message = $(item).parent().siblings('.comment-box').children()[0].value;
+
+            $.ajax({
+                url: '/Forum/AddReplay',
+                type: 'POST',
+                dataType: 'text',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: { commentId: commentId, message: message },
+                success: function (response) {
+                    let replayHtml = `<div class="row">
+                                            <div class="replay-autor-pic col-auto offset-1">
+                                                <img src="`+ imageUrl + `" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">` + name + `</span>
+                                            </div>
+                                            <div class="col">
+                                                <p>`+ message + `</p>
+                                            </div>
+                                        </div>`;
+
+                    $(item).parent().parent().parent().append(replayHtml);
+                    $(item).parent().parent().remove(); // delete replay box.
+                },
+                error: function (data, status, xhr) {
+                    console.log(status);
+                }
+            });
         }
 
         function countLikesAjax(btn, postId) {

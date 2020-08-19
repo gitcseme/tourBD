@@ -15,6 +15,7 @@ namespace tourBD.Forum.Services
 
         Task AddLikeAsync(Like like);
         Task AddCommentAsync(Comment comment);
+        Task AddReplayAsync(Replay replay);
 
         Task<IEnumerable<Post>> GetAllIncludePropertiesAsync();
         (IEnumerable<Post>, int, int) GetPosts(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
