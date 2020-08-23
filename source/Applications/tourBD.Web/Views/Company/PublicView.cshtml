@@ -1,0 +1,163 @@
+﻿@model tourBD.Membership.Entities.Company
+
+@section Styles {
+
+    <style>
+        #cover-photo {
+            padding: 5px;
+            width: auto;
+            height: 400px;
+        }
+
+        .package-list {
+            font-weight: 600;
+            font-size: 20px;
+            border: 1px solid gray;
+            box-shadow: 2px 2px 2px #888888;
+            text-align: center;
+            line-height: 37px;
+        }
+
+        .create-package .package-create-link {
+            text-align: center;
+            margin: 0 auto;
+            box-shadow: 2px 2px 2px #888888;
+        }
+
+        .create-package .package-create-link a {
+            width: 100%;
+            text-align: center;
+        }
+
+        label span.color-ml-3 {
+            margin-left: 3px;
+            color: coral;
+        }
+
+        .single-package {
+            min-height: 430px;
+        }
+
+        .single-info {
+            width: 100px;
+        }
+
+        .value-text {
+            color: blueviolet
+        }
+
+        .description-as-list {
+            list-style: none;
+            margin-top: 50px;
+            padding-left: 15px;
+        }
+
+        .cnd {
+            background-color: bisque;
+            text-align: center;
+            font-size: 45px;
+            color: darkmagenta;
+            font-weight: bold;
+            border-radius: 12px;
+            margin: 5px 0;
+            padding: 3px;
+        }
+
+        .cnd p {
+            margin-bottom: 0;
+        }
+
+    </style>
+
+}
+
+<div class="container-fluid">
+    <div class="row" style="padding-left: 8px;">
+        <div class="col-md-4 card">
+            <div class="company-description">
+                <div class="cnd">
+                    <p>@Model.Name</p>
+                </div>
+
+                <div>
+                    <ul class="description-as-list">
+                        <li>
+                            <label class="single-info">Address: </label>
+                            <span class="value-text">@Model.Address</span>
+                        </li>
+                        <li>
+                            <label class="single-info">Reputation: </label>
+                            <span class="value-text">@Model.Reputation</span>
+                        </li>
+                        <li>
+                            <label class="single-info">Packages: </label>
+                            <span class="value-text">@Model.TourPackages.Count packages</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="cover card">
+                <img src="@Model.CompanyImageUrl"
+                     alt="Company image"
+                     id="cover-photo"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="row m-5">
+        <div class="col-md-12">
+            <p class="package-list">List of packages</p>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var package in Model.TourPackages)
+        {
+            <div class="col-md-3">
+                <div class="card single-package">
+                    <div class="card-header p-2">
+                        <div class="header-left float-left">
+                            <label>Package code: <span class="color-ml-3">@package.PackageCode</span></label> <br />
+                            <label>Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
+                            <label>Days: <span class="color-ml-3">@package.Days days</span></label> <br />
+
+                            @if (package.Discount == 0)
+                            {
+                                <label>Price: <span class="color-ml-3">@package.Price tk</span></label> <span> (per adalt)</span>
+                            }
+                            else
+                            {
+                                double discountedPrice = package.Price - (package.Price * package.Discount) / 100;
+                                <label>Price: <span class="ml-2" style="color: red"><s>@package.Price tk</s></span><span style="color: blue" class="ml-2">@discountedPrice tk</span></label> <span> (per adalt)</span>
+                            }
+                        </div>
+                        <div class="header-right float-right">
+                            @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
+                            {
+                                <button class="btn btn-sm btn-success available">@package.Availability</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-danger available">@package.Availability</button>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body p-2">
+                        <label class="mb-1">Including spots</label>
+                        <div class="spot-list">
+                            @foreach (var spot in package.Spots)
+                            {
+                                <div class="col-sm-auto float-left btn btn-sm btn-dark mr-1 mb-1">
+                                    @spot.Name
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

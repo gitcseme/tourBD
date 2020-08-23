@@ -203,5 +203,18 @@ namespace tourBD.Web.Controllers
             await _tourPackageService.EditAsync(tourPackage);
             return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
         }
+
+        [HttpGet]
+        public async Task<IActionResult> PublicView(string companyId)
+        {
+            var company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId));
+
+            company.TourPackages.ForEach(tp =>
+            {
+                tp.Spots.Sort((s1, s2) => s1.Name.Length.CompareTo(s2.Name.Length));
+            });
+
+            return View(company);
+        }
     }
 }
