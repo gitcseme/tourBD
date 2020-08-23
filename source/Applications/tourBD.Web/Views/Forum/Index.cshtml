@@ -218,11 +218,10 @@
         });
 
         function AjaxComment(btn, postId, imageUrl, name) {
-            //console.log(imageUrl);
             let box = $(btn).parent().siblings('.comment-box').children()[0];
             let message = box.value;
             box.value = "";
-            imageUrl = imageUrl.includes('no-profile') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
+            imageUrl = ImagePathReBuilder(imageUrl);
 
             $.ajax({
                 url: '/Forum/AddComment',
@@ -253,7 +252,7 @@
             cmtId = commentId;
             imgUrl = imageUrl;
             fName = name;
-            imageUrl = imageUrl.includes('no-profile') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
+            imageUrl = ImagePathReBuilder(imageUrl);
 
             let replayHtml = `<div class="row default-replay-box">
                                     <div class="replay-author-pic col-auto offset-1">
@@ -273,7 +272,7 @@
         }
 
         function AjaxReplay(item, commentId, imageUrl, name) {
-            imageUrl = imageUrl.includes('no-profile') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
+            imageUrl = ImagePathReBuilder(imageUrl);
             let message = $(item).parent().siblings('.comment-box').children()[0].value;
 
             $.ajax({
@@ -322,6 +321,10 @@
                     console.log(status);
                 }
             });
+        }
+
+        function ImagePathReBuilder(imageUrl) {
+            return imageUrl.includes('profile-no') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
         }
 
     </script>

@@ -104,7 +104,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> RegistrationForm(IdentityUser user)
         {
             ViewBag.Name = user.Email;
-            ViewBag.ImageUrl = @"\img\no-profile.png";
+            ViewBag.ImageUrl = @"\img\profile-no.png";
             ViewBag.UserEmail = user.Email;
 
             return View();
@@ -118,7 +118,7 @@ namespace tourBD.Web.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
                 string imagePath = @"\img\Upload\";
                 string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                string demoImage = @"\img\no-profile.png";
+                string demoImage = @"\img\profile-no.png";
 
                 if (user != null)
                 {
