@@ -1,5 +1,8 @@
 ﻿@model tourBD.Web.Models.UserModel.UserProfileViewModel
 
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+
 @section Styles {
     <style>
         .profile-pic img {
@@ -31,7 +34,6 @@
         .footer {
             margin: 0 auto;
         }
-
     </style>
 }
 
@@ -58,9 +60,15 @@
                         <li>
                             <i class="fas fa-home"></i><span class="right-value">@Model.User.Address</span>
                         </li>
-                        <li class="mt-5">
-                            <a class="btn btn-outline-info" asp-controller="Account" asp-action="EditProfile" asp-route-userId="@Model.User.Id.ToString()"><i class="far fa-edit"></i> Edit Profile</a>
-                        </li>
+                        @{
+                            var user = await _userManager.GetUserAsync(User);
+                            if (user.Id == Model.User.Id)
+                            {
+                                <li class="mt-5">
+                                    <a class="btn btn-outline-info" asp-controller="Account" asp-action="EditProfile" asp-route-userId="@Model.User.Id.ToString()"><i class="far fa-edit"></i> Edit Profile</a>
+                                </li>
+                            }
+                        }
                     </ul>
                 </div>
             </div>
