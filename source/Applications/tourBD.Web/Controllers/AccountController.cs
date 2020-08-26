@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Services;
 using tourBD.Web.Models;
+using tourBD.Web.Models.UserModel;
 
 namespace tourBD.Web.Controllers
 {
@@ -19,17 +22,20 @@ namespace tourBD.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ICompanyService _companyService;
 
         public AccountController(
             SignInManager<ApplicationUser> signInManager, 
             UserManager<ApplicationUser> userManager, 
             ILogger<AccountController> logger,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            ICompanyService companyService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _webHostEnvironment = environment;
+            _companyService = companyService;
         }
 
         [HttpGet]
@@ -134,6 +140,17 @@ namespace tourBD.Web.Controllers
                         return RedirectToAction("Index", "Home");
                 }
             }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Profile(string userId)
+        {
+            var model = new UserProfileViewModel() 
+            { 
+                User = await _userManager.FindByIdAsync(userId), 
+                Companies = (await _companyService.GetUserCompaniesAsync(new Guid(userId))).ToList()
+            };
 
             return View(model);
         }

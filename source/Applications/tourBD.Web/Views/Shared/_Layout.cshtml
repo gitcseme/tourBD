@@ -170,7 +170,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image" style="height: 40px; width: 40px;">
                             </div>
                             <div class="info">
-                                <a href="#" class="d-block">@user.FullName</a>
+                                <a asp-controller="Account" asp-action="Profile" asp-route-userId="@user.Id.ToString()" class="d-block">@user.FullName</a>
                             </div>
                         }
                     }
