@@ -1,0 +1,128 @@
+﻿@model tourBD.Web.Models.UserModel.UserProfileViewModel
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+
+@section Styles {
+    <style>
+        .profile-pic img {
+            width: 185px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        ul.generalInfo {
+            list-style: none;
+            margin: 0;
+            padding: 0 !important;
+        }
+
+        span.right-value {
+            margin-left: 20px;
+        }
+
+        li.user-name h4 {
+            font-weight: 900;
+            font-size: xx-large;
+            margin-bottom: 15px;
+        }
+
+        label.left-info {
+            width: 100px;
+        }
+
+        .footer {
+            margin: 0 auto;
+        }
+    </style>
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="profile-pic">
+                        <img src="@Model.User.ImageUrl" alt="profile pic" />
+                    </div>
+                </div>
+                <div class="col">
+                    <ul class="generalInfo">
+                        <li class="user-name">
+                            <h4>@Model.User.FullName</h4>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i><span class="right-value">@Model.User.Email</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-square-alt"></i><span class="right-value"> @Model.User.PhoneNumber</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-home"></i><span class="right-value">@Model.User.Address</span>
+                        </li>
+                        @{
+                            var user = await _userManager.GetUserAsync(User);
+                            if (user.Id == Model.User.Id)
+                            {
+                                <li class="mt-5">
+                                    <a class="btn btn-outline-info" asp-controller="Account" asp-action="EditProfile" asp-route-userId="@Model.User.Id.ToString()"><i class="far fa-edit"></i> Edit Profile</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Companies.Count != 0)
+        {
+            <h4 class="mt-4">Your authorized companies</h4>
+            <hr />
+            <div class="row">
+                @foreach (var company in Model.Companies)
+                {
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header" style="text-align: center">
+                                <div>
+                                    <img src="@company.CompanyImageUrl" alt="" style="width: 300px; height: 170px" />
+                                </div>
+                            </div>
+                            <div class="card-body company-details">
+                                <ul class="generalInfo">
+                                    <li>
+                                        <label class="left-info">Name: </label>
+                                        <span>@company.Name</span>
+                                    </li>
+                                    <li>
+                                        <label class="left-info">Packages: </label>
+                                        <span>@company.TourPackages.Count</span>
+                                    </li>
+                                    <li>
+                                        <label class="left-info">Reputation: </label>
+                                        <span>@company.Reputation</span>
+                                    </li>
+                                    <li>
+                                        <label class="left-info">Address: </label>
+                                        <span>@company.Address</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="footer">
+                                        <a asp-controller="Company" asp-action="PublicView" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+
+}

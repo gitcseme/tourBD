@@ -136,7 +136,8 @@
 
                                                     <div class="row commentWrapper">
                                                         <div class="comment-autor-pic col-auto">
-                                                            <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@comment.AuthorName</span>
+                                                            <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@comment.AuthorId.ToString()" class="commment-user-name">@comment.AuthorName</a></span>
                                                         </div>
                                                         <div class="col">
                                                             <p>
@@ -156,7 +157,8 @@
                                                             <div class="single-replay">
                                                                 <div class="row">
                                                                     <div class="replay-author-pic col-auto offset-1">
-                                                                        <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">@replay.AuthorName</span>
+                                                                        <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                                        <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@replay.AuthorId.ToString()" class="commment-user-name">@replay.AuthorName</a></span>
                                                                     </div>
                                                                     <div class="col">
                                                                         <p>
