@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Services;
 using tourBD.Web.Models;
+using tourBD.Web.Models.UserModel;
 
 namespace tourBD.Web.Controllers
 {
@@ -19,17 +22,20 @@ namespace tourBD.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ICompanyService _companyService;
 
         public AccountController(
             SignInManager<ApplicationUser> signInManager, 
             UserManager<ApplicationUser> userManager, 
             ILogger<AccountController> logger,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            ICompanyService companyService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _webHostEnvironment = environment;
+            _companyService = companyService;
         }
 
         [HttpGet]
@@ -104,7 +110,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> RegistrationForm(IdentityUser user)
         {
             ViewBag.Name = user.Email;
-            ViewBag.ImageUrl = @"\img\no-profile.png";
+            ViewBag.ImageUrl = @"\img\profile-no.png";
             ViewBag.UserEmail = user.Email;
 
             return View();
@@ -118,7 +124,7 @@ namespace tourBD.Web.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
                 string imagePath = @"\img\Upload\";
                 string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                string demoImage = @"\img\no-profile.png";
+                string demoImage = @"\img\profile-no.png";
 
                 if (user != null)
                 {
@@ -132,6 +138,63 @@ namespace tourBD.Web.Controllers
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
                         return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Profile(string userId)
+        {
+            var model = new UserProfileViewModel() 
+            { 
+                User = await _userManager.FindByIdAsync(userId), 
+                Companies = (await _companyService.GetUserCompaniesAsync(new Guid(userId))).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditProfile(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            ViewBag.ImageUrl = user.ImageUrl;
+            var model = new RegistrationFormModel()
+            {
+                Name = user.FullName,
+                Email = user.Email,
+                Mobile = user.PhoneNumber,
+                Address = user.Address
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(RegistrationFormModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
+                string imagePath = @"\img\Upload\";
+                string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
+                string demoImage = @"\img\profile-no.png";
+
+                if (user != null)
+                {
+                    user.IsVarified = true;
+                    user.FullName = model.Name;
+                    user.Email = model.Email;
+                    user.PhoneNumber = model.Mobile;
+                    user.Address = model.Address;
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                    }
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                        return RedirectToAction("Profile", "Account", new { userId = user.Id.ToString() });
                 }
             }
 
