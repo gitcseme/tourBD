@@ -155,6 +155,52 @@ namespace tourBD.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditProfile(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            ViewBag.ImageUrl = user.ImageUrl;
+            var model = new RegistrationFormModel()
+            {
+                Name = user.FullName,
+                Email = user.Email,
+                Mobile = user.PhoneNumber,
+                Address = user.Address
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(RegistrationFormModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
+                string imagePath = @"\img\Upload\";
+                string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
+                string demoImage = @"\img\profile-no.png";
+
+                if (user != null)
+                {
+                    user.IsVarified = true;
+                    user.FullName = model.Name;
+                    user.Email = model.Email;
+                    user.PhoneNumber = model.Mobile;
+                    user.Address = model.Address;
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                    }
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                        return RedirectToAction("Profile", "Account", new { userId = user.Id.ToString() });
+                }
+            }
+
+            return View(model);
+        }
+
         public IActionResult AccessDenied()
         {
             return View();
