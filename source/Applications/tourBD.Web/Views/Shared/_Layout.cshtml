@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
 @inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+@inject tourBD.Membership.Services.IPathService _imageFolderPath
 
 <!DOCTYPE html>
 <!--
@@ -166,8 +167,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         var user = await _userManager.GetUserAsync(User);
                         if (user != null)
                         {
+                            var imageUrl = _imageFolderPath.PictureFolder + user.ImageUrl;
+                            
                             <div class="image">
-                                <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image" style="height: 40px; width: 40px;">
+                                <img src="@imageUrl" class="img-circle elevation-2" alt="User Image" style="height: 40px; width: 40px;">
                             </div>
                             <div class="info">
                                 <a asp-controller="Account" asp-action="Profile" asp-route-userId="@user.Id.ToString()" class="d-block">@user.FullName</a>
