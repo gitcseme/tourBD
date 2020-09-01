@@ -20,27 +20,31 @@ namespace tourBD.Web.Controllers
         private readonly ICompanyService _companyService;
         private readonly ITourPackageService _tourPackageService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IPathService _pathService;
 
         public CompanyController(
             UserManager<ApplicationUser> userManager, 
             ICompanyRequestService companyRequestService,
             ICompanyService companyService,
             ITourPackageService tourPackageService,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IPathService pathService)
         {
             _userManager = userManager;
             _companyRequestService = companyRequestService;
             _companyService = companyService;
             _tourPackageService = tourPackageService;
             _webHostEnvironment = webHostEnvironment;
+            _pathService = pathService;
         }
 
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var companyList = await _companyService.GetUserCompaniesAsync(user.Id);
+            var model = (await _companyService.GetUserCompaniesAsync(user.Id)).ToList();
+            model.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
-            return View(companyList);
+            return View(model);
         }
 
         [HttpGet]

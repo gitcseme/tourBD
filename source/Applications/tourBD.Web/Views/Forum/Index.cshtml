@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
 @inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+@inject tourBD.Membership.Services.IPathService _pathService;
 
 @section Styles {
     <style>
@@ -66,6 +67,16 @@
             cursor: pointer;
         }
 
+        a#commentViewer {
+            color: darkmagenta;
+            padding: 0;
+        }
+
+        a#commentViewer:hover {
+            color: darkmagenta;
+            text-decoration: underline;
+        }
+
     </style>
 }
 
@@ -115,20 +126,23 @@
 
                                                 <div class="row">
                                                     <div class="col-auto">
-                                                        <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                        <img src="@_pathService.PictureFolder@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
                                                     </div>
                                                     <div class="comment-box col">
                                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                                     </div>
                                                     <div class="col-auto pl-1">
-                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@user.ImageUrl', '@user.FullName')">
+                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">
                                                             <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             }
                                         }
-                                        <div class="comment-container">
+
+                                        <a id="commentViewer" class="btn" onclick="CommentShower(this)"><small>view comments</small></a>
+
+                                        <div class="comment-container" style="display: none">
 
                                             @foreach (var comment in item.Post.Comments)
                                             {
@@ -147,7 +161,7 @@
                                                     </div>
                                                     <ul class="replay-link p-0" style="margin: 0 0 0 33px; list-style: none; display: inline-block">
                                                         <li style="display: block">
-                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@user.ImageUrl', '@user.FullName')">Replay</a>
+                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">Replay</a>
                                                         </li>
                                                     </ul>
 
@@ -219,11 +233,15 @@
 
         });
 
-        function AjaxComment(btn, postId, imageUrl, name) {
+        function CommentShower(btn) {
+            $(btn).siblings('.comment-container').toggle();
+        }
+
+        function AjaxComment(btn, postId, folderPath, imageUrl, name) {
             let box = $(btn).parent().siblings('.comment-box').children()[0];
             let message = box.value;
             box.value = "";
-            imageUrl = ImagePathReBuilder(imageUrl);
+            imageUrl = folderPath + imageUrl;
 
             $.ajax({
                 url: '/Forum/AddComment',
@@ -250,11 +268,11 @@
         }
 
         let cmtId = '', imgUrl = '', fName = '';
-        function CreateReplayBox(item, commentId, imageUrl, name) {
+        function CreateReplayBox(item, commentId, folderPath, imageUrl, name) {
             cmtId = commentId;
             imgUrl = imageUrl;
             fName = name;
-            imageUrl = ImagePathReBuilder(imageUrl);
+            imageUrl = folderPath + imageUrl;
 
             let replayHtml = `<div class="row default-replay-box">
                                     <div class="replay-author-pic col-auto offset-1">
@@ -264,7 +282,7 @@
                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                     </div>
                                     <div class="col-auto pl-1">
-                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxReplay(this, '` + cmtId + `', '` + imgUrl + `', '` + fName + `')">
+                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxReplay(this, '` + cmtId + `', '` + folderPath + `', '` + imgUrl + `', '` + fName + `')">
                                             <i class="fa fa-plus-circle" aria-hidden="true"> Replay</i>
                                         </button>
                                     </div>
@@ -273,8 +291,8 @@
             $(item).parent().parent().siblings('.replay-container').append(replayHtml);
         }
 
-        function AjaxReplay(item, commentId, imageUrl, name) {
-            imageUrl = ImagePathReBuilder(imageUrl);
+        function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
+            imageUrl = folderPath + imageUrl;
             let message = $(item).parent().siblings('.comment-box').children()[0].value;
 
             $.ajax({
@@ -323,10 +341,6 @@
                     console.log(status);
                 }
             });
-        }
-
-        function ImagePathReBuilder(imageUrl) {
-            return imageUrl.includes('profile-no') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
         }
 
     </script>
