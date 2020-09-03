@@ -39,8 +39,6 @@
 
         .single-package {
             min-height: 430px;
-/*            min-width: 400px;
-            max-width: 420px;*/
         }
 
     </style>
@@ -55,7 +53,7 @@
                 <input hidden asp-for="@Model.Company.Id" />
                 <input hidden asp-for="@Model.Company.UserId" />
                 <input hidden asp-for="@Model.Company.CompanyImageUrl" />
-                <input hidden asp-for="@Model.Company.Reputation" />
+                <input hidden asp-for="@Model.Company.Star" />
 
                 <div class="image-update row">
                     <div class="existing-cover-photo">
@@ -78,14 +76,28 @@
                 </div>
 
                 <div class="form-group row">
+                    <label asp-for="@Model.Company.Email" class="col-md-1 col-form-label"></label>
+                    <div class="col-md-6">
+                        <input asp-for="@Model.Company.Email" class="form-control" placeholder="Company Name" />
+                        <span asp-validation-for="@Model.Company.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label asp-for="@Model.Company.PhoneNumber" class="col-md-1 col-form-label"></label>
+                    <div class="col-md-6">
+                        <input asp-for="@Model.Company.PhoneNumber" class="form-control" placeholder="Company Name" />
+                        <span asp-validation-for="@Model.Company.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label asp-for="@Model.Company.Address" class="col-md-1 col-form-label"></label>
                     <div class="col-md-6">
                         <input asp-for="@Model.Company.Address" class="form-control" placeholder="Company Address" />
                         <span asp-validation-for="@Model.Company.Address" class="text-danger"></span>
                     </div>
                 </div>
-
-                @* Tour packages *@
 
                 <div class="form-group row">
                     <div class="col-md-10">

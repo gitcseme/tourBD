@@ -65,7 +65,7 @@ namespace tourBD.Web.Controllers
                     UserId = user.Id,
                     Description = model.Description,
                     RequestDate = DateTime.Now,
-                    RequestStatus = Membership.Enums.CompanyRequestStatus.Pending.ToString()
+                    RequestStatus = CompanyRequestStatus.Pending.ToString()
                 };
 
                 await _companyRequestService.CreateAsync(request);
@@ -82,6 +82,7 @@ namespace tourBD.Web.Controllers
             { 
                 Company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId))
             };
+            model.Company.CompanyImageUrl = $"{_pathService.PictureFolder}{model.Company.CompanyImageUrl}";
 
             model.Company.TourPackages.ForEach(tp =>
             {
@@ -96,14 +97,14 @@ namespace tourBD.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string imagePath = @"\img\Upload\";
+                string imagePath = _pathService.PictureFolder;
                 string physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                string demoImage = @"\img\companyImage.jpg";
+                string demoImage = _pathService.DummyCompanyImageUrl;
 
                 model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, imagePath, demoImage);
                 await _companyService.EditAsync(model.Company);
 
-                return RedirectToAction("EditCompany", "Company", new { companyId = model.Company.Id.ToString() }); // should be redirect to [ViewCompany]
+                return RedirectToAction("CompanyPublicView", "Company", new { companyId = model.Company.Id.ToString() });
             }
 
             return View(model);
@@ -139,7 +140,7 @@ namespace tourBD.Web.Controllers
                     await _tourPackageService.AddSpot(spot);
                 }
 
-                return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+                return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
             }
 
             return View(tourPackage);
@@ -154,7 +155,7 @@ namespace tourBD.Web.Controllers
             }
 
             await _tourPackageService.DeleteAsync(tourPackage);
-            return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+            return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
         }
 
         [HttpGet]
@@ -205,13 +206,14 @@ namespace tourBD.Web.Controllers
             }
 
             await _tourPackageService.EditAsync(tourPackage);
-            return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+            return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
         }
 
         [HttpGet]
-        public async Task<IActionResult> PublicView(string companyId)
+        public async Task<IActionResult> CompanyPublicView(string companyId)
         {
             var company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId));
+            company.CompanyImageUrl = $"{_pathService.PictureFolder}{company.CompanyImageUrl}";
 
             company.TourPackages.ForEach(tp =>
             {

@@ -101,10 +101,12 @@ namespace tourBD.Web.Areas.Admin.Controllers
             // create a new company
             Company company = new Company()
             {
-                Name = "Dummy Name",
-                Address = "Dummy address",
+                Name = "not set",
+                Address = "not set",
+                PhoneNumber = "not set",
+                Email = "not set",
                 CompanyImageUrl = "/img/companyImage.jpg",
-                Reputation = 0,
+                Star = 0,
                 UserId = companyRequestEntity.UserId
             };
 
