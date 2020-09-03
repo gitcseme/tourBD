@@ -53,14 +53,19 @@
         }
 
         .cnd {
-            background-color: bisque;
+            background-color: darkcyan;
             text-align: center;
             font-size: 45px;
-            color: darkmagenta;
+            color: currentcolor;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 3px;
             margin: 5px 0;
             padding: 3px;
+            font-family: Algerian, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .company-info {
+            background-color: azure;
         }
 
         .cnd p {
@@ -79,15 +84,23 @@
                     <p>@Model.Name</p>
                 </div>
 
-                <div>
+                <div class="company-info">
                     <ul class="description-as-list">
+                        <li>
+                            <label class="single-info">Email: </label>
+                            <span class="value-text">@Model.Email</span>
+                        </li>
+                        <li>
+                            <label class="single-info">Mobile: </label>
+                            <span class="value-text">@Model.PhoneNumber</span>
+                        </li>
                         <li>
                             <label class="single-info">Address: </label>
                             <span class="value-text">@Model.Address</span>
                         </li>
                         <li>
                             <label class="single-info">Reputation: </label>
-                            <span class="value-text">@Model.Reputation</span>
+                            <span class="value-text">@Model.Star</span>
                         </li>
                         <li>
                             <label class="single-info">Packages: </label>

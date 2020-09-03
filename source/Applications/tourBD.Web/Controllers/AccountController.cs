@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -23,19 +24,23 @@ namespace tourBD.Web.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ICompanyService _companyService;
+        private readonly IPathService _pathService;
+        private readonly IConfiguration _configuration;
 
         public AccountController(
             SignInManager<ApplicationUser> signInManager, 
             UserManager<ApplicationUser> userManager, 
             ILogger<AccountController> logger,
             IWebHostEnvironment environment,
-            ICompanyService companyService)
+            ICompanyService companyService,
+            IPathService pathService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _webHostEnvironment = environment;
             _companyService = companyService;
+            _pathService = pathService;
         }
 
         [HttpGet]
@@ -88,7 +93,7 @@ namespace tourBD.Web.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Forum");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -110,7 +115,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> RegistrationForm(IdentityUser user)
         {
             ViewBag.Name = user.Email;
-            ViewBag.ImageUrl = @"\img\profile-no.png";
+            ViewBag.ImageUrl = _pathService.DummyUserImageUrl;
             ViewBag.UserEmail = user.Email;
 
             return View();
@@ -121,10 +126,10 @@ namespace tourBD.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
-                string imagePath = @"\img\Upload\";
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                string imagePath = _pathService.PictureFolder;
                 string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                string demoImage = @"\img\profile-no.png";
+                string demoImage = _pathService.DummyUserImageUrl;
 
                 if (user != null)
                 {
@@ -151,6 +156,8 @@ namespace tourBD.Web.Controllers
                 User = await _userManager.FindByIdAsync(userId), 
                 Companies = (await _companyService.GetUserCompaniesAsync(new Guid(userId))).ToList()
             };
+            model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
+            model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
             return View(model);
         }
@@ -177,9 +184,9 @@ namespace tourBD.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email); // returns ApplicationUser
-                string imagePath = @"\img\Upload\";
+                string imagePath = _pathService.PictureFolder;
                 string uploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                string demoImage = @"\img\profile-no.png";
+                string demoImage = _pathService.DummyUserImageUrl;
 
                 if (user != null)
                 {
