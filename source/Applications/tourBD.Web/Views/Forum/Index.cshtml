@@ -93,7 +93,8 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="post-author-pic">
-                                            <img src="@item.Post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="post-user-name">@item.Post.AuthorName</span>
+                                            <img src="@item.Post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@item.Post.AuthorId.ToString()" class="commment-user-name">@item.Post.AuthorName</a></span>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -126,7 +127,7 @@
 
                                                 <div class="row">
                                                     <div class="col-auto">
-                                                        <img src="@_pathService.PictureFolder@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                        <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
                                                     </div>
                                                     <div class="comment-box col">
                                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
@@ -234,6 +235,9 @@
         });
 
         function CommentShower(btn) {
+            let text = btn.innerText;
+            $(btn)[0].children[0].innerText = (text == "view comments" ? "hide comments" : "view comments");
+
             $(btn).siblings('.comment-container').toggle();
         }
 

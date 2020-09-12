@@ -151,12 +151,16 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> Profile(string userId)
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
             var model = new UserProfileViewModel() 
-            { 
+            {
                 User = await _userManager.FindByIdAsync(userId), 
                 Companies = (await _companyService.GetUserCompaniesAsync(new Guid(userId))).ToList()
             };
-            model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
+            if (!model.User.ImageUrl.Contains("img"))
+                model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
             return View(model);
@@ -166,7 +170,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> EditProfile(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            ViewBag.ImageUrl = user.ImageUrl;
+            ViewBag.ImageUrl = _pathService.PictureFolder + user.ImageUrl;
             var model = new RegistrationFormModel()
             {
                 Name = user.FullName,

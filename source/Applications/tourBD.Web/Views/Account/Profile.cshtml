@@ -8,7 +8,7 @@
         .profile-pic img {
             width: 185px;
             height: auto;
-            border-radius: 5px;
+            border-radius: 3px;
         }
 
         ul.generalInfo {
@@ -64,7 +64,7 @@
                             var user = await _userManager.GetUserAsync(User);
                             if (user.Id == Model.User.Id)
                             {
-                                <li class="mt-5">
+                                <li class="mt-2">
                                     <a class="btn btn-outline-info" asp-controller="Account" asp-action="EditProfile" asp-route-userId="@Model.User.Id.ToString()"><i class="far fa-edit"></i> Edit Profile</a>
                                 </li>
                             }

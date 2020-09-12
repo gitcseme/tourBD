@@ -22,6 +22,8 @@ namespace tourBD.Web.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPathService _pathService;
 
+        ApplicationUser user;
+
         public CompanyController(
             UserManager<ApplicationUser> userManager, 
             ICompanyRequestService companyRequestService,
@@ -40,7 +42,8 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            await GetLoggedInUser();
+
             var model = (await _companyService.GetUserCompaniesAsync(user.Id)).ToList();
             model.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
@@ -50,6 +53,8 @@ namespace tourBD.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestCompany()
         {
+            await GetLoggedInUser();
+
             var model = new CompanyRequestModel();
             return View(model);
         }
@@ -78,6 +83,8 @@ namespace tourBD.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> EditCompany(string companyId)
         {
+            await GetLoggedInUser();
+
             var model = new EditCompanyViewModel() 
             { 
                 Company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId))
@@ -111,8 +118,10 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreatePackage(string companyId)
+        public async Task<IActionResult> CreatePackage(string companyId)
         {
+            await GetLoggedInUser();
+
             TourPackage tourPackage = new TourPackage() { CompanyId = new Guid(companyId) };
             ViewBag.companyId = companyId;
             return View(tourPackage);
@@ -161,6 +170,8 @@ namespace tourBD.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> EditPackage(string packageId)
         {
+            await GetLoggedInUser();
+
             var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
             var model = new EditPackageViewModel()
             {
@@ -212,6 +223,8 @@ namespace tourBD.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CompanyPublicView(string companyId)
         {
+            await GetLoggedInUser();
+
             var company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId));
             company.CompanyImageUrl = $"{_pathService.PictureFolder}{company.CompanyImageUrl}";
 
@@ -221,6 +234,12 @@ namespace tourBD.Web.Controllers
             });
 
             return View(company);
+        }
+
+        private async Task GetLoggedInUser()
+        {
+            user = await _userManager.GetUserAsync(HttpContext.User);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
         }
     }
 }
