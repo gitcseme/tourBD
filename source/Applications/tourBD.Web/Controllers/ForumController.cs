@@ -43,6 +43,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
 
             var model = (await _postService.GetAllIncludePropertiesAsync()).Select(p => new PostViewModel()
             {
@@ -70,6 +71,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> CreatePost(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
             var model = new CreatePostViewModel { 
                 UserId = userId, 
                 AuthorName = user.FullName, 

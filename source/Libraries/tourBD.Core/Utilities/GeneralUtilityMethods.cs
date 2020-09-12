@@ -21,14 +21,14 @@ namespace tourBD.Core.Utilities
                 var guid = "pic" + Guid.NewGuid().ToString();
                 var uniqueFileName = Path.Combine(guid + "." + file.FileName.Split(".")[1].ToLower());
                 var fullPath = physicalUploadPath + uniqueFileName;
-                var imageVirtualPath = logicalImagePath + uniqueFileName;
+                //var imageVirtualPath = logicalImagePath + uniqueFileName;
 
                 using (var fileStream = new FileStream(fullPath, FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
                 }
 
-                return imageVirtualPath;
+                return uniqueFileName;
             }
             else
                 return demoImage;
