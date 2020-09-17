@@ -199,18 +199,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                             <ul class="nav nav-treeview" id="navigation-sidebar">
-                                <li class="nav-item">
-                                    <a asp-controller="Forum" asp-action="Index" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Forum</p>
-                                    </a>
-                                </li>
-
                                 @if (_signInManager.IsSignedIn(User))
                                 {
                                     var user = await _userManager.GetUserAsync(User);
                                     if (user != null)
                                     {
+                                        <li class="nav-item">
+                                            <a asp-controller="Forum" asp-action="Index" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Forum</p>
+                                            </a>
+                                        </li>
+
                                         <li class="nav-item">
                                             <a asp-controller="Forum" asp-action="CreatePost" asp-route-userId="@user.Id" class="nav-link">
                                                 <i class="fa fa-paper-plane nav-icon" aria-hidden="true"></i>
@@ -222,7 +222,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <li class="nav-item">
                                         <a asp-controller="Company" asp-action="Index" class="nav-link">
                                             <i class="fa fa-cubes nav-icon" aria-hidden="true"></i>
-                                            <p>View companies</p>
+                                            <p>My companies</p>
                                         </a>
                                     </li>
 

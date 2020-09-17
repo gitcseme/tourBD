@@ -129,7 +129,7 @@
     <div class="row">
         @foreach (var package in Model.TourPackages)
         {
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card single-package">
                     <div class="card-header p-2">
                         <div class="header-left float-left">
@@ -159,7 +159,7 @@
                         </div>
                     </div>
                     <div class="card-body p-2">
-                        <label class="mb-1">Including spots</label>
+                        <label class="mb-1"><span style="color: darkgoldenrod; font-weight: 600;">@package.Spots.Count</span> spots</label>
                         <div class="spot-list">
                             @foreach (var spot in package.Spots)
                             {
@@ -168,6 +168,9 @@
                                 </div>
                             }
                         </div>
+                    </div>
+                    <div class="card-footer p-2" style="text-align: center">
+                        <a class="btn btn-primary btn-sm" asp-controller="Company" asp-action="ViewPackage" asp-route-packageId="@package.Id.ToString()">View Package Details</a>
                     </div>
                 </div>
             </div>

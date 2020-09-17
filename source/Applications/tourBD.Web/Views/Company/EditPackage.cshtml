@@ -51,8 +51,8 @@
                                     Hence main area is Syllete
                                 </small>
                             </div>
-                            <span asp-validation-for="MainArea" class="text-danger"></span>
                         </div>
+                        <small><span asp-validation-for="MainArea" class="text-danger"></span></small>
 
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
@@ -69,8 +69,8 @@
                                     package duration (days)
                                 </small>
                             </div>
-                            <span asp-validation-for="Days" class="text-danger"></span>
                         </div>
+                        <small><span asp-validation-for="Days" class="text-danger"></span></small>
 
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
@@ -83,8 +83,8 @@
                                        class="form-control"
                                        placeholder="Set the package price" />
                             </div>
-                            <span asp-validation-for="Price" class="text-danger"></span>
                         </div>
+                        <small><span asp-validation-for="Price" class="text-danger"></span></small>
 
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
@@ -97,8 +97,8 @@
                                        class="form-control"
                                        placeholder="Set the discount" />
                             </div>
-                            <span asp-validation-for="Discount" class="text-danger"></span>
                         </div>
+                        <small><span asp-validation-for="Discount" class="text-danger"></span></small>
 
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
@@ -109,7 +109,6 @@
                                         new SelectList(Enum.GetValues(typeof(tourBD.Membership.Enums.AvailabilityStatus)), Model.Availability),
                                         new { @class = "form-control Is-available" })
                             </div>
-                            <span asp-validation-for="Price" class="text-danger"></span>
                         </div>
 
                         <div class="row">
