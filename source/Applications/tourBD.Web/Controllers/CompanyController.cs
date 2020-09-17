@@ -117,6 +117,19 @@ namespace tourBD.Web.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ViewPackage(string packageId)
+        {
+            await GetLoggedInUser();
+            var package = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
+
+            var model = new ViewPackageViewModel()
+            {
+                Package = package,
+                Company = _companyService.Get(package.CompanyId)
+            };
+            return View(model);
+        }
+
         [HttpGet]
         public async Task<IActionResult> CreatePackage(string companyId)
         {
@@ -192,32 +205,37 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> EditPackage(EditPackageViewModel model)
         {
             var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(model.packageId);
-
-            // delete all spots
-            foreach (var spot in tourPackage.Spots.ToList())
+            await GetLoggedInUser();
+            if (ModelState.IsValid)
             {
-                await _tourPackageService.DeleteSpotAsync(spot);
-            }
-
-            // Rebuild the package spots from model
-            tourPackage.MainArea = model.MainArea;
-            tourPackage.Days = model.Days;
-            tourPackage.Price = model.Price;
-            tourPackage.Availability = model.Availability;
-            tourPackage.Discount = model.Discount;
-            foreach (var spot in model.Spots)
-            {
-                var newSpot = new Spot()
+                // delete all spots
+                foreach (var spot in tourPackage.Spots.ToList())
                 {
-                    Name = spot,
-                    TourPackageId = tourPackage.Id
-                };
+                    await _tourPackageService.DeleteSpotAsync(spot);
+                }
 
-                await _tourPackageService.AddSpot(newSpot);
+                // Rebuild the package spots from model
+                tourPackage.MainArea = model.MainArea;
+                tourPackage.Days = model.Days;
+                tourPackage.Price = model.Price;
+                tourPackage.Availability = model.Availability;
+                tourPackage.Discount = model.Discount;
+                foreach (var spot in model.Spots)
+                {
+                    var newSpot = new Spot()
+                    {
+                        Name = spot,
+                        TourPackageId = tourPackage.Id
+                    };
+
+                    await _tourPackageService.AddSpot(newSpot);
+                }
+
+                await _tourPackageService.EditAsync(tourPackage);
+                return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
             }
 
-            await _tourPackageService.EditAsync(tourPackage);
-            return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
+            return View(model);
         }
 
         [HttpGet]
