@@ -20,9 +20,9 @@ namespace tourBD.Membership.Seeds
             this._userManager = _userManager;
             this._roleManager = _roleManager;
 
-            _adminUser = new ApplicationUser("kshuvo96@gmail.com", "Kawsarul Alam", "01764206806", "kshuvo96@gmail.com", @"\img\no-profile.png");
-            _supportUser = new ApplicationUser("mahin@gmail.com", "Mahin Hosen", "01789577996", "mahin@gmail.com", @"\img\no-profile.png");
-            _marketingUser = new ApplicationUser("arif@gmail.com", "Ariful Islam", "01688032774", "arif@gmail.com", @"\img\no-profile.png");
+            _adminUser = new ApplicationUser("kshuvo96@gmail.com", "Kawsarul Alam", "01764206806", "kshuvo96@gmail.com", "no-profile.png");
+            _supportUser = new ApplicationUser("mahin@gmail.com", "Mahin Hosen", "01789577996", "mahin@gmail.com", "no-profile.png");
+            _marketingUser = new ApplicationUser("arif@gmail.com", "Ariful Islam", "01688032774", "arif@gmail.com", "no-profile.png");
 
             _adminRole = new Role("Admin");
             _supportRole = new Role("Support");

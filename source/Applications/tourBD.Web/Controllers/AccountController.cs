@@ -121,7 +121,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> RegistrationForm(IdentityUser user)
         {
             ViewBag.Name = user.Email;
-            ViewBag.ImageUrl = _pathService.DummyUserImageUrl;
+            ViewBag.ImageUrl = $"{_pathService.PictureFolder}{_pathService.DummyUserImageUrl}";
             ViewBag.UserEmail = user.Email;
 
             return View();
@@ -144,7 +144,7 @@ namespace tourBD.Web.Controllers
                     user.Email = model.Email;
                     user.PhoneNumber = model.Mobile;
                     user.Address = model.Address;
-                    user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                    user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, demoImage);
 
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
@@ -165,8 +165,7 @@ namespace tourBD.Web.Controllers
                 User = await _userManager.FindByIdAsync(userId), 
                 Companies = (await _companyService.GetUserCompaniesAsync(new Guid(userId))).ToList()
             };
-            if (!model.User.ImageUrl.Contains("img"))
-                model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
+
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
             return View(model);
@@ -207,7 +206,7 @@ namespace tourBD.Web.Controllers
                     user.Address = model.Address;
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, demoImage);
                     }
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
@@ -230,11 +229,9 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null) // Google/FB call this method.
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
-
             LoginModel loginModel = new LoginModel
             {
-                ReturnUrl = returnUrl,
+                ReturnUrl = returnUrl ?? Url.Content("~/"),
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
             };
 
@@ -261,7 +258,7 @@ namespace tourBD.Web.Controllers
 
             if (signinResult.Succeeded)
             {
-                return RedirectToAction("Index", "Home", new { Area = "Member" });
+                return RedirectToAction("Index", "Home");
             }
             else
             {

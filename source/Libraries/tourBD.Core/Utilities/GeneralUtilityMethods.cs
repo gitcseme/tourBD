@@ -9,7 +9,7 @@ namespace tourBD.Core.Utilities
 {
     public static class GeneralUtilityMethods
     {
-        public static async Task<string> GetSavedImageUrlAsync(IFormFile file, string physicalUploadPath, string logicalImagePath, string demoImage)
+        public static async Task<string> GetSavedImageUrlAsync(IFormFile file, string physicalUploadPath, string demoImage)
         {
             if (file != null && file.Length > 0)
             {

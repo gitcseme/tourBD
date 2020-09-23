@@ -108,7 +108,7 @@ namespace tourBD.Web.Controllers
                 string physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
                 string demoImage = _pathService.DummyCompanyImageUrl;
 
-                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, imagePath, demoImage);
+                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, demoImage);
                 await _companyService.EditAsync(model.Company);
 
                 return RedirectToAction("CompanyPublicView", "Company", new { companyId = model.Company.Id.ToString() });
