@@ -96,6 +96,11 @@ namespace tourBD.Web
                     options.ClientId = Configuration["Authentication:Google:AppId"];
                     options.ClientSecret = Configuration["Authentication:Google:AppSecret"];
                     options.ClaimActions.MapJsonKey("urn:google:image", "picture");
+                })
+                .AddFacebook(options => 
+                {
+                    options.ClientId = Configuration["Authentication:Facebook:AppId"];
+                    options.ClientSecret = Configuration["Authentication:Facebook:AppSecret"];
                 });
         }
 
