@@ -17,6 +17,7 @@ using tourBD.Membership.Seeds;
 using tourBD.Forum.Seeds;
 using Autofac.Core;
 using Microsoft.CodeAnalysis.Options;
+using Microsoft.AspNetCore.Authentication;
 
 namespace tourBD.Web
 {
@@ -88,6 +89,19 @@ namespace tourBD.Web
                 options.LogoutPath = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["Authentication:Google:AppId"];
+                    options.ClientSecret = Configuration["Authentication:Google:AppSecret"];
+                    options.ClaimActions.MapJsonKey("urn:google:image", "picture");
+                })
+                .AddFacebook(options => 
+                {
+                    options.ClientId = Configuration["Authentication:Facebook:AppId"];
+                    options.ClientSecret = Configuration["Authentication:Facebook:AppSecret"];
+                });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

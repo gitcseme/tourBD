@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
@@ -75,8 +77,12 @@ namespace tourBD.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {
-            var model = new LoginModel();
-            model.ReturnUrl = returnUrl ?? Url.Content("~/");
+            var model = new LoginModel
+            {
+                ReturnUrl = returnUrl ?? Url.Content("~/"),
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -115,7 +121,7 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> RegistrationForm(IdentityUser user)
         {
             ViewBag.Name = user.Email;
-            ViewBag.ImageUrl = _pathService.DummyUserImageUrl;
+            ViewBag.ImageUrl = $"{_pathService.PictureFolder}{_pathService.DummyUserImageUrl}";
             ViewBag.UserEmail = user.Email;
 
             return View();
@@ -138,7 +144,7 @@ namespace tourBD.Web.Controllers
                     user.Email = model.Email;
                     user.PhoneNumber = model.Mobile;
                     user.Address = model.Address;
-                    user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                    user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, demoImage);
 
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
@@ -159,8 +165,7 @@ namespace tourBD.Web.Controllers
                 User = await _userManager.FindByIdAsync(userId), 
                 Companies = (await _companyService.GetUserCompaniesAsync(new Guid(userId))).ToList()
             };
-            if (!model.User.ImageUrl.Contains("img"))
-                model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
+
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
             return View(model);
@@ -201,7 +206,7 @@ namespace tourBD.Web.Controllers
                     user.Address = model.Address;
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, imagePath, demoImage);
+                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, demoImage);
                     }
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
@@ -210,6 +215,77 @@ namespace tourBD.Web.Controllers
             }
 
             return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl) // value is maped to provider here as name = "provider"
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties); // take us to google signin page.
+        }
+
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null) // Google/FB call this method.
+        {
+            LoginModel loginModel = new LoginModel
+            {
+                ReturnUrl = returnUrl ?? Url.Content("~/"),
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError("", $"Error from external provider: {remoteError}");
+                return View("Join", loginModel);
+            }
+
+            var userInfo = await _signInManager.GetExternalLoginInfoAsync(); // Google gives userInfo
+            if (userInfo == null)
+            {
+                ModelState.AddModelError("", "Error loading external login information");
+                return View("Loin", loginModel);
+            }
+
+            var signinResult = await _signInManager.ExternalLoginSignInAsync(userInfo.LoginProvider, userInfo.ProviderKey,
+                isPersistent: false, bypassTwoFactor: true); // Check AspNetUserLogin table to find corresponding entry to sign the user in.
+
+
+            var email = userInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = userInfo.Principal.FindFirstValue(ClaimTypes.Name);
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (signinResult.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                if (email != null) // user has local account?
+                {
+                    if (user == null) // no local user account found
+                    {
+                        user = new ApplicationUser { UserName = email, Email = email, FullName = name };
+                        var result = await _userManager.CreateAsync(user); // Create new user to AspNetUsers table
+
+                        if (!result.Succeeded)
+                        {
+                            ViewBag.ErrorTitle = $"Failed to create new user";
+                            return View("Error");
+                        }
+                    }
+
+                    await _userManager.AddLoginAsync(user, userInfo); // Add user entry to AspNetUserLogin table.
+                    await _signInManager.SignInAsync(user, isPersistent: false); // sign the user in.
+
+                    return RedirectToAction("RegistrationForm", user);
+                }
+
+                // If we do not receive email from [External Login Provider]
+                ViewBag.ErrorTitle = $"Email claim not received from {userInfo.LoginProvider}";
+                return View("Error");
+            }
         }
 
         public IActionResult AccessDenied()
