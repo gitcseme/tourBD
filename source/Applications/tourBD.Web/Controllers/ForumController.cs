@@ -43,7 +43,6 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
 
             var model = (await _postService.GetAllIncludePropertiesAsync()).Select(p => new PostViewModel()
             {
@@ -64,6 +63,8 @@ namespace tourBD.Web.Controllers
                 });
             });
 
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
             return View(model);
         }
 
@@ -71,12 +72,13 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> CreatePost(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
             var model = new CreatePostViewModel { 
                 UserId = userId, 
                 AuthorName = user.FullName, 
                 AuthorImageUrl = user.ImageUrl
             };
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
             return View(model);
         }
         
@@ -122,7 +124,7 @@ namespace tourBD.Web.Controllers
             {
                 AuthorId = loggedInUser.Id,
                 AuthorName = loggedInUser.FullName,
-                AuthorImageUrl = loggedInUser.ImageUrl,
+                AuthorImageUrl = GetImageName(loggedInUser.ImageUrl),
                 CreationDate = DateTime.Now,
                 Message = message,
                 PostId = new Guid(postId)
@@ -140,7 +142,7 @@ namespace tourBD.Web.Controllers
             {
                 AuthorId = loggedInUser.Id,
                 AuthorName = loggedInUser.FullName,
-                AuthorImageUrl = loggedInUser.ImageUrl,
+                AuthorImageUrl = GetImageName(loggedInUser.ImageUrl),
                 CreationDate = DateTime.Now,
                 Message = message,
                 CommentId = new Guid(commentId)
@@ -148,6 +150,11 @@ namespace tourBD.Web.Controllers
 
             await _postService.AddReplayAsync(replay);
             return RedirectToAction("Index", "Forum");
+        }
+
+        private string GetImageName(string imageUrl)
+        {
+            return imageUrl.Contains(_pathService.PictureFolder) ? imageUrl.Substring(_pathService.PictureFolder.Length) : imageUrl;
         }
 
         public IActionResult Privacy()
