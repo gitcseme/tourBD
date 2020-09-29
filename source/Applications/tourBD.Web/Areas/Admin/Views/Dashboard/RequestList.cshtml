@@ -30,7 +30,7 @@
                         'targets': 0,
                         'render': function (data, type, row) {
                             var arr = data.split('$');
-                            return `<img src="` + arr[1] + `" alt="" style="height: 30px; width: 30px" class="img-circle elevation-2"/> <span class="text-bold"><a href="#">` + arr[0] + `</a></span>`;
+                            return `<img src="` + arr[1] + `" alt="" style="height: 30px; width: 30px" class="img-circle elevation-2"/> <span class="text-bold"><a href="/Account/Profile?userId=` + arr[2] + `">` + arr[0] + `</a></span>`;
                         }
                     },
                     {
@@ -50,7 +50,7 @@
                             if (data == 'Rejected') backColor = 'red';
                             else if (data == 'Approved') backColor = 'green';
 
-                            return `<div style="background-color: ` + backColor + `; width: 75%; text-align: center; margin-left: 17px; border-radius: 45%;"><p>` + data + `</p></div>`;
+                            return `<div style="background-color: ` + backColor + `; width: 75%; text-align: center; margin-left: 17px; border-radius: 3%;"><p>` + data + `</p></div>`;
                         }
                     }
                 ]

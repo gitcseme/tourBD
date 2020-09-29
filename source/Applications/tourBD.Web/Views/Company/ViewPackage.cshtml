@@ -9,6 +9,11 @@
         .color-ml-3 {
             color: chocolate;
         }
+
+        span.main-area-name.color-ml-3 {
+            margin-left: 95px;
+        }
+
     </style>
 }
 
@@ -28,8 +33,12 @@
                     <div class="card-header p-2">
                         <div class="header-left float-left">
                             <label class="packageLabel">Package code: </label> <span class="color-ml-3">@Model.Package.PackageCode</span> <br />
-                            <label class="packageLabel">Area: </label><span class="color-ml-3">@Model.Package.MainArea</span> <br />
+                            <label class="main-area-label">Area: <span class="main-area-name color-ml-3">@Model.Package.MainArea</span></label> <br />
                             <label class="packageLabel">Days: </label><span class="color-ml-3">@Model.Package.Days days</span> <br />
+
+                            @*<label>Package code: <span class="color-ml-3">@Model.Package.PackageCode</span></label> <br />
+                            <label class="main-area-label">Area: <span class="main-area-name color-ml-3">@Model.Package.MainArea</span></label> <br />
+                            <label>Days: <span class="color-ml-3">@Model.Package.Days days</span></label> <br />*@
 
                             @if (Model.Package.Discount == 0)
                             {
@@ -73,4 +82,5 @@
 
 @section Scripts {
     <script type="text/javascript" src="~/js/SpotSearch.js"></script>
+
 }

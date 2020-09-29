@@ -10,5 +10,7 @@ namespace tourBD.Web.Models.CompanyModels
     {
         [Required(ErrorMessage = "Description needed")]
         public string Description { get; set; }
+
+        public string OfficialEmail { get; set; }
     }
 }

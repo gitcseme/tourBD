@@ -1,5 +1,14 @@
 ﻿@model CompanyRequestDetailViewModel
 
+@section Styles {
+    <style>
+        .info a.requester:hover {
+            text-decoration: underline;
+            color: blue !important;
+        }
+    </style>
+}
+
 <div class="container-fluid">
     <div class="row">
         <div class="card col-lg-12">
@@ -9,7 +18,7 @@
                             <img src="@Model.UserImageUrl" class="img-circle" alt="User Image" style="height: 33px; width: 33px; margin-top: 4px">
                         </div>
                         <div class="info">
-                            <a href="#" class="d-block" style="margin-top: 5px; color: black; font-weight: 600">@Model.UserName</a>
+                            <a asp-area="" asp-controller="Account" asp-action="Profile" asp-route-userId="@Model.UserId" class="requester d-block" style="margin-top: 5px; color: black; font-weight: 600">@Model.UserName</a>
                         </div>
                     </div>
                     <div class="col-lg-6 mt-4">

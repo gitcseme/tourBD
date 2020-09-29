@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Enums;
@@ -21,7 +22,7 @@ namespace tourBD.Web.Controllers
         private readonly ITourPackageService _tourPackageService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPathService _pathService;
-
+        private readonly IConfiguration _configuration;
         ApplicationUser user;
 
         public CompanyController(
@@ -30,7 +31,8 @@ namespace tourBD.Web.Controllers
             ICompanyService companyService,
             ITourPackageService tourPackageService,
             IWebHostEnvironment webHostEnvironment,
-            IPathService pathService)
+            IPathService pathService,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _companyRequestService = companyRequestService;
@@ -38,14 +40,19 @@ namespace tourBD.Web.Controllers
             _tourPackageService = tourPackageService;
             _webHostEnvironment = webHostEnvironment;
             _pathService = pathService;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
         {
             await GetLoggedInUser();
 
-            var model = (await _companyService.GetUserCompaniesAsync(user.Id)).ToList();
-            model.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
+            var model = new CompanyIndexModel
+            {
+                Companies = (await _companyService.GetUserCompaniesAsync(user.Id)).ToList(),
+                HasPendingRequest = await _companyRequestService.HastPendingReques(user.Id)
+            };
+            model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
             return View(model);
         }
@@ -55,7 +62,7 @@ namespace tourBD.Web.Controllers
         {
             await GetLoggedInUser();
 
-            var model = new CompanyRequestModel();
+            var model = new CompanyRequestModel() { OfficialEmail = _configuration["Company:OfficialEmail"] };
             return View(model);
         }
 

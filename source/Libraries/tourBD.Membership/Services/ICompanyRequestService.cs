@@ -11,5 +11,7 @@ namespace tourBD.Membership.Services
     {
         (IEnumerable<CompanyRequest>, int, int) GetRequests(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
         Task<(IEnumerable<CompanyRequest>, int, int)> GetRequestsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
+
+        Task<bool> HastPendingReques(Guid userId);
     }
 }
