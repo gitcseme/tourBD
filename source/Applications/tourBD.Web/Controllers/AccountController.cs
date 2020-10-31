@@ -166,6 +166,9 @@ namespace tourBD.Web.Controllers
                 Companies = (await _companyService.GetUserCompaniesAsync(new Guid(userId))).ToList()
             };
 
+            if (!model.User.ImageUrl.Contains(_pathService.PictureFolder))
+                model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
+
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
 
             return View(model);

@@ -3,23 +3,25 @@
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="card" style="width: 500px">
-                <form method="post" asp-controller="Forum" asp-action="CreatePost">
-                    <div class="form-group">
-                        <input asp-for="UserId" hidden />
-                        <input asp-for="AuthorImageUrl" hidden />
-                        <input asp-for="AuthorName" hidden />
-                        <div class="card-header">
-                            <label class="label" asp-for="Message">Create a tour post</label>
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <form method="post" asp-controller="Forum" asp-action="CreatePost">
+                        <div class="form-group">
+                            <input asp-for="UserId" hidden />
+                            <input asp-for="AuthorImageUrl" hidden />
+                            <input asp-for="AuthorName" hidden />
+                            <div class="card-header">
+                                <label class="label" asp-for="Message">Create a tour post</label>
+                            </div>
+                            <div class="card-body">
+                                <textarea name="Message" cols="15" rows="5" class="form-control" id="Message" placeholder="Describe your tour plan/offer"></textarea>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Create post</button>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <textarea name="Message" cols="15" rows="5" class="form-control" id="Message" placeholder="Describe your tour plan/offer"></textarea>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Create post</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

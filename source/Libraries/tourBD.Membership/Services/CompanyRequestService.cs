@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Enums;
 using tourBD.Membership.UnitOfWorks;
 
 namespace tourBD.Membership.Services
@@ -51,6 +53,13 @@ namespace tourBD.Membership.Services
         public async Task<(IEnumerable<CompanyRequest>, int, int)> GetRequestsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection)
         {
             return await _companyRequestUnitOfWork.CompanyRequestRepository.GetAsync(null, orderingColumn, orderDirection, "", pageIndex, pageSize, isTrackingOff);
+        }
+
+        public async Task<bool> HastPendingReques(Guid userId)
+        {
+            return (await _companyRequestUnitOfWork.CompanyRequestRepository.GetAllAsync()).
+                ToList()
+                .Where(cr => cr.UserId == userId && cr.RequestStatus == CompanyRequestStatus.Pending.ToString()).Any();
         }
     }
 }

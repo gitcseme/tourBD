@@ -7,6 +7,7 @@ namespace tourBD.Web.Areas.Admin.Models
 {
     public class CompanyRequestDetailViewModel
     {
+        public string UserId { get; set; }
         public string UserImageUrl { get; set; }
         public string UserName { get; set; }
         public string CompanyRequestId { get; set; }

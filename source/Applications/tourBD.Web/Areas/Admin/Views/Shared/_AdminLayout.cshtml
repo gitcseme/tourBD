@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@*@inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager*@
+@inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -44,15 +48,15 @@
 
             <!-- SEARCH FORM -->
             @*<form class="form-inline ml-3">
-                <div class="input-group input-group-sm">
-                    <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-navbar" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>*@
+                </form>*@
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
@@ -153,22 +157,37 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="~/admin/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                <img src="~/img/tbd-logo.png" alt="tourBD Logo" class="brand-image img-circle elevation-3"
                      style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+                <span class="brand-text font-weight-light">tourBD</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
+                    @*<div class="image">
                         <img src="~/admin/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
+                    </div>*@
+
+                    @{
+                        var user = await _userManager.GetUserAsync(User);
+                        if (user != null)
+                        {
+                            <div class="image">
+                                <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image" style="height: 40px; width: 40px;">
+                            </div>
+                            <div class="info">
+                                <a asp-controller="Account" asp-action="Profile" asp-route-userId="@user.Id.ToString()" class="d-block">@user.FullName</a>
+                            </div>
+                        }
+                    }
                 </div>
+
+
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
@@ -198,7 +217,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a href="pages/widgets.html" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -692,7 +711,7 @@
                                 <i class="nav-icon far fa-circle text-info"></i>
                                 <p>Informational</p>
                             </a>
-                        </li>
+                        </li>*@
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -704,20 +723,20 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             @*<div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">Dashboard</h1>
-                        </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
-                            </ol>
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1 class="m-0 text-dark">Dashboard</h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active">Dashboard v1</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>*@
+                </div>*@
             <!-- /.content-header -->
             <!-- Main content -->
             <section class="content">

@@ -1,14 +1,33 @@
 ﻿@model tourBD.Web.Models.CompanyModels.CompanyRequestModel
 
+@section Styles {
+    <style>
+        .request-title {
+            text-align: center;
+            font-size: 25px;
+            font-family: Algerian;
+        }
+
+        span.official-email {
+            color: blueviolet;
+            font-style: italic;
+            margin-left: 5px;
+        }
+    </style>
+}
+
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="card" style="width: 700px">
+            <div class="card" style="width: 800px; margin: 0 auto;">
                 <form method="post" asp-controller="Company" asp-action="RequestCompany">
                     <div class="form-group">
                         <div class="card-header">
+                            <div class="request-title">
+                                <label>Company request form</label>
+                            </div>
                             <label class="label" asp-for="Description">Describe your company(name, location,...etc)</label>
-                            <p><small>We will contact with you soon</small></p>
+                            <p><small>Send your company license or other related data to <span class="official-email">@Model.OfficialEmail</span>. <span style="color: darkred;">Send from your tourBD account email</span></small></p>
                         </div>
                         <div class="card-body">
                             <textarea name="Description" cols="20" rows="7" class="form-control" id="Description" placeholder="Write your company details"></textarea>
