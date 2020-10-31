@@ -20,24 +20,31 @@ namespace tourBD.Web.Areas.Admin.Controllers
         private readonly ICompanyRequestService _companyRequestService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICompanyService _companyService;
+        private readonly IPathService _pathService;
 
         public DashboardController(
             UserManager<ApplicationUser> userManager, 
             ICompanyRequestService companyRequestService,
-            ICompanyService companyService)
+            ICompanyService companyService,
+            IPathService pathService)
         {
             _companyRequestService = companyRequestService;
             _userManager = userManager;
             _companyService = companyService;
+            _pathService = pathService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await GetLoggedInUser();
+
             return View();
         }
 
-        public IActionResult RequestList()
+        public async Task<IActionResult> RequestList()
         {
+            await GetLoggedInUser();
+
             return View();
         }
 
@@ -53,7 +60,7 @@ namespace tourBD.Web.Areas.Admin.Controllers
                 data = requestData.Item1.Select(r =>
                        {
                            var user = _userManager.FindByIdAsync(r.UserId.ToString()).Result;
-                           string userData = user.FullName + "$" + user.ImageUrl;
+                           string userData = user.FullName + "$" + $"{_pathService.PictureFolder}{user.ImageUrl}" + "$" + user.Id.ToString();
                            string description = r.Description.Length < 40 ? r.Description : r.Description.Substring(0, 35) + "...";
 
                            return new string[]
@@ -72,13 +79,16 @@ namespace tourBD.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Details(string Id)
         {
+            await GetLoggedInUser();
+
             var request = _companyRequestService.Get(new Guid(Id));
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
             if (user != null)
             {
                 var model = new CompanyRequestDetailViewModel()
                 {
-                    UserImageUrl = user.ImageUrl,
+                    UserId = user.Id.ToString(),
+                    UserImageUrl = user.ImageUrl.Contains(_pathService.PictureFolder) ? user.ImageUrl : $"{_pathService.PictureFolder}{user.ImageUrl}",
                     UserName = user.FullName,
                     CompanyRequestId = request.Id.ToString(),
                     Description = request.Description,
@@ -101,10 +111,12 @@ namespace tourBD.Web.Areas.Admin.Controllers
             // create a new company
             Company company = new Company()
             {
-                Name = "Dummy Name",
-                Address = "Dummy address",
-                CompanyImageUrl = "/img/companyImage.jpg",
-                Reputation = 0,
+                Name = "not set",
+                Address = "not set",
+                PhoneNumber = "not set",
+                Email = "not set",
+                CompanyImageUrl = _pathService.DummyCompanyImageUrl,
+                Star = 0,
                 UserId = companyRequestEntity.UserId
             };
 
@@ -119,6 +131,12 @@ namespace tourBD.Web.Areas.Admin.Controllers
             await _companyRequestService.EditAsync(companyRequestEntity);
 
             return RedirectToAction("RequestList", "Dashboard");
+        }
+
+        private async Task GetLoggedInUser()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
         }
     }
 }

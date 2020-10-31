@@ -1,4 +1,4 @@
-﻿@model IEnumerable<tourBD.Membership.Entities.Company>
+﻿@model tourBD.Web.Models.CompanyModels.CompanyIndexModel
 
 @section Styles {
     <style>
@@ -30,7 +30,6 @@
         <div class="row">
             <div class="col-lg-8">
                 <h3>Authorized companies</h3>
-                <hr />
             </div>
             <div class="col-lg-4">
                 <div class="request-link">
@@ -38,44 +37,54 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            @if (Model.Count() == 0)
-            {
-                <div>
-                    <p>No company is created by user yet!</p>
-                    <p>Click the button top-right corner for requesting a company</p>
-                </div>
-            }
-            else
-            {
-                @foreach (var company in Model)
+        <div class="current-status row">
+            <div class="col-md-12">
+                <hr />
+                <hr />
+                @if (Model.Companies.Count() == 0 && !Model.HasPendingRequest)
                 {
-                    <div class="col-lg-4">
-                        <div class="card">
+                    <ul>
+                        <li>No company is created by user yet!</li>
+                        <li>Click the button top-right corner for making a company request</li>
+                    </ul>
+                }
+                else if (Model.HasPendingRequest)
+                {
+                    <ul>
+                        <li>You have a company request <span style="color: blue; font-style: italic; font-weight: 600">pending</span></li>
+                        <li>We will evaluate your request within <span style="color: blueviolet; font-weight:600">72 hours</span> and inform by sending you email.</li>
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var company in Model.Companies)
+            {
+                <div class="col-lg-4">
+                    <div class="card">
                         <div class="card-header" style="text-align: center">
                             <div>
-                                <img src="@company.CompanyImageUrl" alt="" style="width: 300px; height: 170px" />
+                                <img src="@company.CompanyImageUrl" alt="" style="width: 100%; height: 170px" />
                             </div>
                         </div>
                         <div class="card-body company-details">
                             <ul style="list-style: none; margin-bottom: 0" class="detail-list">
                                 <li>Name: <span class="ml-3">@company.Name</span></li>
                                 <li>Packages: <span class="ml-3">@company.TourPackages.Count</span></li>
-                                <li>Reputation: <span class="ml-3">@company.Reputation</span></li>
+                                <li>Stars: <span class="ml-3">@company.Star</span></li>
                                 <li>Address: <span class="ml-3">@company.Address</span></li>
                             </ul>
                         </div>
                         <div class="card-footer">
                             <div class="row">
                                 <div class="footer">
-                                    <a asp-controller="Company" asp-action="PublicView" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
+                                    <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
                                     <a asp-controller="Company" asp-action="EditCompany" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary ml-2"><i class="fas fa-edit"></i> Edit</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    </div>
-                }
+                </div>
             }
         </div>
     </div>

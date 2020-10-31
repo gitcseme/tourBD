@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using tourBD.Forum.Entities;
 using tourBD.Forum.Services;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Services;
 using tourBD.Web.Models;
 using tourBD.Web.Models.PostModels;
 
@@ -22,27 +23,48 @@ namespace tourBD.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ForumController> _logger;
         private IPostService _postService;
+        private readonly IPathService _pathService;
 
         public ForumController(
             ILogger<ForumController> logger, 
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IPostService postService)
+            IPostService postService,
+            IPathService pathService)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _postService = postService;
+            _pathService = pathService;
         }
 
+        /* Common properties should be removed and re organized & viewModel need to re-designed */
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var model = (await _postService.GetAllIncludePropertiesAsync()).Select(p => new PostViewModel() 
-            { 
+
+            var model = (await _postService.GetAllIncludePropertiesAsync()).Select(p => new PostViewModel()
+            {
                 Post = p,
                 IsLikedBy = p.Likes.Where(l => l.AuthorId == user.Id).Any()
+            }).ToList();
+
+            model.ForEach(p =>
+            {
+                p.Post.AuthorImageUrl = $"{_pathService.PictureFolder}{p.Post.AuthorImageUrl}";
+                p.Post.Comments.ToList().ForEach(c =>
+                {
+                    c.AuthorImageUrl = $"{_pathService.PictureFolder}{c.AuthorImageUrl}";
+                    c.Replays.ToList().ForEach(r =>
+                    {
+                        r.AuthorImageUrl = $"{_pathService.PictureFolder}{r.AuthorImageUrl}";
+                    });
+                });
             });
+
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
             return View(model);
         }
 
@@ -55,6 +77,8 @@ namespace tourBD.Web.Controllers
                 AuthorName = user.FullName, 
                 AuthorImageUrl = user.ImageUrl
             };
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
             return View(model);
         }
         
@@ -100,7 +124,7 @@ namespace tourBD.Web.Controllers
             {
                 AuthorId = loggedInUser.Id,
                 AuthorName = loggedInUser.FullName,
-                AuthorImageUrl = loggedInUser.ImageUrl,
+                AuthorImageUrl = GetImageName(loggedInUser.ImageUrl),
                 CreationDate = DateTime.Now,
                 Message = message,
                 PostId = new Guid(postId)
@@ -118,7 +142,7 @@ namespace tourBD.Web.Controllers
             {
                 AuthorId = loggedInUser.Id,
                 AuthorName = loggedInUser.FullName,
-                AuthorImageUrl = loggedInUser.ImageUrl,
+                AuthorImageUrl = GetImageName(loggedInUser.ImageUrl),
                 CreationDate = DateTime.Now,
                 Message = message,
                 CommentId = new Guid(commentId)
@@ -126,6 +150,11 @@ namespace tourBD.Web.Controllers
 
             await _postService.AddReplayAsync(replay);
             return RedirectToAction("Index", "Forum");
+        }
+
+        private string GetImageName(string imageUrl)
+        {
+            return imageUrl.Contains(_pathService.PictureFolder) ? imageUrl.Substring(_pathService.PictureFolder.Length) : imageUrl;
         }
 
         public IActionResult Privacy()

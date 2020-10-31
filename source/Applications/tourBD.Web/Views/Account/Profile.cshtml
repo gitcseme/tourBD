@@ -5,12 +5,6 @@
 
 @section Styles {
     <style>
-        .profile-pic img {
-            width: 185px;
-            height: auto;
-            border-radius: 5px;
-        }
-
         ul.generalInfo {
             list-style: none;
             margin: 0;
@@ -34,42 +28,85 @@
         .footer {
             margin: 0 auto;
         }
+
+        .card.profile-wrapper {
+            /*background-color: #0cbaba;
+            background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);*/
+            background-color: #2876f9;
+            background-image: linear-gradient(315deg, #2876f9 0%, #6d17cb 74%);
+            padding: 5px;
+            color: white;
+            min-height: 300px;
+            margin-top: 50px;
+            box-shadow: 0 5px 10px rgba(154, 160, 185, 0.45), 0 15px 40px rgba(166, 173, 201, 0.32);
+            border-bottom-left-radius: 50px;
+            border-top-right-radius: 50px;
+        }
+
+        .profile-pic img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-top: 10px;
+            border: 10px solid #6d17e4;
+        }
+
+        .profile-pic {
+            text-align: center;
+        }
+
+        .row.child {
+            margin-top: 60px;
+        }
+
+        .row.profile-row {
+            /*background-color: #d9d9d9;
+            background-image: linear-gradient(315deg, #d9d9d9 0%, #f6f2f2 74%);*/
+            height: 400px;
+            background-color: #0cbaba;
+            background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);
+        }
+
     </style>
 }
 
 <div class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="row">
-                <div class="col-auto">
-                    <div class="profile-pic">
-                        <img src="@Model.User.ImageUrl" alt="profile pic" />
-                    </div>
-                </div>
-                <div class="col">
-                    <ul class="generalInfo">
-                        <li class="user-name">
-                            <h4>@Model.User.FullName</h4>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i><span class="right-value">@Model.User.Email</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone-square-alt"></i><span class="right-value"> @Model.User.PhoneNumber</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-home"></i><span class="right-value">@Model.User.Address</span>
-                        </li>
-                        @{
-                            var user = await _userManager.GetUserAsync(User);
-                            if (user.Id == Model.User.Id)
-                            {
-                                <li class="mt-5">
-                                    <a class="btn btn-outline-info" asp-controller="Account" asp-action="EditProfile" asp-route-userId="@Model.User.Id.ToString()"><i class="far fa-edit"></i> Edit Profile</a>
+        <div class="row profile-row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card profile-wrapper">
+                    <div class="row child">
+                        <div class="col-md-4">
+                            <div class="profile-pic">
+                                <img src="@Model.User.ImageUrl" alt="profile pic" />
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <ul class="generalInfo">
+                                <li class="user-name">
+                                    <h4>@Model.User.FullName</h4>
                                 </li>
-                            }
-                        }
-                    </ul>
+                                <li>
+                                    <i class="fas fa-envelope"></i><span class="right-value">@Model.User.Email</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-phone-square-alt"></i><span class="right-value"> @Model.User.PhoneNumber</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-home"></i><span class="right-value">@Model.User.Address</span>
+                                </li>
+                                @{
+                                    var user = await _userManager.GetUserAsync(User);
+                                    if (user.Id == Model.User.Id)
+                                    {
+                                        <li class="mt-2">
+                                            <a class="btn btn-outline-info" asp-controller="Account" asp-action="EditProfile" asp-route-userId="@Model.User.Id.ToString()"><i class="far fa-edit"></i> Edit Profile</a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,7 +137,7 @@
                                     </li>
                                     <li>
                                         <label class="left-info">Reputation: </label>
-                                        <span>@company.Reputation</span>
+                                        <span>@company.Star</span>
                                     </li>
                                     <li>
                                         <label class="left-info">Address: </label>
@@ -111,7 +148,7 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="footer">
-                                        <a asp-controller="Company" asp-action="PublicView" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
+                                        <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
                                     </div>
                                 </div>
                             </div>

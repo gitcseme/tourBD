@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
 @inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+@inject tourBD.Membership.Services.IPathService _imageFolderPath
 
 <!DOCTYPE html>
 <!--
@@ -152,9 +153,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="~/admin/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                     style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+                <img src="~/img/tbd-logo.PNG" alt="TBD Logo" class="brand-image img-circle elevation-3">
+                <span class="brand-text font-weight-light">tourBD</span>
             </a>
 
             <!-- Sidebar -->
@@ -166,6 +166,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         var user = await _userManager.GetUserAsync(User);
                         if (user != null)
                         {
+                            //var imageUrl = _imageFolderPath.PictureFolder + user.ImageUrl;
+
                             <div class="image">
                                 <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image" style="height: 40px; width: 40px;">
                             </div>
@@ -176,8 +178,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     }
                     else
                     {
-                        <div>
-                            <i class="fa fa-user img-circle elevation-2" aria-hidden="true"></i>
+                        <div class="image img-circle elevation-2" style="height: 40px; width: 40px;">
+                            <i class="fa fa-user" aria-hidden="true" style="color: #ded; margin-top: 10px"></i>
+                        </div>
+                        <div class="info">
+                            <a href="#" class="d-block">Anonymous</a>
                         </div>
                     }
                 </div>
@@ -196,18 +201,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                             <ul class="nav nav-treeview" id="navigation-sidebar">
-                                <li class="nav-item">
-                                    <a asp-controller="Forum" asp-action="Index" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Forum</p>
-                                    </a>
-                                </li>
-
                                 @if (_signInManager.IsSignedIn(User))
                                 {
                                     var user = await _userManager.GetUserAsync(User);
                                     if (user != null)
                                     {
+                                        <li class="nav-item">
+                                            <a asp-controller="Forum" asp-action="Index" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Forum</p>
+                                            </a>
+                                        </li>
+
                                         <li class="nav-item">
                                             <a asp-controller="Forum" asp-action="CreatePost" asp-route-userId="@user.Id" class="nav-link">
                                                 <i class="fa fa-paper-plane nav-icon" aria-hidden="true"></i>
@@ -219,7 +224,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <li class="nav-item">
                                         <a asp-controller="Company" asp-action="Index" class="nav-link">
                                             <i class="fa fa-cubes nav-icon" aria-hidden="true"></i>
-                                            <p>View companies</p>
+                                            <p>My companies</p>
                                         </a>
                                     </li>
 

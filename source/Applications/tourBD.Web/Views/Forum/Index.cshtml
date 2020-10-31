@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
 @inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+@inject tourBD.Membership.Services.IPathService _pathService;
 
 @section Styles {
     <style>
@@ -30,6 +31,8 @@
 
         .comment-box #default-comment-box {
             width: 100%;
+            height: 31px;
+            border: none;
         }
 
         .comment-box {
@@ -66,6 +69,30 @@
             cursor: pointer;
         }
 
+        a#commentViewer {
+            color: darkmagenta;
+            padding: 0;
+        }
+
+        a#commentViewer:hover {
+            color: darkmagenta;
+            text-decoration: underline;
+        }
+
+        small.fix-like {
+            margin-top: 6px;
+            margin-left: 5px;
+        }
+
+        span#like-count {
+            margin-top: 3px;
+        }
+
+        .commentCounter {
+            margin-top: 3px;
+            margin-left: 100px;
+        }
+
     </style>
 }
 
@@ -82,7 +109,8 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="post-author-pic">
-                                            <img src="@item.Post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" /> <span class="post-user-name">@item.Post.AuthorName</span>
+                                            <img src="@item.Post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@item.Post.AuthorId.ToString()" class="commment-user-name">@item.Post.AuthorName</a></span>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -96,24 +124,22 @@
 
                                             if (user != null)
                                             {
-                                                if (item.IsLikedBy)
-                                                {
-                                                    <div>
+                                                <div class="like-wrapper row">
+                                                    @if (item.IsLikedBy)
+                                                    {
                                                         <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="afterLike">Like</small>
-                                                        <hr />
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div>
+                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="fix-like afterLike">Like</small>
+                                                    }
+                                                    else
+                                                    {
                                                         <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="afterLikeInstant">Like</small>
-                                                        <hr />
-                                                    </div>
-                                                }
+                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="fix-like afterLikeInstant">Like</small>
+                                                    }
 
-                                                <div class="row">
+                                                    <div class="commentCounter">@item.Post.Comments.Count <small>comment</small></div>
+                                                </div>
+                                                <hr />
+                                                <div class="row mt-3">
                                                     <div class="col-auto">
                                                         <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
                                                     </div>
@@ -121,14 +147,17 @@
                                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                                     </div>
                                                     <div class="col-auto pl-1">
-                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@user.ImageUrl', '@user.FullName')">
-                                                            <i class="fa fa-plus-circle" aria-hidden="true"> Comment</i>
+                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">
+                                                            <i class="far fa-comment-alt" style="color: darkolivegreen"> Comment</i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             }
                                         }
-                                        <div class="comment-container">
+
+                                        <a id="commentViewer" class="btn" onclick="CommentShower(this)"><small>view comments</small></a>
+
+                                        <div class="comment-container" style="display: none">
 
                                             @foreach (var comment in item.Post.Comments)
                                             {
@@ -147,7 +176,7 @@
                                                     </div>
                                                     <ul class="replay-link p-0" style="margin: 0 0 0 33px; list-style: none; display: inline-block">
                                                         <li style="display: block">
-                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@user.ImageUrl', '@user.FullName')">Replay</a>
+                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">Replay</a>
                                                         </li>
                                                     </ul>
 
@@ -215,15 +244,19 @@
 @section Scripts {
     <script type="text/javascript">
 
-        $(document).ready(function () {
+        function CommentShower(btn) {
+            let text = btn.innerText;
+            $(btn)[0].children[0].innerText = (text == "view comments" ? "hide comments" : "view comments");
 
-        });
+            $(btn).siblings('.comment-container').toggle();
+        }
 
-        function AjaxComment(btn, postId, imageUrl, name) {
+        function AjaxComment(btn, postId, folderPath, imageUrl, name) {
             let box = $(btn).parent().siblings('.comment-box').children()[0];
             let message = box.value;
             box.value = "";
-            imageUrl = ImagePathReBuilder(imageUrl);
+            if (!imageUrl.includes(folderPath))
+                imageUrl = folderPath + imageUrl;
 
             $.ajax({
                 url: '/Forum/AddComment',
@@ -250,11 +283,12 @@
         }
 
         let cmtId = '', imgUrl = '', fName = '';
-        function CreateReplayBox(item, commentId, imageUrl, name) {
+        function CreateReplayBox(item, commentId, folderPath, imageUrl, name) {
             cmtId = commentId;
             imgUrl = imageUrl;
             fName = name;
-            imageUrl = ImagePathReBuilder(imageUrl);
+            if (!imageUrl.includes(folderPath))
+                imageUrl = folderPath + imageUrl;
 
             let replayHtml = `<div class="row default-replay-box">
                                     <div class="replay-author-pic col-auto offset-1">
@@ -264,7 +298,7 @@
                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                     </div>
                                     <div class="col-auto pl-1">
-                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxReplay(this, '` + cmtId + `', '` + imgUrl + `', '` + fName + `')">
+                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxReplay(this, '` + cmtId + `', '` + folderPath + `', '` + imgUrl + `', '` + fName + `')">
                                             <i class="fa fa-plus-circle" aria-hidden="true"> Replay</i>
                                         </button>
                                     </div>
@@ -273,8 +307,9 @@
             $(item).parent().parent().siblings('.replay-container').append(replayHtml);
         }
 
-        function AjaxReplay(item, commentId, imageUrl, name) {
-            imageUrl = ImagePathReBuilder(imageUrl);
+        function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
+            if (!imageUrl.includes(folderPath))
+                imageUrl = folderPath + imageUrl;
             let message = $(item).parent().siblings('.comment-box').children()[0].value;
 
             $.ajax({
@@ -323,10 +358,6 @@
                     console.log(status);
                 }
             });
-        }
-
-        function ImagePathReBuilder(imageUrl) {
-            return imageUrl.includes('profile-no') ? "\\img\\" + imageUrl.substring(3) : "\\img\\Upload\\" + imageUrl.substring(9);
         }
 
     </script>

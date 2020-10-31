@@ -24,10 +24,10 @@
             box-shadow: 2px 2px 2px #888888;
         }
 
-        .create-package .package-create-link a {
-            width: 100%;
-            text-align: center;
-        }
+            .create-package .package-create-link a {
+                width: 100%;
+                text-align: center;
+            }
 
         label span.color-ml-3 {
             margin-left: 3px;
@@ -53,20 +53,24 @@
         }
 
         .cnd {
-            background-color: bisque;
+            background-color: darkcyan;
             text-align: center;
             font-size: 45px;
-            color: darkmagenta;
+            color: currentcolor;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 3px;
             margin: 5px 0;
             padding: 3px;
+            font-family: Algerian, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .company-info {
+            background-color: azure;
         }
 
         .cnd p {
             margin-bottom: 0;
         }
-
     </style>
 
 }
@@ -79,15 +83,23 @@
                     <p>@Model.Name</p>
                 </div>
 
-                <div>
+                <div class="company-info">
                     <ul class="description-as-list">
+                        <li>
+                            <label class="single-info">Email: </label>
+                            <span class="value-text">@Model.Email</span>
+                        </li>
+                        <li>
+                            <label class="single-info">Mobile: </label>
+                            <span class="value-text">@Model.PhoneNumber</span>
+                        </li>
                         <li>
                             <label class="single-info">Address: </label>
                             <span class="value-text">@Model.Address</span>
                         </li>
                         <li>
-                            <label class="single-info">Reputation: </label>
-                            <span class="value-text">@Model.Reputation</span>
+                            <label class="single-info">Stars: </label>
+                            <span class="value-text">@Model.Star</span>
                         </li>
                         <li>
                             <label class="single-info">Packages: </label>
@@ -102,7 +114,7 @@
             <div class="cover card">
                 <img src="@Model.CompanyImageUrl"
                      alt="Company image"
-                     id="cover-photo"/>
+                     id="cover-photo" />
             </div>
         </div>
     </div>
@@ -116,12 +128,12 @@
     <div class="row">
         @foreach (var package in Model.TourPackages)
         {
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card single-package">
                     <div class="card-header p-2">
                         <div class="header-left float-left">
                             <label>Package code: <span class="color-ml-3">@package.PackageCode</span></label> <br />
-                            <label>Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
+                            <label class="main-area-label">Area: <span class="main-area-name color-ml-3">@package.MainArea</span></label> <br />
                             <label>Days: <span class="color-ml-3">@package.Days days</span></label> <br />
 
                             @if (package.Discount == 0)
@@ -146,7 +158,7 @@
                         </div>
                     </div>
                     <div class="card-body p-2">
-                        <label class="mb-1">Including spots</label>
+                        <label class="mb-1"><span style="color: darkgoldenrod; font-weight: 600;">@package.Spots.Count</span> spots</label>
                         <div class="spot-list">
                             @foreach (var spot in package.Spots)
                             {
@@ -156,8 +168,16 @@
                             }
                         </div>
                     </div>
+                    <div class="card-footer p-2" style="text-align: center">
+                        <a class="btn btn-primary btn-sm" asp-controller="Company" asp-action="ViewPackage" asp-route-packageId="@package.Id.ToString()">View Package Details</a>
+                    </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/SpotSearch.js"></script>
+}

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Enums;
@@ -20,33 +21,48 @@ namespace tourBD.Web.Controllers
         private readonly ICompanyService _companyService;
         private readonly ITourPackageService _tourPackageService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IPathService _pathService;
+        private readonly IConfiguration _configuration;
+        ApplicationUser user;
 
         public CompanyController(
             UserManager<ApplicationUser> userManager, 
             ICompanyRequestService companyRequestService,
             ICompanyService companyService,
             ITourPackageService tourPackageService,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IPathService pathService,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _companyRequestService = companyRequestService;
             _companyService = companyService;
             _tourPackageService = tourPackageService;
             _webHostEnvironment = webHostEnvironment;
+            _pathService = pathService;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var companyList = await _companyService.GetUserCompaniesAsync(user.Id);
+            await GetLoggedInUser();
 
-            return View(companyList);
+            var model = new CompanyIndexModel
+            {
+                Companies = (await _companyService.GetUserCompaniesAsync(user.Id)).ToList(),
+                HasPendingRequest = await _companyRequestService.HastPendingReques(user.Id)
+            };
+            model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
+
+            return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> RequestCompany()
         {
-            var model = new CompanyRequestModel();
+            await GetLoggedInUser();
+
+            var model = new CompanyRequestModel() { OfficialEmail = _configuration["Company:OfficialEmail"] };
             return View(model);
         }
 
@@ -61,7 +77,7 @@ namespace tourBD.Web.Controllers
                     UserId = user.Id,
                     Description = model.Description,
                     RequestDate = DateTime.Now,
-                    RequestStatus = Membership.Enums.CompanyRequestStatus.Pending.ToString()
+                    RequestStatus = CompanyRequestStatus.Pending.ToString()
                 };
 
                 await _companyRequestService.CreateAsync(request);
@@ -74,10 +90,13 @@ namespace tourBD.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> EditCompany(string companyId)
         {
+            await GetLoggedInUser();
+
             var model = new EditCompanyViewModel() 
             { 
                 Company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId))
             };
+            model.Company.CompanyImageUrl = $"{_pathService.PictureFolder}{model.Company.CompanyImageUrl}";
 
             model.Company.TourPackages.ForEach(tp =>
             {
@@ -92,22 +111,37 @@ namespace tourBD.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string imagePath = @"\img\Upload\";
+                string imagePath = _pathService.PictureFolder;
                 string physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                string demoImage = @"\img\companyImage.jpg";
+                string demoImage = _pathService.DummyCompanyImageUrl;
 
-                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, imagePath, demoImage);
+                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, demoImage);
                 await _companyService.EditAsync(model.Company);
 
-                return RedirectToAction("EditCompany", "Company", new { companyId = model.Company.Id.ToString() }); // should be redirect to [ViewCompany]
+                return RedirectToAction("CompanyPublicView", "Company", new { companyId = model.Company.Id.ToString() });
             }
 
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult CreatePackage(string companyId)
+        public async Task<IActionResult> ViewPackage(string packageId)
         {
+            await GetLoggedInUser();
+            var package = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
+
+            var model = new ViewPackageViewModel()
+            {
+                Package = package,
+                Company = _companyService.Get(package.CompanyId)
+            };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreatePackage(string companyId)
+        {
+            await GetLoggedInUser();
+
             TourPackage tourPackage = new TourPackage() { CompanyId = new Guid(companyId) };
             ViewBag.companyId = companyId;
             return View(tourPackage);
@@ -135,7 +169,7 @@ namespace tourBD.Web.Controllers
                     await _tourPackageService.AddSpot(spot);
                 }
 
-                return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+                return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
             }
 
             return View(tourPackage);
@@ -150,12 +184,14 @@ namespace tourBD.Web.Controllers
             }
 
             await _tourPackageService.DeleteAsync(tourPackage);
-            return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+            return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
         }
 
         [HttpGet]
         public async Task<IActionResult> EditPackage(string packageId)
         {
+            await GetLoggedInUser();
+
             var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
             var model = new EditPackageViewModel()
             {
@@ -176,38 +212,46 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> EditPackage(EditPackageViewModel model)
         {
             var tourPackage = await _tourPackageService.GetPackageWithRelatedSpotsAsync(model.packageId);
-
-            // delete all spots
-            foreach (var spot in tourPackage.Spots.ToList())
+            await GetLoggedInUser();
+            if (ModelState.IsValid)
             {
-                await _tourPackageService.DeleteSpotAsync(spot);
-            }
-
-            // Rebuild the package spots from model
-            tourPackage.MainArea = model.MainArea;
-            tourPackage.Days = model.Days;
-            tourPackage.Price = model.Price;
-            tourPackage.Availability = model.Availability;
-            tourPackage.Discount = model.Discount;
-            foreach (var spot in model.Spots)
-            {
-                var newSpot = new Spot()
+                // delete all spots
+                foreach (var spot in tourPackage.Spots.ToList())
                 {
-                    Name = spot,
-                    TourPackageId = tourPackage.Id
-                };
+                    await _tourPackageService.DeleteSpotAsync(spot);
+                }
 
-                await _tourPackageService.AddSpot(newSpot);
+                // Rebuild the package spots from model
+                tourPackage.MainArea = model.MainArea;
+                tourPackage.Days = model.Days;
+                tourPackage.Price = model.Price;
+                tourPackage.Availability = model.Availability;
+                tourPackage.Discount = model.Discount;
+                foreach (var spot in model.Spots)
+                {
+                    var newSpot = new Spot()
+                    {
+                        Name = spot,
+                        TourPackageId = tourPackage.Id
+                    };
+
+                    await _tourPackageService.AddSpot(newSpot);
+                }
+
+                await _tourPackageService.EditAsync(tourPackage);
+                return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
             }
 
-            await _tourPackageService.EditAsync(tourPackage);
-            return RedirectToAction("EditCompany", "Company", new { companyId = tourPackage.CompanyId }); // should be redirect to [ViewCompany]
+            return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> PublicView(string companyId)
+        public async Task<IActionResult> CompanyPublicView(string companyId)
         {
+            await GetLoggedInUser();
+
             var company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId));
+            company.CompanyImageUrl = $"{_pathService.PictureFolder}{company.CompanyImageUrl}";
 
             company.TourPackages.ForEach(tp =>
             {
@@ -215,6 +259,12 @@ namespace tourBD.Web.Controllers
             });
 
             return View(company);
+        }
+
+        private async Task GetLoggedInUser()
+        {
+            user = await _userManager.GetUserAsync(HttpContext.User);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
         }
     }
 }

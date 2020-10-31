@@ -39,8 +39,6 @@
 
         .single-package {
             min-height: 430px;
-/*            min-width: 400px;
-            max-width: 420px;*/
         }
 
     </style>
@@ -55,7 +53,7 @@
                 <input hidden asp-for="@Model.Company.Id" />
                 <input hidden asp-for="@Model.Company.UserId" />
                 <input hidden asp-for="@Model.Company.CompanyImageUrl" />
-                <input hidden asp-for="@Model.Company.Reputation" />
+                <input hidden asp-for="@Model.Company.Star" />
 
                 <div class="image-update row">
                     <div class="existing-cover-photo">
@@ -78,14 +76,28 @@
                 </div>
 
                 <div class="form-group row">
+                    <label asp-for="@Model.Company.Email" class="col-md-1 col-form-label"></label>
+                    <div class="col-md-6">
+                        <input asp-for="@Model.Company.Email" class="form-control" placeholder="Email" />
+                        <span asp-validation-for="@Model.Company.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label asp-for="@Model.Company.PhoneNumber" class="col-md-1 col-form-label">Phone</label>
+                    <div class="col-md-6">
+                        <input asp-for="@Model.Company.PhoneNumber" class="form-control" placeholder="Phone number" />
+                        <span asp-validation-for="@Model.Company.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label asp-for="@Model.Company.Address" class="col-md-1 col-form-label"></label>
                     <div class="col-md-6">
                         <input asp-for="@Model.Company.Address" class="form-control" placeholder="Company Address" />
                         <span asp-validation-for="@Model.Company.Address" class="text-danger"></span>
                     </div>
                 </div>
-
-                @* Tour packages *@
 
                 <div class="form-group row">
                     <div class="col-md-10">
@@ -111,12 +123,12 @@
     <div class="row">
         @foreach (var package in Model.Company.TourPackages)
         {
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card single-package">
                     <div class="card-header p-2">
                         <div class="header-left float-left">
                             <label>Package code: <span class="color-ml-3">@package.PackageCode</span></label> <br />
-                            <label>Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
+                            <label class="main-area-label">Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
                             <label>Days: <span class="color-ml-3">@package.Days days</span></label> <br />
 
                             @if (package.Discount == 0)
@@ -140,7 +152,7 @@
                         </div>
                     </div>
                     <div class="card-body p-2">
-                        <label class="mb-1">Including spots</label>
+                        <label class="mb-1"><span style="color: darkgoldenrod; font-weight: 600;">@package.Spots.Count</span> spots</label>
                         <div class="spot-list">
                             @foreach (var spot in package.Spots)
                             {
@@ -151,8 +163,8 @@
                         </div>
                     </div>
                     <div class="card-footer p-2">
-                        <a class="btn btn-primary" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()"><i class="far fa-edit"></i> Edit</a>
-                        <a class="btn btn-danger" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()"><i class="fas fa-trash-alt"></i> Delete</a>
+                        <a class="btn btn-primary btn-sm" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()"><i class="far fa-edit"></i> Edit</a>
+                        <a class="btn btn-danger btn-sm" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()"><i class="fas fa-trash-alt"></i> Delete</a>
                     </div>
                 </div>
             </div>
@@ -161,6 +173,8 @@
 </div>
 
 @section Scripts {
+    <script type="text/javascript" src="~/js/SpotSearch.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#filePhoto').change(function () {

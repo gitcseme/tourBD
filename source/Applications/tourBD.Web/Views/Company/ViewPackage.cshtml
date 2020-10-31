@@ -1,0 +1,86 @@
+﻿@model tourBD.Web.Models.CompanyModels.ViewPackageViewModel
+
+@section Styles {
+    <style>
+        label.packageLabel {
+            width: 135px;
+        }
+
+        .color-ml-3 {
+            color: chocolate;
+        }
+
+        span.main-area-name.color-ml-3 {
+            margin-left: 95px;
+        }
+
+    </style>
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8" style="margin: 0 auto">
+            <div class="card">
+                <div class="card-header">
+                    <div class="companyInfo">
+                        This package belongs to <b><a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@Model.Company.Id">@Model.Company.Name</a></b> <br />
+                        <label>Mobile: </label> @Model.Company.PhoneNumber
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="card-header p-2">
+                        <div class="header-left float-left">
+                            <label class="packageLabel">Package code: </label> <span class="color-ml-3">@Model.Package.PackageCode</span> <br />
+                            <label class="main-area-label">Area: <span class="main-area-name color-ml-3">@Model.Package.MainArea</span></label> <br />
+                            <label class="packageLabel">Days: </label><span class="color-ml-3">@Model.Package.Days days</span> <br />
+
+                            @*<label>Package code: <span class="color-ml-3">@Model.Package.PackageCode</span></label> <br />
+                            <label class="main-area-label">Area: <span class="main-area-name color-ml-3">@Model.Package.MainArea</span></label> <br />
+                            <label>Days: <span class="color-ml-3">@Model.Package.Days days</span></label> <br />*@
+
+                            @if (Model.Package.Discount == 0)
+                            {
+                                <label class="packageLabel">Price: </label><span class="color-ml-3">@Model.Package.Price tk</span> <span> (per adalt)</span>
+                            }
+                            else
+                            {
+                                double discountedPrice = Model.Package.Price - (Model.Package.Price * @Model.Package.Discount) / 100;
+                                <label class="packageLabel">Price: </label><span class="ml-2" style="color: red"><s>@Model.Package.Price tk</s></span><span style="color: blue" class="ml-2">@discountedPrice tk</span> <span> (per adalt)</span>
+                            }
+                        </div>
+                        <div class="header-right float-right">
+                            @if (Model.Package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
+                            {
+                                <button class="btn btn-sm btn-success available">@Model.Package.Availability</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-danger available">@Model.Package.Availability</button>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body p-2">
+                        <label class="mb-1"><span style="color: darkgoldenrod; font-weight: 600;">@Model.Package.Spots.Count</span> spots</label>
+                        <div class="spot-list">
+                            @foreach (var spot in @Model.Package.Spots)
+                            {
+                                <div class="col-sm-auto float-left btn btn-sm btn-dark mr-1 mb-1">
+                                    @spot.Name
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/SpotSearch.js"></script>
+
+}
