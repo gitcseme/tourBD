@@ -1,0 +1,80 @@
+﻿
+#cover-photo {
+    padding: 5px;
+    width: auto;
+    height: 400px;
+}
+
+.package-list {
+    font-weight: 600;
+    font-size: 20px;
+    border: 1px solid gray;
+    box-shadow: 2px 2px 2px #888888;
+    text-align: center;
+    line-height: 37px;
+}
+
+.create-package .package-create-link {
+    text-align: center;
+    margin: 0 auto;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+    .create-package .package-create-link a {
+        width: 100%;
+        text-align: center;
+    }
+
+label span.color-ml-3 {
+    margin-left: 3px;
+    color: coral;
+}
+
+.single-package {
+    min-height: 430px;
+}
+
+.single-info {
+    width: 100px;
+}
+
+.value-text {
+    color: blueviolet
+}
+
+.description-as-list {
+    list-style: none;
+    margin-top: 50px;
+    padding-left: 15px;
+}
+
+.cnd {
+    background-color: darkcyan;
+    text-align: center;
+    font-size: 45px;
+    color: currentcolor;
+    font-weight: bold;
+    border-radius: 3px;
+    margin: 5px 0;
+    padding: 3px;
+    font-family: Algerian, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.company-info {
+    background-color: azure;
+}
+
+.cnd p {
+    margin-bottom: 0;
+}
+
+.spot-list .col-sm-auto:hover {
+    background: #26a0da;
+    color: #050801;
+    box-shadow: 0 0 3px #26a0da, 0 0 5px #26a0da, 0 0 10px #26a0da;
+    transition-delay: 0.1s;
+}
+
+.spot-list .col-sm-auto {
+    border: none;
+}

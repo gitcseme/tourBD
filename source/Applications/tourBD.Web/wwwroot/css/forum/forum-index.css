@@ -1,0 +1,88 @@
+﻿
+
+.card img#author-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.card .card-footer #post-likes {
+    width: 80px;
+}
+
+.commment-user-name {
+    color: chocolate
+}
+
+.post-user-name {
+    color: darkorange
+}
+
+.post-container .single-post .card {
+    width: 100%
+}
+
+.comment-box #default-comment-box {
+    width: 100%;
+    height: 31px;
+    border: none;
+}
+
+.comment-box {
+    padding-right: 0;
+}
+
+.afterLike {
+    color: blue !important;
+    cursor: pointer !important;
+}
+
+.row.commentWrapper {
+    height: 30px;
+}
+
+.replay-link {
+    width: 50px;
+}
+
+.replay-link a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    text-align: left;
+    color: blueviolet;
+    border: 0;
+    font-size: 13px;
+}
+
+.replay-link:hover a {
+    text-decoration: underline;
+    color: blueviolet;
+    cursor: pointer;
+}
+
+a#commentViewer {
+    color: darkmagenta;
+    padding: 0;
+}
+
+a#commentViewer:hover {
+    color: darkmagenta;
+    text-decoration: underline;
+}
+
+small.fix-like {
+    margin-top: 6px;
+    margin-left: 5px;
+}
+
+span#like-count {
+    margin-top: 3px;
+}
+
+.commentCounter {
+    margin-top: 3px;
+    margin-left: 100px;
+}
+

@@ -1,0 +1,19 @@
+﻿
+
+.propertyLabel.col-auto {
+    padding-top: 5px;
+    padding-left: 0px;
+}
+
+.submit-package {
+    margin: 0 auto;
+    width: 300px;
+}
+
+    .submit-package button {
+        width: 100%;
+    }
+
+.propertyLabel {
+    width: 135px;
+}

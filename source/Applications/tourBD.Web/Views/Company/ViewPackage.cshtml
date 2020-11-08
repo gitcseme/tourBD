@@ -1,31 +1,8 @@
 ﻿@model tourBD.Web.Models.CompanyModels.ViewPackageViewModel
 
 @section Styles {
-    <style>
-        label.packageLabel {
-            width: 135px;
-        }
 
-        .color-ml-3 {
-            color: chocolate;
-        }
-
-        span.main-area-name.color-ml-3 {
-            margin-left: 95px;
-        }
-
-        .spot-list .col-sm-auto:hover {
-            background: #26a0da;
-            color: #050801;
-            box-shadow: 0 0 3px #26a0da, 0 0 5px #26a0da, 0 0 10px #26a0da;
-            transition-delay: 0.1s;
-        }
-
-        .spot-list .col-sm-auto {
-            border: none;
-        }
-
-    </style>
+    <link href="~/css/company/view-package.css" rel="stylesheet" />
 }
 
 
@@ -46,10 +23,6 @@
                             <label class="packageLabel">Package code: </label> <span class="color-ml-3">@Model.Package.PackageCode</span> <br />
                             <label class="main-area-label">Area: <span class="main-area-name color-ml-3">@Model.Package.MainArea</span></label> <br />
                             <label class="packageLabel">Days: </label><span class="color-ml-3">@Model.Package.Days days</span> <br />
-
-                            @*<label>Package code: <span class="color-ml-3">@Model.Package.PackageCode</span></label> <br />
-                            <label class="main-area-label">Area: <span class="main-area-name color-ml-3">@Model.Package.MainArea</span></label> <br />
-                            <label>Days: <span class="color-ml-3">@Model.Package.Days days</span></label> <br />*@
 
                             @if (Model.Package.Discount == 0)
                             {
