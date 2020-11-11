@@ -1,29 +1,11 @@
 ﻿@model tourBD.Membership.Entities.TourPackage
 
 @section Styles {
-    <style>
-        .propertyLabel.col-auto {
-            padding-top: 5px;
-            padding-left: 0px;
-        }
 
-        .submit-package {
-            margin: 0 auto;
-            width: 300px;
-        }
-
-        .submit-package button {
-            width: 100%;
-        }
-
-        .propertyLabel {
-            width: 135px;
-        }
-
-    </style>
+    <link href="~/css/company/create-package.css" rel="stylesheet" />
 }
 
-@{ 
+@{
     var companyId = ViewBag.companyId;
 }
 
@@ -127,37 +109,6 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
 
-            $('#addSpot').click(function () {
-                var num = $('#SpotContainer').find('.newSpot').length - 1;
-                var newNum = num + 1;
-                var newElem = $('#singleSpot' + num).clone().attr('id', 'singleSpot' + newNum);
-
-                newElem.find('.spotName').attr('name', 'Spots[' + newNum + '].Name').attr('id', 'id' + newNum + 'name').val('');
-
-                $('#singleSpot' + num).after(newElem);
-            });
-
-        });
-
-        function RemoveSpot(item) {
-            var spotNode = $(item).parent().parent();
-            var spots = $('#SpotContainer').find('.newSpot');
-
-            if (spots.length > 1) {
-                spotNode.remove();
-                spots = $('#SpotContainer').find('.newSpot');
-
-                for (i = 0; i < spots.length; ++i) {
-                    let spot = $(spots[i]);
-
-                    spot.find('.spotName').attr('name', 'Spots[' + i + '].Name').attr('id', 'id' + i + 'name');
-                    spot.attr('id', 'singleSpot' + i);
-                }
-            }
-        }
-
-    </script>
+    <script src="~/js/createPackage.js" type="text/javascript"></script>
 }

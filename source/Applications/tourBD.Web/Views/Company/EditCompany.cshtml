@@ -2,47 +2,7 @@
 
 @section Styles {
 
-    <style>
-        .image-update {
-            margin-bottom: 15px;
-            padding: 0 5px;
-        }
-
-        #filePhoto {
-            margin-top: 5px;
-        }
-
-        .package-list {
-            font-weight: 600;
-            font-size: 20px;
-            border: 1px solid gray;
-            box-shadow: 2px 2px 2px #888888;
-            text-align: center;
-            line-height: 37px;
-        }
-
-        .create-package .package-create-link {
-            text-align: center;
-            margin: 0 auto;
-            box-shadow: 2px 2px 2px #888888;
-        }
-
-        .create-package .package-create-link a {
-            width: 100%;
-            text-align: center;
-        }
-
-        label span.color-ml-3 {
-            margin-left: 3px;
-            color: coral;
-        }
-
-        .single-package {
-            min-height: 430px;
-        }
-
-    </style>
-
+    <link href="~/css/company/edit-company.css" rel="stylesheet" type="text/css"/>
 }
 
 <div class="container-fluid">
@@ -109,13 +69,19 @@
         </div>
     </div>
 
-    <div class="row mt-5 mb-5">
-        <div class="col-md-6">
+    <div class="row middle-row">
+        <div class="col-md-6 package-heading">
             <p class="package-list">List of packages</p>
         </div>
         <div class="create-package col-md-6">
             <div class="package-create-link">
-                <a class="btn btn-primary" asp-controller="Company" asp-action="CreatePackage" asp-route-companyId="@Model.Company.Id.ToString()"><i class="fas fa-plus-square"></i> Create Package</a>
+                <a asp-controller="Company" asp-action="CreatePackage" asp-route-companyId="@Model.Company.Id.ToString()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <i class="fas fa-plus-square"></i> Create Package
+                </a>
             </div>
         </div>
     </div>
@@ -146,7 +112,8 @@
                             {
                                 <button class="btn btn-sm btn-success available">@package.Availability</button>
                             }
-                            else {
+                            else
+                            {
                                 <button class="btn btn-sm btn-danger available">@package.Availability</button>
                             }
                         </div>
@@ -174,21 +141,6 @@
 
 @section Scripts {
     <script type="text/javascript" src="~/js/SpotSearch.js"></script>
+    <script type="text/javascript" src="~/js/pictureUpload.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#filePhoto').change(function () {
-
-                if (this.files && this.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = (e) => {
-                        $('#cover-photo').attr('src', e.target.result);
-                    };
-
-                    reader.readAsDataURL(this.files[0]);
-                }
-
-            })
-        });
-    </script>
 }
