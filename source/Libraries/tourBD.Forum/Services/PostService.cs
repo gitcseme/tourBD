@@ -78,9 +78,9 @@ namespace tourBD.Forum.Services
                 await _postUnitOfWork.SaveAsync();
         }
 
-        public async Task<IEnumerable<Post>> GetAllIncludePropertiesAsync()
+        public async Task<IEnumerable<Post>> GetAllPostsPaginatedAsync(int pageIndex = 1, int pageSize = 10, bool isTrackingOff = true)
         {
-            return await _postUnitOfWork.PostRepository.GetAllIncludePropertiesAsync();
+            return await _postUnitOfWork.PostRepository.GetAllPostsPaginatedAsync(pageIndex, pageSize, isTrackingOff);
         }
 
         public async Task AddReplayAsync(Replay replay)

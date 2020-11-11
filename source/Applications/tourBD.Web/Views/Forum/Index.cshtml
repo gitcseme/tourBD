@@ -16,20 +16,34 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="post-container">
-                    @foreach (var item in Model)
+                    @foreach (var post in Model)
                     {
                         <div class="single-post">
                             <div class="row">
                                 <div class="card">
                                     <div class="card-header">
-                                        <div class="post-author-pic">
-                                            <img src="@item.Post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
-                                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@item.Post.AuthorId.ToString()" class="commment-user-name">@item.Post.AuthorName</a></span>
+                                        <div class="post-author-pic float-left">
+                                            <img src="@post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@post.AuthorId.ToString()" class="commment-user-name">@post.AuthorName</a></span>
                                         </div>
+
+                                        @if (post.IsPostAuthor)
+                                        {
+                                            <div class="dropdown float-right">
+                                                <button class="btn btn-outline-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-marker"></i>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="#">Edit</a>
+                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                        }
+
                                     </div>
                                     <div class="card-body">
                                         <p class="card-text">
-                                            @item.Post.Message
+                                            @post.Message
                                         </p>
                                     </div>
                                     <div class="card-footer">
@@ -39,18 +53,18 @@
                                             if (user != null)
                                             {
                                                 <div class="like-wrapper row">
-                                                    @if (item.IsLikedBy)
+                                                    @if (post.IsLikedBy)
                                                     {
-                                                        <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="fix-like afterLike">Like</small>
+                                                        <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@post.PostId.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                        <span id="like-count">@post.Likes</span> <small class="fix-like afterLike">Like</small>
                                                     }
                                                     else
                                                     {
-                                                        <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="fix-like afterLikeInstant">Like</small>
+                                                        <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@post.PostId.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                        <span id="like-count">@post.Likes</span> <small class="fix-like afterLikeInstant">Like</small>
                                                     }
 
-                                                    <div class="commentCounter">@item.Post.Comments.Count <small>comment</small></div>
+                                                    <div class="commentCounter">@post.Comments.Count <small>comment</small></div>
                                                 </div>
                                                 <hr />
                                                 <div class="row mt-3">
@@ -61,7 +75,7 @@
                                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                                     </div>
                                                     <div class="col-auto pl-1">
-                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">
+                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@post.PostId.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">
                                                             <i class="far fa-comment-alt" style="color: darkolivegreen"> Comment</i>
                                                         </button>
                                                     </div>
@@ -73,7 +87,7 @@
 
                                         <div class="comment-container" style="display: none">
 
-                                            @foreach (var comment in item.Post.Comments)
+                                            @foreach (var comment in post.Comments)
                                             {
                                                 <div class="single-comment">
 
@@ -90,7 +104,7 @@
                                                     </div>
                                                     <ul class="replay-link p-0" style="margin: 0 0 0 33px; list-style: none; display: inline-block">
                                                         <li style="display: block">
-                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">Replay</a>
+                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.CommentId.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">Replay</a>
                                                         </li>
                                                     </ul>
 

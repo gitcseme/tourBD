@@ -39,34 +39,54 @@ namespace tourBD.Web.Controllers
             _pathService = pathService;
         }
 
-        /* Common properties should be removed and re organized & viewModel need to re-designed */
-        public async Task<IActionResult> Index()
+        /* Redesign the index page */
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            var model = (await _postService.GetAllIncludePropertiesAsync()).Select(p => new PostViewModel()
+            var posts = await _postService.GetAllPostsPaginatedAsync(pageIndex, pageSize);
+
+            var model = posts.Select(post => new PostViewModel
             {
-                Post = p,
-                IsLikedBy = p.Likes.Where(l => l.AuthorId == user.Id).Any()
+                PostId = post.Id,
+                AuthorId = post.AuthorId,
+                AuthorName = post.AuthorName,
+                AuthorImageUrl = $"{_pathService.PictureFolder}{post.AuthorImageUrl}",
+                CreationDate = post.CreationDate,
+                Message = post.Message,
+                Likes = post.Likes.Count,
+                IsLikedBy = post.Likes.Where(l => l.AuthorId == loggedInUser.Id).Any(),
+                IsPostAuthor = post.AuthorId == loggedInUser.Id,
+                Comments = post.Comments.Select(cmt => new CommentViewModel
+                {
+                    CommentId = cmt.Id,
+                    PostId = cmt.PostId,
+                    AuthorId = cmt.AuthorId,
+                    AuthorName = cmt.AuthorName,
+                    AuthorImageUrl = $"{_pathService.PictureFolder}{cmt.AuthorImageUrl}",
+                    CreationDate = cmt.CreationDate,
+                    Message = cmt.Message,
+                    IsCommentAuthor = cmt.AuthorId == loggedInUser.Id,
+                    Replays = cmt.Replays.Select(rpl => new ReplayViewModel
+                    {
+                        ReplayId = rpl.Id,
+                        CommentId = rpl.CommentId,
+                        AuthorId = rpl.AuthorId,
+                        AuthorName = rpl.AuthorName,
+                        AuthorImageUrl = $"{_pathService.PictureFolder}{rpl.AuthorImageUrl}",
+                        CreationDate = rpl.CreationDate,
+                        Message = rpl.Message,
+                        IsReplayAuthor = rpl.AuthorId == loggedInUser.Id
+                    }).ToList()
+                }).ToList()
             }).ToList();
 
-            model.ForEach(p =>
-            {
-                p.Post.AuthorImageUrl = $"{_pathService.PictureFolder}{p.Post.AuthorImageUrl}";
-                p.Post.Comments.ToList().ForEach(c =>
-                {
-                    c.AuthorImageUrl = $"{_pathService.PictureFolder}{c.AuthorImageUrl}";
-                    c.Replays.ToList().ForEach(r =>
-                    {
-                        r.AuthorImageUrl = $"{_pathService.PictureFolder}{r.AuthorImageUrl}";
-                    });
-                });
-            });
-
-            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+            loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
             return View(model);
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> CreatePost(string userId)
