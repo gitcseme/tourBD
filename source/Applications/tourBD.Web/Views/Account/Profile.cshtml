@@ -4,70 +4,8 @@
 @inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
 
 @section Styles {
-    <style>
-        ul.generalInfo {
-            list-style: none;
-            margin: 0;
-            padding: 0 !important;
-        }
 
-        span.right-value {
-            margin-left: 20px;
-        }
-
-        li.user-name h4 {
-            font-weight: 900;
-            font-size: xx-large;
-            margin-bottom: 15px;
-        }
-
-        label.left-info {
-            width: 100px;
-        }
-
-        .footer {
-            margin: 0 auto;
-        }
-
-        .card.profile-wrapper {
-            /*background-color: #0cbaba;
-            background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);*/
-            background-color: #2876f9;
-            background-image: linear-gradient(315deg, #2876f9 0%, #6d17cb 74%);
-            padding: 5px;
-            color: white;
-            min-height: 300px;
-            margin-top: 50px;
-            box-shadow: 0 5px 10px rgba(154, 160, 185, 0.45), 0 15px 40px rgba(166, 173, 201, 0.32);
-            border-bottom-left-radius: 50px;
-            border-top-right-radius: 50px;
-        }
-
-        .profile-pic img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-top: 10px;
-            border: 10px solid #6d17e4;
-        }
-
-        .profile-pic {
-            text-align: center;
-        }
-
-        .row.child {
-            margin-top: 60px;
-        }
-
-        .row.profile-row {
-            /*background-color: #d9d9d9;
-            background-image: linear-gradient(315deg, #d9d9d9 0%, #f6f2f2 74%);*/
-            height: 400px;
-            background-color: #0cbaba;
-            background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);
-        }
-
-    </style>
+    <link href="~/css/account/profile.css" rel="stylesheet" />
 }
 
 <div class="content">
@@ -136,7 +74,7 @@
                                         <span>@company.TourPackages.Count</span>
                                     </li>
                                     <li>
-                                        <label class="left-info">Reputation: </label>
+                                        <label class="left-info">Stars: </label>
                                         <span>@company.Star</span>
                                     </li>
                                     <li>

@@ -1,0 +1,172 @@
+﻿
+.image-update {
+    margin-bottom: 15px;
+    padding: 0 5px;
+}
+
+#filePhoto {
+    margin-top: 5px;
+}
+
+.package-list {
+    font-weight: 600;
+    font-size: 20px;
+    border: 1px solid gray;
+    box-shadow: 2px 2px 2px #888888;
+    text-align: center;
+    line-height: 35px;
+    margin-top: 2%;
+}
+
+label span.color-ml-3 {
+    margin-left: 3px;
+    color: coral;
+}
+
+.single-package {
+    min-height: 430px;
+}
+
+.spot-list .col-sm-auto:hover {
+    background: #26a0da;
+    color: #050801;
+    box-shadow: 0 0 3px #26a0da, 0 0 5px #26a0da, 0 0 10px #26a0da;
+    transition-delay: 0.1s;
+}
+
+.spot-list .col-sm-auto {
+    border: none;
+}
+
+.col-md-6.package-heading {
+    background: #ddd;
+}
+
+.row.middle-row {
+    margin: 30px 0;
+}
+
+.package-heading, .package-create-link {
+    min-height: 70px;
+}
+
+.create-package {
+    background: #1D1E22;
+}
+
+/* Create package button */
+
+.create-package .package-create-link a {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: #1670f0;
+    padding: 10px 20px;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.create-package .package-create-link a::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    bottom: 2px;
+    width: 50%;
+    background: rgba(255,255,255,0.05);
+}
+
+.create-package .package-create-link a span:nth-child(1) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #0c002b, yellow);
+    animation: animate1 1.5s linear infinite;
+}
+
+@keyframes animate1 {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.create-package .package-create-link a span:nth-child(2) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, #0c002b, green);
+    animation: animate2 1.5s linear infinite;
+}
+
+@keyframes animate2 {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.create-package .package-create-link a span:nth-child(3) {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to left, #0c002b, white);
+    animation: animate3 1.5s linear infinite;
+}
+
+@keyframes animate3 {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.create-package .package-create-link a span:nth-child(4) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to top, #0c002b, cyan);
+    animation: animate4 1.5s linear infinite;
+}
+
+@keyframes animate4 {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+/* Neon button. */
+.create-package a:hover {
+    background: #F4D03F;
+    color: #255784;
+    box-shadow: 0px 0px 10px #F4D03F, 0px 0px 20px#F4D03F, 0px 0px 40px #F4D03F;
+    transition-delay: 0.1s;
+}
+
+/* Create package button */
+

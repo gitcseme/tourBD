@@ -1,39 +1,28 @@
 ﻿@model tourBD.Web.Models.CompanyModels.CompanyIndexModel
 
 @section Styles {
-    <style>
-        .request-link a {
-            width: 100%;
-            font-size: 20px;
-            color: currentColor;
-            background: beige;
-        }
 
-        ul.detail-list li {
-            color: darkgoldenrod;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        }
-
-        ul.detail-list li span.ml-3 {
-            color: coral;
-        }
-
-        .footer {
-            margin: 0 auto;
-        }
-    </style>
+    <link href="~/css/company/user-company.css" rel="stylesheet" type="text/css"/>
 }
 
 <!-- Main content -->
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-8">
-                <h3>Authorized companies</h3>
+            <div class="col-md-6 left-side">
+                <div class="user-companies">
+                    <h3>Authorized companies</h3>
+                </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-6 right-side">
                 <div class="request-link">
-                    <a asp-controller="Company" asp-action="RequestCompany" class="btn btn-outline-primary">Request for a company</a>
+                    <a asp-controller="Company" asp-action="RequestCompany">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        Request for a company
+                    </a>
                 </div>
             </div>
         </div>
