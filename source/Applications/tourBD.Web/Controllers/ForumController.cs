@@ -172,6 +172,13 @@ namespace tourBD.Web.Controllers
             return RedirectToAction("Index", "Forum");
         }
 
+
+        public async Task<IActionResult> DeleteReplay (string replayId)
+        {
+            await _postService.DeleteReplayAsync(new Guid(replayId));
+            return RedirectToAction("Index", "Forum");
+        }
+
         private string GetImageName(string imageUrl)
         {
             return imageUrl.Contains(_pathService.PictureFolder) ? imageUrl.Substring(_pathService.PictureFolder.Length) : imageUrl;

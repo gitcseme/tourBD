@@ -92,6 +92,25 @@ function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
     });
 }
 
+function DeleteReplayAjax(item, replayId) {
+    item = $(item).parent().parent().parent().parent().parent();
+
+    $.ajax({
+        url: '/Forum/DeleteReplay',
+        type: 'POST',
+        dataType: 'text',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: { replayId: replayId },
+        success: function (response) {
+            item.remove();
+        },
+        error: function (data, status, xhr) {
+            console.log(status);
+        }
+    })
+
+}
+
 function countLikesAjax(btn, postId) {
 
     $.ajax({

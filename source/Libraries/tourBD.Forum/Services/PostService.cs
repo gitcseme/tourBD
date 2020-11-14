@@ -88,5 +88,11 @@ namespace tourBD.Forum.Services
             await _postUnitOfWork.ReplayRepository.AddAsync(replay);
             await _postUnitOfWork.SaveAsync();
         }
+
+        public async Task DeleteReplayAsync(Guid replayId)
+        {
+            await _postUnitOfWork.ReplayRepository.RemoveAsync(replayId);
+            await _postUnitOfWork.SaveAsync();
+        }
     }
 }
