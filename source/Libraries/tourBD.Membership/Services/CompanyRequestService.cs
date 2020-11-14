@@ -45,6 +45,11 @@ namespace tourBD.Membership.Services
             return _companyRequestUnitOfWork.CompanyRequestRepository.Get(Id);
         }
 
+        public async Task<CompanyRequest> GetAsync(Guid Id)
+        {
+            return await _companyRequestUnitOfWork.CompanyRequestRepository.GetAsync(Id);
+        }
+
         public (IEnumerable<CompanyRequest>, int, int) GetRequests(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection)
         {
             return _companyRequestUnitOfWork.CompanyRequestRepository.Get(r => r.Description.Contains(searchText), orderingColumn, orderDirection, "", pageIndex, pageSize, isTrackingOff);

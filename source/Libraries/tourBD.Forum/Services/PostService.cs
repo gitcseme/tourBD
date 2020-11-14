@@ -41,6 +41,11 @@ namespace tourBD.Forum.Services
             return _postUnitOfWork.PostRepository.Get(Id);
         }
 
+        public async Task<Post> GetAsync(Guid Id)
+        {
+            return await _postUnitOfWork.PostRepository.GetAsync(Id);
+        }
+
         public void Dispose()
         {
             _postUnitOfWork.Dispose();
@@ -93,6 +98,11 @@ namespace tourBD.Forum.Services
         {
             await _postUnitOfWork.ReplayRepository.RemoveAsync(replayId);
             await _postUnitOfWork.SaveAsync();
+        }
+
+        public async Task<Post> GetPostIncludePropertiesAsync(Guid id)
+        {
+            return await _postUnitOfWork.PostRepository.GetPostIncludePropertiesAsync(id);
         }
     }
 }

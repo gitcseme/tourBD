@@ -43,6 +43,11 @@ namespace tourBD.Membership.Services
         {
             return _tourPackageUnitOfWork.TourPackageRepository.Get(Id);
         }
+        
+        public async Task<TourPackage> GetAsync(Guid Id)
+        {
+            return await _tourPackageUnitOfWork.TourPackageRepository.GetAsync(Id);
+        }
 
         public async Task AddSpot(Spot spot)
         {

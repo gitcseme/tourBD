@@ -110,6 +110,32 @@
             margin-top: -4px;
         }
 
+        /* Dropdown */
+        .dropdown p#dropdownMenuButton {
+            font-weight: 900;
+            display: inline-block;
+        }
+
+        .dropdown p#dropdownMenuButton:hover {
+            cursor: pointer;
+        }
+
+        .dropdown.col-md-4 {
+            text-align: right;
+        }
+
+        .post-date {
+            margin-left: 40px;
+            font-size: 14px;
+        }
+
+        .card-header .row {
+            height: 35px;
+        }
+
+        .card-header {
+            padding-bottom: 0;
+        }
 
     </style>
 
@@ -127,29 +153,38 @@
                             <div class="row">
                                 <div class="card">
                                     <div class="card-header">
-                                        <div class="post-author-pic float-left">
-                                            <img src="@post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
-                                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@post.AuthorId.ToString()" class="commment-user-name">@post.AuthorName</a></span>
-                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="post-author-pic col">
+                                                    <img src="@post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                    <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@post.AuthorId.ToString()" class="commment-user-name">@post.AuthorName</a></span>
+                                                </div>
 
-                                        @if (post.IsPostAuthor)
-                                        {
-                                            <div class="dropdown float-right">
-                                                <button class="btn btn-outline-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-marker"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="#">Edit</a>
-                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                <div class="dropdown col-auto">
+                                                    <p id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</p>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a asp-controller="Forum" asp-action="ViewPost" asp-route-postId="@post.PostId.ToString()" class="dropdown-item">View</a>
+                                                        @if (post.IsPostAuthor)
+                                                        {
+                                                            <a class="dropdown-item" href="#">Edit</a>
+                                                            <a class="dropdown-item" href="#">Delete</a>
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
-                                        }
-
+                                            <div class="row">
+                                                <div class="post-date">
+                                                    @post.CreationDate.ToString()
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="card-body">
-                                        <p class="card-text">
-                                            @post.Message
-                                        </p>
+                                        <div class="post-message">
+                                            <p class="card-text">
+                                                @post.Message
+                                            </p>
+                                        </div>
                                     </div>
                                     <div class="card-footer">
                                         @{

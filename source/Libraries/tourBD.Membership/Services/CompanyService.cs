@@ -43,6 +43,11 @@ namespace tourBD.Membership.Services
         {
             return _companyUnitOfWork.CompanyRepository.Get(Id);
         }
+        
+        public async Task<Company> GetAsync(Guid Id)
+        {
+            return await _companyUnitOfWork.CompanyRepository.GetAsync(Id);
+        }
 
         public async Task<IEnumerable<Company>> GetUserCompaniesAsync(Guid userId)
         {

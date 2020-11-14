@@ -11,7 +11,7 @@ namespace tourBD.Web.Models.PostModels
         public string AuthorImageUrl { get; set; }
 
         public Guid CommentId { get; set; }
-        public DateTime CreationDate { get; set; }
+        public string CreationDate { get; set; }
 
         public string Message { get; set; }
         public bool IsReplayAuthor { get; set; }

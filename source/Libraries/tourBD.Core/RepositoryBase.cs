@@ -186,6 +186,11 @@ namespace tourBD.Core
             return _DbSet.Find(id);
         }
 
+        public async Task<TEntity> GetAsync(Guid id)
+        {
+            return await _DbSet.FindAsync(id);
+        }
+
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await Task.Run(() => {

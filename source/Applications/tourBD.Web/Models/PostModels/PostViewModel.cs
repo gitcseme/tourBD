@@ -12,7 +12,7 @@ namespace tourBD.Web.Models.PostModels
         public string AuthorName { get; set; }
         public string AuthorImageUrl { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public string CreationDate { get; set; }
         public string Message { get; set; }
         public int Likes { get; set; }
         public bool IsLikedBy { get; set; }

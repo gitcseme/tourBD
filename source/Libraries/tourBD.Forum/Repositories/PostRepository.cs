@@ -34,5 +34,15 @@ namespace tourBD.Forum.Repositories
 
             return data;
         }
+
+        public async Task<Post> GetPostIncludePropertiesAsync(Guid id)
+        {
+            
+            return await _DbSet
+                .Include(post => post.Comments)
+                    .ThenInclude(cmt => cmt.Replays)
+                .Include(post => post.Likes)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

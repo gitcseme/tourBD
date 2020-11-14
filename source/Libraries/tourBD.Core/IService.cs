@@ -10,5 +10,6 @@ namespace tourBD.Core
         Task DeleteAsync(T entity);
 
         T Get(Guid Id);
+        Task<T> GetAsync(Guid Id);
     }
 }

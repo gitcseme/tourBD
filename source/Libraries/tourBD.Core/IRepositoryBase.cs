@@ -14,6 +14,7 @@ namespace tourBD.Core
         Task RemoveAsync(Expression<Func<TEntity, bool>> filter);
         Task EditAsync(TEntity entityToUpdate);
         TEntity Get(Guid id);
+        Task<TEntity> GetAsync(Guid id);
 
         Task<IEnumerable<TEntity>> GetAllAsync();
         IEnumerable<TEntity> GetAll();
