@@ -59,7 +59,7 @@ function CreateReplayBox(item, commentId, folderPath, imageUrl, name) {
                                         </div>
                                     </div>`;
 
-    $(item).parent().parent().siblings('.replay-container').append(replayHtml);
+    $(item).parent().parent().parent().parent().siblings('.replay-container').append(replayHtml);
 }
 
 function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
