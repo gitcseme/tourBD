@@ -133,3 +133,28 @@ function countLikesAjax(btn, postId) {
         }
     });
 }
+
+function DeletePostAjax(btn, postId) {
+    let post = $(btn).parent().parent().parent().parent().parent().parent().parent().parent();
+
+    $.ajax({
+        url: '/Forum/DeletePost',
+        type: 'POST',
+        dataType: 'text',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: { postId: postId },
+        success: function (response) {
+            post.remove();
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'The post is deleted',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        },
+        error: function (data, status, xhr) {
+            
+        }
+    });
+}

@@ -14,7 +14,9 @@ namespace tourBD.Forum.Services
         IEnumerable<Post> GetAll();
 
         Task AddLikeAsync(Like like);
+        Task DeleteLikeAsync(Like like);
         Task AddCommentAsync(Comment comment);
+        Task DeleteCommentAsync(Comment comment);
         Task AddReplayAsync(Replay replay);
         Task DeleteReplayAsync(Guid replayId);
 

@@ -90,6 +90,76 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> EditPost(string postId)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
+            loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
+            Post post = null;
+
+            try
+            {
+                post = await _postService.GetAsync(new Guid(postId));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            var model = new EditPostViewModel
+            {
+                PostId = postId,
+                Message = post.Message
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPostAsync(EditPostViewModel model)
+        {
+            try
+            {
+                var post = await _postService.GetAsync(new Guid(model.PostId));
+                post.Message = model.Message;
+                await _postService.EditAsync(post);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return RedirectToAction("ViewPost", new { postId = model.PostId });
+        }
+
+        public async Task<IActionResult> DeletePostAsync(string postId)
+        {
+            try
+            {
+                var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
+                foreach (var comment in post.Comments.ToList())
+                {
+                    foreach (var replay in comment.Replays.ToList())
+                    {
+                        await _postService.DeleteReplayAsync(replay.Id);
+                    }
+                    await _postService.DeleteCommentAsync(comment);
+                }
+
+                foreach (var like in post.Likes.ToList())
+                {
+                    await _postService.DeleteLikeAsync(like);
+                }
+
+                await _postService.DeleteAsync(post);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return RedirectToAction("Index", "Forum");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ViewPost(string postId)
         {
             var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);

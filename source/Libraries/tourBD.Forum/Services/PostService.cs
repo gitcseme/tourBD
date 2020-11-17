@@ -77,10 +77,22 @@ namespace tourBD.Forum.Services
                 await _postUnitOfWork.SaveAsync();
         }
 
+        public async Task DeleteLikeAsync(Like like)
+        {
+            await _postUnitOfWork.LikeRepository.RemoveAsync(like);
+            await _postUnitOfWork.SaveAsync();
+        }
+
         public async Task AddCommentAsync(Comment comment)
         {
                 await _postUnitOfWork.CommentRepository.AddAsync(comment);
                 await _postUnitOfWork.SaveAsync();
+        }
+
+        public async Task DeleteCommentAsync(Comment comment)
+        {
+            await _postUnitOfWork.CommentRepository.RemoveAsync(comment);
+            await _postUnitOfWork.SaveAsync();
         }
 
         public async Task<IEnumerable<Post>> GetAllPostsPaginatedAsync(int pageIndex = 1, int pageSize = 10, bool isTrackingOff = true)
