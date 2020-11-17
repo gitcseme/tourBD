@@ -18,25 +18,27 @@
 
 <div class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="card" style="width: 800px; margin: 0 auto;">
-                <form method="post" asp-controller="Company" asp-action="RequestCompany">
-                    <div class="form-group">
-                        <div class="card-header">
-                            <div class="request-title">
-                                <label>Company request form</label>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <form method="post" asp-controller="Company" asp-action="RequestCompany">
+                        <div class="form-group">
+                            <div class="card-header">
+                                <div class="request-title">
+                                    <label>Company request form</label>
+                                </div>
+                                <label class="label" asp-for="Description">Describe your company(name, location,...etc)</label>
+                                <p><small>Send your company license or other related data to <span class="official-email">@Model.OfficialEmail</span>. <span style="color: darkred;">Send from your tourBD account email</span></small></p>
                             </div>
-                            <label class="label" asp-for="Description">Describe your company(name, location,...etc)</label>
-                            <p><small>Send your company license or other related data to <span class="official-email">@Model.OfficialEmail</span>. <span style="color: darkred;">Send from your tourBD account email</span></small></p>
+                            <div class="card-body">
+                                <textarea name="Description" cols="20" rows="7" class="form-control" id="Description" placeholder="Write your company details"></textarea>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit request</button>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <textarea name="Description" cols="20" rows="7" class="form-control" id="Description" placeholder="Write your company details"></textarea>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit request</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

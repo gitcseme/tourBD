@@ -1,4 +1,4 @@
-﻿@model IEnumerable<tourBD.Web.Models.PostModels.PostViewModel>
+﻿@model tourBD.Web.Models.PostModels.ForumModel
 
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
@@ -10,14 +10,19 @@
     <link href="~/css/forum/forum-index.css" rel="stylesheet" />
 
 }
-
 <!-- Main content -->
+
+@{ 
+    var prevDisabled = !Model.PreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.NextPage ? "disabled" : "";
+}
+
 <div class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-8">
                 <div class="post-container">
-                    @foreach (var post in Model)
+                    @foreach (var post in Model.Posts)
                     {
                         <div class="single-post">
                             <div class="row">
@@ -195,6 +200,27 @@
                 </div>
             </div>
             <!-- /.col-lg-4 -->
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row justify-content-md-center">
+                    <div aria-label="Page navigation example" class="next-prev">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link btn @prevDisabled" aria-label="Previous" asp-controller="Forum" asp-action="Index" , asp-route-pageIndex="@(Model.PageIndex - 1)">
+                                    <span aria-hidden="true">&laquo;</span> Previous
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link btn @nextDisabled" aria-label="Next" asp-controller="Forum" asp-action="Index" , asp-route-pageIndex="@(Model.PageIndex + 1)">
+                                    <span aria-hidden="true">&raquo;</span> Next
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- /.row -->
     </div><!-- /.container-fluid -->

@@ -116,5 +116,10 @@ namespace tourBD.Forum.Services
         {
             return await _postUnitOfWork.PostRepository.GetPostIncludePropertiesAsync(id);
         }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _postUnitOfWork.PostRepository.GetCountAsync();
+        }
     }
 }

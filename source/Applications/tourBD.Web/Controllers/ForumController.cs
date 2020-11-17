@@ -41,13 +41,15 @@ namespace tourBD.Web.Controllers
         }
 
         /* Redesign the index page */
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 1)
         {
             var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
 
             var posts = await _postService.GetAllPostsPaginatedAsync(pageIndex, pageSize);
+            var postViewModels = posts.Select(post => PreparePostViewModel(post, loggedInUser)).ToList();
+            int totalRecords = await _postService.GetCountAsync();
 
-            var model = posts.Select(post => PreparePostViewModel(post, loggedInUser)).ToList();
+            var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords);
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
