@@ -8,6 +8,7 @@
 @section Styles {
 
     <link href="~/css/forum/forum-index.css" rel="stylesheet" />
+
 }
 
 <!-- Main content -->
@@ -16,21 +17,44 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="post-container">
-                    @foreach (var item in Model)
+                    @foreach (var post in Model)
                     {
                         <div class="single-post">
                             <div class="row">
                                 <div class="card">
                                     <div class="card-header">
-                                        <div class="post-author-pic">
-                                            <img src="@item.Post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
-                                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@item.Post.AuthorId.ToString()" class="commment-user-name">@item.Post.AuthorName</a></span>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="post-author-pic col">
+                                                    <img src="@post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                    <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@post.AuthorId.ToString()" class="commment-user-name">@post.AuthorName</a></span>
+                                                </div>
+
+                                                <div class="dropdown col-auto">
+                                                    <p id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</p>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a asp-controller="Forum" asp-action="ViewPost" asp-route-postId="@post.PostId.ToString()" class="dropdown-item">View</a>
+                                                        @if (post.IsPostAuthor)
+                                                        {
+                                                            <a class="dropdown-item" asp-controller="Forum" asp-action="EditPost" asp-route-postId="@post.PostId.ToString()">Edit</a>
+                                                            <a id="dletePost" class="dropdown-item" onclick="DeletePostAjax(this, '@post.PostId.ToString()')">Delete</a>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="post-date">
+                                                    @post.CreationDate.ToString()
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p class="card-text">
-                                            @item.Post.Message
-                                        </p>
+                                        <div class="post-message">
+                                            <p class="card-text">
+                                                @post.Message
+                                            </p>
+                                        </div>
                                     </div>
                                     <div class="card-footer">
                                         @{
@@ -39,18 +63,18 @@
                                             if (user != null)
                                             {
                                                 <div class="like-wrapper row">
-                                                    @if (item.IsLikedBy)
+                                                    @if (post.IsLikedBy)
                                                     {
-                                                        <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="fix-like afterLike">Like</small>
+                                                        <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@post.PostId.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                        <span id="like-count">@post.Likes</span> <small class="fix-like afterLike">Like</small>
                                                     }
                                                     else
                                                     {
-                                                        <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@item.Post.Id.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                                                        <span id="like-count">@item.Post.Likes.Count</span> <small class="fix-like afterLikeInstant">Like</small>
+                                                        <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@post.PostId.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                                        <span id="like-count">@post.Likes</span> <small class="fix-like afterLikeInstant">Like</small>
                                                     }
 
-                                                    <div class="commentCounter">@item.Post.Comments.Count <small>comment</small></div>
+                                                    <div class="commentCounter">@post.Comments.Count <small>comment</small></div>
                                                 </div>
                                                 <hr />
                                                 <div class="row mt-3">
@@ -61,7 +85,7 @@
                                                         <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
                                                     </div>
                                                     <div class="col-auto pl-1">
-                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@item.Post.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">
+                                                        <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@post.PostId.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">
                                                             <i class="far fa-comment-alt" style="color: darkolivegreen"> Comment</i>
                                                         </button>
                                                     </div>
@@ -73,7 +97,7 @@
 
                                         <div class="comment-container" style="display: none">
 
-                                            @foreach (var comment in item.Post.Comments)
+                                            @foreach (var comment in post.Comments)
                                             {
                                                 <div class="single-comment">
 
@@ -88,11 +112,21 @@
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <ul class="replay-link p-0" style="margin: 0 0 0 33px; list-style: none; display: inline-block">
-                                                        <li style="display: block">
-                                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.Id.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">Replay</a>
-                                                        </li>
-                                                    </ul>
+                                                    <div class="row replay-linkWrapper">
+                                                        <div class="col">
+                                                            <ul class="replay-link">
+                                                                <li>
+                                                                    <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.CommentId.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">Replay</a>
+                                                                </li>
+                                                                @if (comment.IsCommentAuthor)
+                                                                {
+                                                                    <li>
+                                                                        <a class="delete-comment">Delete</a>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
 
                                                     <div class="replay-container">
                                                         @foreach (var replay in comment.Replays)
@@ -109,6 +143,18 @@
                                                                         </p>
                                                                     </div>
                                                                 </div>
+                                                                @if (replay.IsReplayAuthor)
+                                                                {
+                                                                    <div class="row">
+                                                                        <div class="offset-1">
+                                                                            <ul class="delete-replay">
+                                                                                <li>
+                                                                                    <a onclick="DeleteReplayAjax(this, '@replay.ReplayId.ToString()')">Delete</a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                }
                                                             </div>
                                                         }
                                                     </div>
@@ -156,6 +202,9 @@
 <!-- /.content -->
 
 @section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <script type="text/javascript" src="~/js/forumIndex.js"></script>
 
 }

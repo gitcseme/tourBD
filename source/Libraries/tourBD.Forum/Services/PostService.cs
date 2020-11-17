@@ -41,6 +41,11 @@ namespace tourBD.Forum.Services
             return _postUnitOfWork.PostRepository.Get(Id);
         }
 
+        public async Task<Post> GetAsync(Guid Id)
+        {
+            return await _postUnitOfWork.PostRepository.GetAsync(Id);
+        }
+
         public void Dispose()
         {
             _postUnitOfWork.Dispose();
@@ -72,21 +77,44 @@ namespace tourBD.Forum.Services
                 await _postUnitOfWork.SaveAsync();
         }
 
+        public async Task DeleteLikeAsync(Like like)
+        {
+            await _postUnitOfWork.LikeRepository.RemoveAsync(like);
+            await _postUnitOfWork.SaveAsync();
+        }
+
         public async Task AddCommentAsync(Comment comment)
         {
                 await _postUnitOfWork.CommentRepository.AddAsync(comment);
                 await _postUnitOfWork.SaveAsync();
         }
 
-        public async Task<IEnumerable<Post>> GetAllIncludePropertiesAsync()
+        public async Task DeleteCommentAsync(Comment comment)
         {
-            return await _postUnitOfWork.PostRepository.GetAllIncludePropertiesAsync();
+            await _postUnitOfWork.CommentRepository.RemoveAsync(comment);
+            await _postUnitOfWork.SaveAsync();
+        }
+
+        public async Task<IEnumerable<Post>> GetAllPostsPaginatedAsync(int pageIndex = 1, int pageSize = 10, bool isTrackingOff = true)
+        {
+            return await _postUnitOfWork.PostRepository.GetAllPostsPaginatedAsync(pageIndex, pageSize, isTrackingOff);
         }
 
         public async Task AddReplayAsync(Replay replay)
         {
             await _postUnitOfWork.ReplayRepository.AddAsync(replay);
             await _postUnitOfWork.SaveAsync();
+        }
+
+        public async Task DeleteReplayAsync(Guid replayId)
+        {
+            await _postUnitOfWork.ReplayRepository.RemoveAsync(replayId);
+            await _postUnitOfWork.SaveAsync();
+        }
+
+        public async Task<Post> GetPostIncludePropertiesAsync(Guid id)
+        {
+            return await _postUnitOfWork.PostRepository.GetPostIncludePropertiesAsync(id);
         }
     }
 }

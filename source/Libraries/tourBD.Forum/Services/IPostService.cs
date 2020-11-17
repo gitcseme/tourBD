@@ -14,11 +14,16 @@ namespace tourBD.Forum.Services
         IEnumerable<Post> GetAll();
 
         Task AddLikeAsync(Like like);
+        Task DeleteLikeAsync(Like like);
         Task AddCommentAsync(Comment comment);
+        Task DeleteCommentAsync(Comment comment);
         Task AddReplayAsync(Replay replay);
+        Task DeleteReplayAsync(Guid replayId);
 
-        Task<IEnumerable<Post>> GetAllIncludePropertiesAsync();
+        Task<IEnumerable<Post>> GetAllPostsPaginatedAsync(int pageIndex = 1, int pageSize = 10, bool isTrackingOff = true);
         (IEnumerable<Post>, int, int) GetPosts(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
         Task<(IEnumerable<Post>, int, int)> GetPostsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
+
+        Task<Post> GetPostIncludePropertiesAsync(Guid id);
     }
 }
