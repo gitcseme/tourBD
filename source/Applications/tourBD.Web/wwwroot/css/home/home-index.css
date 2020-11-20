@@ -1,0 +1,89 @@
+﻿
+.top-content {
+    background: url('../../img/bg/winter-boat.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 650px;
+    transition: 8s;
+
+    animation-name: animate;
+    animation-direction: alternate-reverse;
+    animation-duration: 40s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes animate {
+    0% {
+        background-image: url('../../img/bg/boats.jpg');
+    }
+    25% {
+        background-image: url('../../img/bg/camera-boy.jpg');
+    }
+    50% {
+        background-image: url('../../img/bg/personal.jpg');
+    }
+    75% {
+        background-image: url('../../img/bg/beach.jpg');
+    }
+    100% {
+        background-image: url('../../img/bg/hill-boat.jpg');
+    }
+}
+
+.tourBD-info {
+    text-align: center;
+}
+
+.tourBD-info h1 {
+    font-size: 110px;
+    font-family: 'Modak', cursive;
+    letter-spacing: 5px;
+    color: darkblue;
+    padding: 0;
+    margin-top: 55px;
+}
+
+.tourBD-info h1 span.bd {
+    color: darkslateblue;
+}
+
+
+/* our services */
+section.our-services {
+    background-color: azure;
+    padding: 20px 0;
+}
+
+.col-md-12.service-wrapper {
+    text-align: center;
+}
+
+h2.section-heading {
+    font-size: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin: 30px 0;
+}
+
+.famous-quote p.the-quote {
+    font-family: cursive;
+    font-size: 20px;
+    color: darkorange;
+}
+
+p.quote-author {
+    margin-left: 50px;
+    color: blue;
+    font-family: cursive;
+}
+
+/* forum service */
+
+.ref-1 img {
+    max-width: 100%;
+    height: fit-content;
+    object-fit: cover;
+}

@@ -1,0 +1,157 @@
+﻿@model tourBD.Web.Models.PostModels.PostViewModel
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
+@inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+@inject tourBD.Membership.Services.IPathService _pathService
+
+@{
+    var post = Model;
+}
+
+<div class="single-post">
+    <div class="row">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="post-author-pic col">
+                            <img src="@post.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                            <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@post.AuthorId.ToString()" class="commment-user-name">@post.AuthorName</a></span>
+                        </div>
+
+                        <div class="dropdown col-auto">
+                            <p id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</p>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a asp-controller="Forum" asp-action="ViewPost" asp-route-postId="@post.PostId.ToString()" class="dropdown-item">View</a>
+                                @if (post.IsPostAuthor)
+                                {
+                                    <a class="dropdown-item" asp-controller="Forum" asp-action="EditPost" asp-route-postId="@post.PostId.ToString()">Edit</a>
+                                    <a id="dletePost" class="dropdown-item" onclick="DeletePostAjax(this, '@post.PostId.ToString()')">Delete</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="post-date">
+                            @post.CreationDate.ToString()
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="post-message">
+                    <p class="card-text">
+                        @post.Message
+                    </p>
+                </div>
+            </div>
+            <div class="card-footer">
+                @{
+                    var user = await _userManager.GetUserAsync(User);
+
+                    if (user != null)
+                    {
+                        <div class="like-wrapper row">
+                            @if (post.IsLikedBy)
+                            {
+                                <button id="post-likes" class="btn btn-sm btn-light afterLike" onclick="countLikesAjax(this, '@post.PostId.ToString()')" disabled><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                <span id="like-count">@post.Likes</span> <small class="fix-like afterLike">Like</small>
+                            }
+                            else
+                            {
+                                <button id="post-likes" class="btn btn-sm btn-light" onclick="countLikesAjax(this, '@post.PostId.ToString()')"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                                <span id="like-count">@post.Likes</span> <small class="fix-like afterLikeInstant">Like</small>
+                            }
+
+                            <div class="commentCounter">@post.Comments.Count <small>comment</small></div>
+                        </div>
+                        <hr />
+                        <div class="row mt-3">
+                            <div class="col-auto">
+                                <img src="@user.ImageUrl" alt="profile-pic" id="author-profile-pic" />
+                            </div>
+                            <div class="comment-box col">
+                                <textarea id="default-comment-box" name="cmtbox" rows="1"></textarea>
+                            </div>
+                            <div class="col-auto pl-1">
+                                <button id="btn-add-comment" class="btn btn-sm btn-outline-primary" onclick="AjaxComment(this, '@post.PostId.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">
+                                    <i class="far fa-comment-alt" style="color: darkolivegreen"> Comment</i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <a id="commentViewer" class="btn" onclick="CommentShower(this)"><small>view comments</small></a>
+
+                <div class="comment-container" style="display: none">
+
+                    @foreach (var comment in post.Comments)
+                    {
+                        <div class="single-comment">
+
+                            <div class="row commentWrapper">
+                                <div class="comment-autor-pic col-auto">
+                                    <img src="@comment.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                    <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@comment.AuthorId.ToString()" class="commment-user-name">@comment.AuthorName</a></span>
+                                </div>
+                                <div class="col">
+                                    <p>
+                                        @comment.Message
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row replay-linkWrapper">
+                                <div class="col">
+                                    <ul class="replay-link">
+                                        <li>
+                                            <a class="replay-trigger" onclick="CreateReplayBox(this, '@comment.CommentId.ToString()', '@_pathService.PictureFolder', '@user.ImageUrl', '@user.FullName')">Replay</a>
+                                        </li>
+                                        @if (comment.IsCommentAuthor)
+                                        {
+                                            <li>
+                                                <a class="delete-comment">Delete</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="replay-container">
+                                @foreach (var replay in comment.Replays)
+                                {
+                                    <div class="single-replay">
+                                        <div class="row">
+                                            <div class="replay-author-pic col-auto offset-1">
+                                                <img src="@replay.AuthorImageUrl" alt="profile-pic" id="author-profile-pic" />
+                                                <span class="commment-user-name"><a asp-controller="Account" asp-action="Profile" asp-route-userId="@replay.AuthorId.ToString()" class="commment-user-name">@replay.AuthorName</a></span>
+                                            </div>
+                                            <div class="col">
+                                                <p>
+                                                    @replay.Message
+                                                </p>
+                                            </div>
+                                        </div>
+                                        @if (replay.IsReplayAuthor)
+                                        {
+                                            <div class="row">
+                                                <div class="offset-1">
+                                                    <ul class="delete-replay">
+                                                        <li>
+                                                            <a onclick="DeleteReplayAjax(this, '@replay.ReplayId.ToString()')">Delete</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
