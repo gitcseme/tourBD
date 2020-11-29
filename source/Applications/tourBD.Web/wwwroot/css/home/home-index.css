@@ -18,14 +18,8 @@
     0% {
         background-image: url('../../img/bg/boats.jpg');
     }
-    25% {
-        background-image: url('../../img/bg/camera-boy.jpg');
-    }
     50% {
-        background-image: url('../../img/bg/personal.jpg');
-    }
-    75% {
-        background-image: url('../../img/bg/beach.jpg');
+        background-image: url('../../img/bg/camera-boy.jpg');
     }
     100% {
         background-image: url('../../img/bg/hill-boat.jpg');
@@ -50,24 +44,6 @@
 }
 
 
-/* our services */
-section.our-services {
-    background-color: azure;
-    padding: 20px 0;
-}
-
-.col-md-12.service-wrapper {
-    text-align: center;
-}
-
-h2.section-heading {
-    font-size: 50px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 900;
-    letter-spacing: 3px;
-    margin: 30px 0;
-}
-
 .famous-quote p.the-quote {
     font-family: cursive;
     font-size: 20px;
@@ -80,10 +56,48 @@ p.quote-author {
     font-family: cursive;
 }
 
-/* forum service */
+/* Companies */
+.conpanies {
+    padding: 60px 0;
+}
 
-.ref-1 img {
-    max-width: 100%;
-    height: fit-content;
-    object-fit: cover;
+.all-companies .sponsors h4 {
+    font-family: monospace;
+    background-color: bisque;
+    margin: 0;
+    padding: 5px 50px;
+    font-weight: 600;
+}
+
+.top-sponsors .sponsors h4 {
+    font-family: monospace;
+    background-color: azure;
+    margin: 0;
+    padding: 5px 50px;
+    font-weight: 600;
+}
+
+.row .sponsors {
+    border-radius: 3px;
+    text-align: center;
+    padding: 3px 0;
+    margin-bottom: 15px;
+}
+
+.company-logo {
+    text-align: center;
+}
+
+.col-md-4.all-companies {
+    background: beige;
+    border: 1px solid azure;
+}
+
+.col-md-4.top-sponsors {
+    border: 1px solid gainsboro;
+}
+
+.col-md-4.hot-feeds {
+    background: darkgray;
+    padding: 5px 1px 3px 10px;
 }

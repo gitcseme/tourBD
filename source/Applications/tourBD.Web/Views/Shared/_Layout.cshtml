@@ -14,7 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>AdminLTE 3 | Starter</title>
+    <title>tourBD</title>
 
     <!-- Font Awesome Icons -->
     <link href="~/admin/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
@@ -36,6 +36,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                </li>
+                @if (_signInManager.IsSignedIn(User))
+                { 
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a asp-controller="Forum" asp-action="Index" class="nav-link">Forum</a>
+                    </li>
+                }
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a asp-controller="Home" asp-action="Services" class="nav-link">Services</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
@@ -150,7 +159,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </nav>
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed;">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
                 <img src="~/img/tbd-logo.PNG" alt="TBD Logo" class="brand-image img-circle elevation-3">
@@ -206,12 +215,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     var user = await _userManager.GetUserAsync(User);
                                     if (user != null)
                                     {
-                                        <li class="nav-item">
+                                        @*<li class="nav-item">
                                             <a asp-controller="Forum" asp-action="Index" class="nav-link">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Forum</p>
                                             </a>
-                                        </li>
+                                        </li>*@
 
                                         <li class="nav-item">
                                             <a asp-controller="Forum" asp-action="CreatePost" asp-route-userId="@user.Id" class="nav-link">
@@ -279,7 +288,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Anything you want
+                Dedicated public service
             </div>
             <!-- Default to the left -->
             <strong>Copyright &copy; 2020 <a href="#">tourBD</a>.</strong> All rights reserved.

@@ -48,7 +48,12 @@ namespace tourBD.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> RegisterAsync(string returnUrl = null)
         {
-            var model = new RegisterModel() { ReturnUrl = returnUrl };
+            var model = new RegisterModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
             return View(model);
         }
 
@@ -148,7 +153,7 @@ namespace tourBD.Web.Controllers
 
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Profile", "Account", new { userId = user.Id.ToString() });
                 }
             }
 
