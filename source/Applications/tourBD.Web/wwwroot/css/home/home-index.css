@@ -61,6 +61,22 @@ p.quote-author {
     padding: 60px 0;
 }
 
+.conpany-section {
+    margin: 50px 0;
+}
+
+.row.conpany-section h3 {
+    font-weight: 600;
+    text-align: center;
+    padding: 0;
+    font-size: 40px;
+}
+
+.row.section-content-wrapper {
+    min-height: 400px;
+    max-height: 600px;
+}
+
 .all-companies .sponsors h4 {
     font-family: monospace;
     background-color: bisque;
@@ -100,4 +116,11 @@ p.quote-author {
 .col-md-4.hot-feeds {
     background: darkgray;
     padding: 5px 1px 3px 10px;
+}
+
+/* Footer */
+footer.main-footer {
+    height: 500px;
+    background-color: slategrey;
+    color: white;
 }
