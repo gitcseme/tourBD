@@ -1,0 +1,53 @@
+﻿
+/* our services */
+section.our-services {
+    background-color: azure;
+    padding: 30px 0;
+}
+
+.col-md-12.service-wrapper {
+    text-align: center;
+}
+
+h2.section-heading {
+    font-size: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin: 30px 0;
+}
+
+.single-service {
+    margin: 50px 0;
+}
+
+/* forum service */
+.ref-1 img {
+    width: 100%;
+    height: auto;
+}
+
+.row.forum-service {
+    background: beige;
+    padding: 15px 0;
+}
+
+/* company service */
+.row.company-service {
+    background: cadetblue;
+    padding: 15px 0;
+}
+
+.service-name h3 {
+    background: azure;
+    font-weight: 600;
+    font-family: monospace;
+    text-align: center;
+}
+
+.service-partition h4 {
+    font-family: monospace;
+    background: azure;
+    padding: 0 7px;
+    border-radius: 3px;
+}

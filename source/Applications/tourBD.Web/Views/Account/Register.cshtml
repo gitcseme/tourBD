@@ -33,6 +33,31 @@
                                  class="register-pic" />
                         </div>
                         <div class="col-lg-6">
+                            <div class="pl-5 pt-1 pr-5">
+                                @if (Model.ExternalLogins.Count != 0)
+                                {
+                                    <h3>Login with external account</h3>
+                                    <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                                        <div class="external-providers">
+                                            @foreach (var provider in Model.ExternalLogins)
+                                            {
+                                                if (provider.DisplayName == "Google")
+                                                {
+                                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Login with @provider.DisplayName account">
+                                                        <i class="fab fa-google"></i> @provider.DisplayName
+                                                    </button>
+                                                }
+                                                else if (provider.DisplayName == "Facebook")
+                                                {
+                                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Login with @provider.DisplayName account">
+                                                        <i class="fab fa-facebook"></i> @provider.DisplayName
+                                                    </button>
+                                                }
+                                            }
+                                        </div>
+                                    </form>
+                                }
+                            </div>
                             <div class="p-5 py-lg-12">
                                 <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
                                     <div>

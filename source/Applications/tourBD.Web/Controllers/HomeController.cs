@@ -22,11 +22,23 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            await PrepareLoggedInUserAsync();
+
+            return View();
+        }
+
+        public async Task<IActionResult> Services()
+        {
+            await PrepareLoggedInUserAsync();
+
+            return View();
+        }
+
+        private async Task PrepareLoggedInUserAsync()
+        {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
                 user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
-
-            return View();
         }
     }
 }

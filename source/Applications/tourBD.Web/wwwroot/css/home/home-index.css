@@ -1,0 +1,126 @@
+﻿
+.top-content {
+    background: url('../../img/bg/winter-boat.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 650px;
+    transition: 8s;
+
+    animation-name: animate;
+    animation-direction: alternate-reverse;
+    animation-duration: 40s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes animate {
+    0% {
+        background-image: url('../../img/bg/boats.jpg');
+    }
+    50% {
+        background-image: url('../../img/bg/camera-boy.jpg');
+    }
+    100% {
+        background-image: url('../../img/bg/hill-boat.jpg');
+    }
+}
+
+.tourBD-info {
+    text-align: center;
+}
+
+.tourBD-info h1 {
+    font-size: 110px;
+    font-family: 'Modak', cursive;
+    letter-spacing: 5px;
+    color: darkblue;
+    padding: 0;
+    margin-top: 55px;
+}
+
+.tourBD-info h1 span.bd {
+    color: darkslateblue;
+}
+
+
+.famous-quote p.the-quote {
+    font-family: cursive;
+    font-size: 20px;
+    color: darkorange;
+}
+
+p.quote-author {
+    margin-left: 50px;
+    color: blue;
+    font-family: cursive;
+}
+
+/* Companies */
+.conpanies {
+    padding: 60px 0;
+}
+
+.conpany-section {
+    margin: 50px 0;
+}
+
+.row.conpany-section h3 {
+    font-weight: 600;
+    text-align: center;
+    padding: 0;
+    font-size: 40px;
+}
+
+.row.section-content-wrapper {
+    min-height: 400px;
+    max-height: 600px;
+}
+
+.all-companies .sponsors h4 {
+    font-family: monospace;
+    background-color: bisque;
+    margin: 0;
+    padding: 5px 50px;
+    font-weight: 600;
+}
+
+.top-sponsors .sponsors h4 {
+    font-family: monospace;
+    background-color: azure;
+    margin: 0;
+    padding: 5px 50px;
+    font-weight: 600;
+}
+
+.row .sponsors {
+    border-radius: 3px;
+    text-align: center;
+    padding: 3px 0;
+    margin-bottom: 15px;
+}
+
+.company-logo {
+    text-align: center;
+}
+
+.col-md-4.all-companies {
+    background: beige;
+    border: 1px solid azure;
+}
+
+.col-md-4.top-sponsors {
+    border: 1px solid gainsboro;
+}
+
+.col-md-4.hot-feeds {
+    background: darkgray;
+    padding: 5px 1px 3px 10px;
+}
+
+/* Footer */
+footer.main-footer {
+    height: 500px;
+    background-color: slategrey;
+    color: white;
+}

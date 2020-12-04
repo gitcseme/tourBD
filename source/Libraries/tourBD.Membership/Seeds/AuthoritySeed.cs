@@ -26,7 +26,7 @@ namespace tourBD.Membership.Seeds
             this._roleManager = _roleManager;
             _pathService = pathService;
 
-            _adminUser = new ApplicationUser("shuvo@gmail.com", "Kawsarul Alam", "01764206806", "kshuvo96@gmail.com", _pathService.DummyUserImageUrl);
+            _adminUser = new ApplicationUser("shuvo@gmail.com", "Kawsarul Alam", "01764206806", "shuvo@gmail.com", _pathService.DummyUserImageUrl);
             _supportUser = new ApplicationUser("mahin@gmail.com", "Mahin Hosen", "01789577996", "mahin@gmail.com", _pathService.DummyUserImageUrl);
             _marketingUser = new ApplicationUser("arif@gmail.com", "Ariful Islam", "01688032774", "arif@gmail.com", _pathService.DummyUserImageUrl);
 
