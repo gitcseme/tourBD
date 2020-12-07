@@ -197,7 +197,7 @@ namespace tourBD.Web.Controllers
             {
                 packageId = tourPackage.Id,
                 PackageCode = tourPackage.PackageCode,
-                MainArea = tourPackage.MainArea,
+                Division = tourPackage.Division,
                 Days = tourPackage.Days,
                 Price = tourPackage.Price,
                 Availability = tourPackage.Availability,
@@ -222,7 +222,7 @@ namespace tourBD.Web.Controllers
                 }
 
                 // Rebuild the package spots from model
-                tourPackage.MainArea = model.MainArea;
+                tourPackage.Division = model.Division;
                 tourPackage.Days = model.Days;
                 tourPackage.Price = model.Price;
                 tourPackage.Availability = model.Availability;

@@ -19,12 +19,12 @@
                         <input asp-for="packageId" hidden />
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
-                                <label asp-for="MainArea">Main location</label>
+                                <label asp-for="Division">Main location</label>
                             </div>
                             <div class="inputBox col-auto">
                                 <input type="text"
                                        name="MainArea"
-                                       value="@Model.MainArea"
+                                       value="@Model.Division"
                                        class="form-control"
                                        placeholder="Main target location name"
                                        aria-describedby="Main-area-description" />
@@ -34,7 +34,7 @@
                                 </small>
                             </div>
                         </div>
-                        <small><span asp-validation-for="MainArea" class="text-danger"></span></small>
+                        <small><span asp-validation-for="Division" class="text-danger"></span></small>
 
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">

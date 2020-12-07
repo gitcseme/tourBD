@@ -12,10 +12,14 @@ namespace tourBD.Membership.Entities
         public Guid UserId { get; set; }
 
         [Required(ErrorMessage = "Request description is needed")]
+        [MaxLength(800)]
         public string Description { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime RequestDate { get; set; }
 
+        [Required]
+        [MaxLength(20)]
         public string RequestStatus { get; set; }
     }
 }
