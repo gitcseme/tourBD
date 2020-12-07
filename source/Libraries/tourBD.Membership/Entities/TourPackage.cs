@@ -8,14 +8,12 @@ namespace tourBD.Membership.Entities
     public class TourPackage : EntityBase<Guid>
     {
         [MaxLength(30)]
-        [Required(ErrorMessage = "Main area is required")]
+        [Required(ErrorMessage = "Division is required")]
         public string Division { get; set; }
 
-        [Required]
         public string PackageCode { get; set; }
 
         [MaxLength(15)]
-        [Required]
         public string Availability { get; set; }
 
         [DataType(DataType.Currency)]
@@ -25,7 +23,9 @@ namespace tourBD.Membership.Entities
 
         [Required]
         public int Days { get; set; }
+        
         public List<Spot> Spots { get; set; } = new List<Spot>();
+        public List<Love> Loves { get; set; } = new List<Love>();
 
         public Guid CompanyId { get; set; }
         public Company Company { get; set; }

@@ -1,4 +1,5 @@
 ﻿@model tourBD.Web.Models.CompanyModels.EditPackageViewModel
+@using tourBD.Membership.Enums;
 
 
 @section Styles {
@@ -19,19 +20,13 @@
                         <input asp-for="packageId" hidden />
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">
-                                <label asp-for="Division">Main location</label>
+                                <label asp-for="Division">Division</label>
                             </div>
                             <div class="inputBox col-auto">
-                                <input type="text"
-                                       name="MainArea"
-                                       value="@Model.Division"
-                                       class="form-control"
-                                       placeholder="Main target location name"
-                                       aria-describedby="Main-area-description" />
-                                <small id="Main-area-description" class="text-muted">
-                                    Suppose the package targets the spots of Syllete divition.
-                                    Hence main area is Syllete
-                                </small>
+                                @Html.DropDownListFor(m => m.Division,
+                                        new SelectList(Enum.GetValues(typeof(BangladeshDivisions))),
+                                        "Choose division",
+                                        new { @class = "form-control", required = (string)null })
                             </div>
                         </div>
                         <small><span asp-validation-for="Division" class="text-danger"></span></small>
@@ -41,12 +36,10 @@
                                 <label asp-for="Days">Days</label>
                             </div>
                             <div class="inputBox col-auto">
-                                <input type="text"
-                                       name="Days"
-                                       value="@Model.Days"
-                                       class="form-control"
-                                       placeholder="Put a number"
-                                       aria-describedby="Package-days" />
+                                @Html.DropDownListFor(m => m.Days,
+                                        new SelectList(Enumerable.Range(1, 30)),
+                                        "Select days",
+                                        new { @class = "form-control", required = (string)null })
                                 <small id="Package-days" class="text-muted">
                                     package duration (days)
                                 </small>
@@ -61,12 +54,19 @@
                             <div class="inputBox col-auto">
                                 <input type="text"
                                        name="Price"
-                                       value="@Model.Price"
                                        class="form-control"
-                                       placeholder="Set the package price" />
+                                       placeholder="Set per person price"
+                                       aria-describedby="Package-price"
+                                       value="@Model.Price"/>
+                                <small class="text-muted">
+                                    Set price per person
+                                </small>
                             </div>
+                            <div class="tk-mark">
+                                <button type="button" class="text-muted">TK</button>
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
                         </div>
-                        <small><span asp-validation-for="Price" class="text-danger"></span></small>
 
                         <div class="form-group row">
                             <div class="propertyLabel col-auto">

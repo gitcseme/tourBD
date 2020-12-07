@@ -129,7 +129,7 @@ namespace tourBD.Web.Controllers
             await GetLoggedInUser();
             var package = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
 
-            var model = new ViewPackageViewModel()
+            var model = new PackageViewModel()
             {
                 Package = package,
                 Company = _companyService.Get(package.CompanyId)
@@ -259,6 +259,12 @@ namespace tourBD.Web.Controllers
             });
 
             return View(company);
+        }
+
+        public async Task<IActionResult> AddPackageLove(string packageId)
+        {
+
+            return RedirectToAction("ViewPackage", "Company", new { packageId = packageId });
         }
 
         private async Task GetLoggedInUser()

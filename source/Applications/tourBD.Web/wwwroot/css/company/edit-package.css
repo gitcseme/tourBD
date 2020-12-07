@@ -17,3 +17,10 @@
 .propertyLabel {
     width: 135px;
 }
+
+button.text-muted {
+    height: 62%;
+    border: none;
+    border-radius: 3px;
+    margin-left: -6px;
+}

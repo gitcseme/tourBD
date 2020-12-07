@@ -78,3 +78,13 @@ label span.color-ml-3 {
 .spot-list .col-sm-auto {
     border: none;
 }
+
+label.packageLabel {
+    width: 110px;
+    background-color: beige;
+}
+
+span.color-ml-3 {
+    font-weight: 600;
+    color: maroon;
+}

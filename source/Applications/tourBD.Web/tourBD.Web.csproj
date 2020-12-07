@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200729161154_Changed_RequestStatus_Type.cs" />
     <Compile Remove="Data\Migrations\20200729161154_Changed_RequestStatus_Type.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201207054856_Adding_SchoolContext.cs" />
+    <Compile Remove="Data\Migrations\20201207054856_Adding_SchoolContext.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
