@@ -51,5 +51,6 @@ namespace tourBD.Membership.Contexts
         public DbSet<TourPackage> TourPackages { get; set; }
         public DbSet<Spot> Spots { get; set; }
         public DbSet<CompanyRequest> CompanyRequests { get; set; }
+        public DbSet<Love> Loves { get; set; }
     }
 }

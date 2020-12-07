@@ -11,10 +11,11 @@ namespace tourBD.Membership.UnitOfWorks
         {
             TourPackageRepository = new TourPackageRepository(_dbContext);
             SpotRepository = new SpotRepository(_dbContext);
+            LoveRepository = new LoveRepository(_dbContext);
         }
 
         public ITourPackageRepository TourPackageRepository { get; set; }
         public ISpotRepository SpotRepository { get; set; }
-
+        public ILoveRepository LoveRepository { get; set; }
     }
 }

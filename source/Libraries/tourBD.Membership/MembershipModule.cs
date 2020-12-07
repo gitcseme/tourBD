@@ -40,6 +40,10 @@ namespace tourBD.Membership
                 .As<ISpotRepository>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<LoveRepository>()
+                .As<ILoveRepository>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<CompanyRequestRepository>()
                 .As<ICompanyRequestRepository>()
                 .InstancePerLifetimeScope();

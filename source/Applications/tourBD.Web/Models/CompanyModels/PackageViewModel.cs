@@ -10,5 +10,8 @@ namespace tourBD.Web.Models.CompanyModels
     {
         public Company Company { get; set; }
         public TourPackage Package { get; set; }
+
+        public bool IsLoved { get; set; }
+        public int Loves { get; set; }
     }
 }

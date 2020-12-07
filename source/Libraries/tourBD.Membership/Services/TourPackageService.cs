@@ -65,5 +65,11 @@ namespace tourBD.Membership.Services
             await _tourPackageUnitOfWork.SpotRepository.RemoveAsync(spot);
             await _tourPackageUnitOfWork.SaveAsync();
         }
+
+        public async Task AddLoveAsync(Love love)
+        {
+            await _tourPackageUnitOfWork.LoveRepository.AddAsync(love);
+            await _tourPackageUnitOfWork.SaveAsync();
+        }
     }
 }

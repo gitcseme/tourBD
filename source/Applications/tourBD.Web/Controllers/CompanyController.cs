@@ -132,9 +132,25 @@ namespace tourBD.Web.Controllers
             var model = new PackageViewModel()
             {
                 Package = package,
-                Company = _companyService.Get(package.CompanyId)
+                Company = _companyService.Get(package.CompanyId),
+                Loves = package.Loves.Count,
+                IsLoved = package.Loves.Where(l => l.AuthorId == user.Id).Any(),
             };
             return View(model);
+        }
+
+        public async Task<IActionResult> AddPackageLove(string packageId)
+        {
+            await GetLoggedInUser();
+            var love = new Love
+            {
+                AuthorId = user.Id,
+                TourPackageId = new Guid(packageId)
+            };
+
+            await _tourPackageService.AddLoveAsync(love);
+
+            return RedirectToAction("ViewPackage", "Company", new { packageId = packageId });
         }
 
         [HttpGet]
@@ -259,12 +275,6 @@ namespace tourBD.Web.Controllers
             });
 
             return View(company);
-        }
-
-        public async Task<IActionResult> AddPackageLove(string packageId)
-        {
-
-            return RedirectToAction("ViewPackage", "Company", new { packageId = packageId });
         }
 
         private async Task GetLoggedInUser()

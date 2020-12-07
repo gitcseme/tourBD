@@ -23,6 +23,7 @@ namespace tourBD.Membership.Repositories
                 return _DbSet
                         .Where(p => p.Id == packageId)
                         .Include(p => p.Spots)
+                        .Include(p => p.Loves)
                         .FirstOrDefault();
             });
         }

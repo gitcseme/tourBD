@@ -15,10 +15,16 @@
                         <label>Package provider:</label> <a class="company-name" asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@Model.Company.Id">@Model.Company.Name</a> <br />
                         <label class="mr-3">Mobile: </label> <span>@Model.Company.PhoneNumber</span>
                     </div>
+
+                    @{ 
+                        var loveDisable = Model.IsLoved ? "disabled" : "";
+                        var loved = Model.IsLoved ? "afterLove" : "";
+                    }
+
                     <div class="float-right love-warpper">
-                        <button class="btn love-react" onclick="AjaxLove(this, '@Model.Package.Id.ToString()')"><i class="fas fa-heart"></i></button>
+                        <button class="btn love-react" onclick="AjaxLove(this, '@Model.Package.Id.ToString()')" @loveDisable><i class="fas fa-heart @loved"></i></button>
                         <div class="love-count">
-                            <p class="loves">29 Love</p>
+                            <p class="loves @loved">@Model.Loves Love</p>
                         </div>
                     </div>
                 </div>
@@ -75,31 +81,27 @@
 
     <script type="text/javascript">
         function AjaxLove(btn, packageId) {
+            
 
-            let love = $(btn).siblings('.love-count').children('.loves')[0].innerText;
-            console.log(love);
+            $.ajax({
+                url: '/Company/AddPackageLove',
+                type: 'POST',
+                dataType: 'text',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: { packageId: packageId },
+                success: function (response) {
+                    btn.disabled = true;
+                    let loveElem = $(btn).siblings('.love-count').children('.loves');
+                    let newText = (parseInt(loveElem[0].innerText.split(' ')[0]) + 1) + ' Love';
+                    loveElem.text(newText);
 
-            //$.ajax({
-            //    url: '/Company/AddPackageLove',
-            //    type: 'POST',
-            //    dataType: 'text',
-            //    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            //    data: { packageId: packageId },
-            //    success: function (response) {
-
-
-            //        //let elem = $(btn).siblings('#like-count');
-            //        //let likes = parseInt(elem[0].innerText) + 1;
-            //        //elem.text(likes);
-
-            //        //$(btn).addClass('afterLike');
-            //        //$(btn).siblings('.afterLikeInstant').addClass('afterLike');
-            //        //btn.disabled = true;
-            //    },
-            //    error(data, status, xhr) {
-            //        console.log(status);
-            //    }
-            //});
+                    $(btn).children('.fas.fa-heart').addClass('afterLove');
+                    $(btn).siblings('.love-count').children('.loves').addClass('afterLove');
+                },
+                error(data, status, xhr) {
+                    console.log(status);
+                }
+            });
 
         }
     </script>

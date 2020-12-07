@@ -7,5 +7,6 @@ namespace tourBD.Membership.UnitOfWorks
     {
         ITourPackageRepository TourPackageRepository { get; }
         ISpotRepository SpotRepository { get; }
+        ILoveRepository LoveRepository { get; }
     }
 }
