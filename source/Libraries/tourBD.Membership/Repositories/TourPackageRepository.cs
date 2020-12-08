@@ -24,6 +24,7 @@ namespace tourBD.Membership.Repositories
                         .Where(p => p.Id == packageId)
                         .Include(p => p.Spots)
                         .Include(p => p.Loves)
+                        .AsNoTracking()
                         .FirstOrDefault();
             });
         }

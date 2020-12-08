@@ -69,13 +69,15 @@
 
                             @if (package.Discount == 0)
                             {
-                                <label class="packageLabel">Price: </label><span class="color-ml-3"> @package.Price tk</span> <span> (per adalt)</span>
+                                <label class="packageLabel">Price: </label><span class="color-ml-3"> @package.Price tk</span> <small>(per adalt)</small> <br />
                             }
                             else
                             {
                                 double discountedPrice = package.Price - (package.Price * package.Discount) / 100;
-                                <label class="packageLabel">Price: </label><span class="color-ml-3" style="color: red"><s> @package.Price tk</s></span><span style="color: blue" class="ml-2 color-ml-3">@discountedPrice tk</span> <span> (per adalt)</span>
+                                <label class="packageLabel">Price: </label><span class="color-ml-3" style="color: red"><s> @package.Price tk</s></span><span style="color: blue" class="ml-2 color-ml-3">@discountedPrice tk</span><small>(per adalt)</small> <br />
                             }
+
+                            <label class="packageLabel">Popularity: </label><span class="color-ml-3"> <i class="fas fa-heart text-danger"></i> @package.Loves.Count</span>
                         </div>
                         <div class="header-right float-right">
                             @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
