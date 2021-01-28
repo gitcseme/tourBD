@@ -1,4 +1,9 @@
 ﻿
+.post-date {
+    margin-left: 40px;
+    font-size: 13px;
+    color: #808080;
+}
 
 .card img#author-profile-pic {
     width: 30px;
@@ -26,6 +31,7 @@
     width: 100%;
     height: 31px;
     border: none;
+    background-color: #F0F2F5;
 }
 
 .comment-box {
@@ -39,27 +45,6 @@
 
 .row.commentWrapper {
     height: 30px;
-}
-
-.replay-link {
-    width: 50px;
-}
-
-.replay-link a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    text-align: left;
-    color: blueviolet;
-    border: 0;
-    font-size: 13px;
-}
-
-.replay-link:hover a {
-    text-decoration: underline;
-    color: blueviolet;
-    cursor: pointer;
 }
 
 a#commentViewer {
@@ -84,5 +69,68 @@ span#like-count {
 .commentCounter {
     margin-top: 3px;
     margin-left: 100px;
+}
+
+ul.replay-link {
+    padding-left: 33.5px;
+}
+
+ul.delete-replay, ul.replay-link {
+    list-style: none;
+    display: flex;
+    margin: 0;
+}
+
+ul.delete-replay li, ul.replay-link li {
+    display: block;
+}
+
+ul.delete-replay li a, ul.replay-link li a {
+    display: block;
+    font-size: 13px;
+    transition: .35s;
+}
+
+ul.delete-replay li a:hover, ul.replay-link li a:hover {
+    text-decoration: underline;
+    color: firebrick;
+    transition: .35s;
+    cursor: pointer;
+}
+
+ul.replay-link li a.delete-comment {
+    margin-left: 10px;
+}
+
+ul.delete-replay li a {
+    margin-top: -4px;
+}
+
+/* Dropdown */
+.dropdown p#dropdownMenuButton {
+    font-weight: 900;
+    display: inline-block;
+}
+
+.dropdown p#dropdownMenuButton:hover {
+    cursor: pointer;
+}
+
+.dropdown.col-md-4 {
+    text-align: right;
+}
+
+.card-header .row {
+    height: 35px;
+}
+
+.card-header {
+    padding-bottom: 0;
+}
+
+.dropdown-menu a#dletePost:hover {
+    cursor: pointer;
+    background-color: firebrick;
+    transition: 0.5s;
 }
 

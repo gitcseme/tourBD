@@ -11,6 +11,7 @@ namespace tourBD.Membership.Services
     {
         Task AddSpot(Spot spot);
         Task DeleteSpotAsync(Spot spot);
+        Task AddLoveAsync(Love love);
         Task<TourPackage> GetPackageWithRelatedSpotsAsync(Guid packageId);
     }
 }

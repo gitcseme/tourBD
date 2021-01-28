@@ -9,6 +9,8 @@ namespace tourBD.Forum.Repositories
 {
     public interface IPostRepository : IRepositoryBase<Post, Guid>
     {
-        Task<IEnumerable<Post>> GetAllIncludePropertiesAsync();
+        Task<IEnumerable<Post>> GetAllPostsPaginatedAsync(int pageIndex, int pageSize, bool isTrackingOff);
+
+        Task<Post> GetPostIncludePropertiesAsync(Guid id);
     }
 }

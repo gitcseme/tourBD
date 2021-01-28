@@ -21,10 +21,11 @@ namespace tourBD.Membership.Repositories
             return await Task.Run(() =>
             {
                 return _DbSet
-                       .Where(c => c.Id == companyId)
-                       .Include(c => c.TourPackages)
-                            .ThenInclude(tp => tp.Spots)
-                            .FirstOrDefault();
+                        .Where(c => c.Id == companyId)
+                        .Include(c => c.TourPackages).ThenInclude(tp => tp.Spots)
+                        .Include(c => c.TourPackages).ThenInclude(tp => tp.Loves)
+                        .AsNoTracking()
+                        .FirstOrDefault();
             });
         }
     }

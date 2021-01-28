@@ -129,12 +129,28 @@ namespace tourBD.Web.Controllers
             await GetLoggedInUser();
             var package = await _tourPackageService.GetPackageWithRelatedSpotsAsync(new Guid(packageId));
 
-            var model = new ViewPackageViewModel()
+            var model = new PackageViewModel()
             {
                 Package = package,
-                Company = _companyService.Get(package.CompanyId)
+                Company = _companyService.Get(package.CompanyId),
+                Loves = package.Loves.Count,
+                IsLoved = package.Loves.Where(l => l.AuthorId == user.Id).Any(),
             };
             return View(model);
+        }
+
+        public async Task<IActionResult> AddPackageLove(string packageId)
+        {
+            await GetLoggedInUser();
+            var love = new Love
+            {
+                AuthorId = user.Id,
+                TourPackageId = new Guid(packageId)
+            };
+
+            await _tourPackageService.AddLoveAsync(love);
+
+            return RedirectToAction("ViewPackage", "Company", new { packageId = packageId });
         }
 
         [HttpGet]
@@ -197,7 +213,7 @@ namespace tourBD.Web.Controllers
             {
                 packageId = tourPackage.Id,
                 PackageCode = tourPackage.PackageCode,
-                MainArea = tourPackage.MainArea,
+                Division = tourPackage.Division,
                 Days = tourPackage.Days,
                 Price = tourPackage.Price,
                 Availability = tourPackage.Availability,
@@ -222,7 +238,7 @@ namespace tourBD.Web.Controllers
                 }
 
                 // Rebuild the package spots from model
-                tourPackage.MainArea = model.MainArea;
+                tourPackage.Division = model.Division;
                 tourPackage.Days = model.Days;
                 tourPackage.Price = model.Price;
                 tourPackage.Availability = model.Availability;

@@ -104,18 +104,27 @@ namespace tourBD.Web.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<string>("CompanyImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CompanyLogo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Star")
@@ -137,13 +146,16 @@ namespace tourBD.Web.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(800)")
+                        .HasMaxLength(800);
 
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("RequestStatus")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -151,6 +163,25 @@ namespace tourBD.Web.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CompanyRequests");
+                });
+
+            modelBuilder.Entity("tourBD.Membership.Entities.Love", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TourPackageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TourPackageId");
+
+                    b.ToTable("Loves");
                 });
 
             modelBuilder.Entity("tourBD.Membership.Entities.Role", b =>
@@ -212,7 +243,8 @@ namespace tourBD.Web.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<Guid>("TourPackageId")
                         .HasColumnType("uniqueidentifier");
@@ -231,7 +263,8 @@ namespace tourBD.Web.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Availability")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(15);
 
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uniqueidentifier");
@@ -242,9 +275,10 @@ namespace tourBD.Web.Data.Migrations
                     b.Property<double>("Discount")
                         .HasColumnType("float");
 
-                    b.Property<string>("MainArea")
+                    b.Property<string>("Division")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("PackageCode")
                         .HasColumnType("nvarchar(max)");
@@ -335,6 +369,15 @@ namespace tourBD.Web.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("tourBD.Membership.Entities.Love", b =>
+                {
+                    b.HasOne("tourBD.Membership.Entities.TourPackage", "TourPackage")
+                        .WithMany("Loves")
+                        .HasForeignKey("TourPackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourBD.Membership.Entities.RoleClaim", b =>

@@ -16,16 +16,33 @@ namespace tourBD.Forum.Repositories
         {
         }
 
-        public async Task<IEnumerable<Post>> GetAllIncludePropertiesAsync()
+        public async Task<IEnumerable<Post>> GetAllPostsPaginatedAsync(int pageIndex = 1, int pageSize = 10, bool isTrackingOff = true)
         {
-            return await Task.Run(() => {
-                return _DbSet
+            IQueryable<Post> query = _DbSet;
+            query = query
                     .Include(post => post.Comments)
                         .ThenInclude(cmt => cmt.Replays)
-                    .Include(post => post.Likes)
-                    .AsNoTracking()
-                    .ToList();
-            }); 
+                    .Include(post => post.Likes);
+
+            var result = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+            IEnumerable<Post> data;
+
+            if (isTrackingOff)
+                data = await result.AsNoTracking().ToListAsync();
+            else
+                data = await result.ToListAsync();
+
+            return data;
+        }
+
+        public async Task<Post> GetPostIncludePropertiesAsync(Guid id)
+        {
+            
+            return await _DbSet
+                .Include(post => post.Comments)
+                    .ThenInclude(cmt => cmt.Replays)
+                .Include(post => post.Likes)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

@@ -17,9 +17,10 @@
 
     .user-companies h3 {
         display: inline-block;
-        margin-top: 4%;
+        margin-top: 5%;
         margin-bottom: 0px;
         text-transform: uppercase;
+        font-weight: 600;
     }
 
 /* Request button */

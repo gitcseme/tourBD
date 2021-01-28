@@ -1,0 +1,27 @@
+﻿
+@model tourBD.Web.Models.PostModels.EditPostViewModel
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <form method="post" asp-controller="Forum" asp-action="EditPost">
+                        <div class="form-group">
+                            <input asp-for="PostId" hidden />
+                            <div class="card-header">
+                                <label class="label" asp-for="Message">Update post</label>
+                            </div>
+                            <div class="card-body">
+                                <textarea name="Message" cols="15" rows="5" class="form-control" id="Message" placeholder="Describe your tour plan/offer" asp-for="Message"></textarea>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

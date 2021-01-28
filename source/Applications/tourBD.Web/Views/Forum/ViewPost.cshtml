@@ -1,0 +1,35 @@
+﻿@model tourBD.Web.Models.PostModels.PostViewModel 
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<tourBD.Membership.Entities.ApplicationUser> _signInManager
+@inject UserManager<tourBD.Membership.Entities.ApplicationUser> _userManager
+@inject tourBD.Membership.Services.IPathService _pathService
+
+@section Styles {
+
+    <link href="~/css/forum/forum-index.css" rel="stylesheet" />
+}
+
+<!-- Main content -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="post-container">
+                    <partial name="_PostPartial" model="Model" />
+                </div>
+            </div>
+
+            <!-- /.col-lg-4 -->
+            <partial name="_AdvertisePartial" />
+            <!-- /.col-lg-4 -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content -->
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/forumIndex.js"></script>
+
+}

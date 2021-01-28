@@ -59,7 +59,7 @@ function CreateReplayBox(item, commentId, folderPath, imageUrl, name) {
                                         </div>
                                     </div>`;
 
-    $(item).parent().parent().siblings('.replay-container').append(replayHtml);
+    $(item).parent().parent().parent().parent().siblings('.replay-container').append(replayHtml);
 }
 
 function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
@@ -92,6 +92,25 @@ function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
     });
 }
 
+function DeleteReplayAjax(item, replayId) {
+    item = $(item).parent().parent().parent().parent().parent();
+
+    $.ajax({
+        url: '/Forum/DeleteReplay',
+        type: 'POST',
+        dataType: 'text',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: { replayId: replayId },
+        success: function (response) {
+            item.remove();
+        },
+        error: function (data, status, xhr) {
+            console.log(status);
+        }
+    })
+
+}
+
 function countLikesAjax(btn, postId) {
 
     $.ajax({
@@ -111,6 +130,31 @@ function countLikesAjax(btn, postId) {
         },
         error(data, status, xhr) {
             console.log(status);
+        }
+    });
+}
+
+function DeletePostAjax(btn, postId) {
+    let post = $(btn).parent().parent().parent().parent().parent().parent().parent().parent();
+
+    $.ajax({
+        url: '/Forum/DeletePost',
+        type: 'POST',
+        dataType: 'text',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: { postId: postId },
+        success: function (response) {
+            post.remove();
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'The post is deleted',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        },
+        error: function (data, status, xhr) {
+            
         }
     });
 }

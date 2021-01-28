@@ -18,6 +18,7 @@
                 <div class="image-update row">
                     <div class="existing-cover-photo">
                         <img src="@Model.Company.CompanyImageUrl"
+                             class="img-fluid"
                              alt="Company image"
                              id="cover-photo" style="width: 100%; height: 100%" />
                     </div>
@@ -94,7 +95,7 @@
                     <div class="card-header p-2">
                         <div class="header-left float-left">
                             <label>Package code: <span class="color-ml-3">@package.PackageCode</span></label> <br />
-                            <label class="main-area-label">Area: <span class="color-ml-3">@package.MainArea</span></label> <br />
+                            <label class="main-area-label">Area: <span class="color-ml-3">@package.Division</span></label> <br />
                             <label>Days: <span class="color-ml-3">@package.Days days</span></label> <br />
 
                             @if (package.Discount == 0)
@@ -129,7 +130,7 @@
                             }
                         </div>
                     </div>
-                    <div class="card-footer p-2">
+                    <div class="card-footer p-2" style="text-align: center;">
                         <a class="btn btn-primary btn-sm" asp-controller="Company" asp-action="EditPackage" asp-route-packageId="@package.Id.ToString()"><i class="far fa-edit"></i> Edit</a>
                         <a class="btn btn-danger btn-sm" asp-controller="Company" asp-action="DeletePackage" asp-route-packageId="@package.Id.ToString()"><i class="fas fa-trash-alt"></i> Delete</a>
                     </div>

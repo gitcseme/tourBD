@@ -13,7 +13,9 @@ namespace tourBD.Web.Models.CompanyModels
         public string PackageCode { get; set; }
 
         [Required]
-        public string MainArea { get; set; }
+        public string Division { get; set; }
+
+        [Required]
         public string Availability { get; set; }
 
         [DataType(DataType.Currency)]

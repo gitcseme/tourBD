@@ -43,6 +43,11 @@ namespace tourBD.Membership.Services
         {
             return _tourPackageUnitOfWork.TourPackageRepository.Get(Id);
         }
+        
+        public async Task<TourPackage> GetAsync(Guid Id)
+        {
+            return await _tourPackageUnitOfWork.TourPackageRepository.GetAsync(Id);
+        }
 
         public async Task AddSpot(Spot spot)
         {
@@ -58,6 +63,12 @@ namespace tourBD.Membership.Services
         public async Task DeleteSpotAsync(Spot spot)
         {
             await _tourPackageUnitOfWork.SpotRepository.RemoveAsync(spot);
+            await _tourPackageUnitOfWork.SaveAsync();
+        }
+
+        public async Task AddLoveAsync(Love love)
+        {
+            await _tourPackageUnitOfWork.LoveRepository.AddAsync(love);
             await _tourPackageUnitOfWork.SaveAsync();
         }
     }

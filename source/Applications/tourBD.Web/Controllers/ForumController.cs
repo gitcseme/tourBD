@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using tourBD.Core.Utilities;
 using tourBD.Forum.Entities;
 using tourBD.Forum.Services;
 using tourBD.Membership.Entities;
@@ -39,31 +40,18 @@ namespace tourBD.Web.Controllers
             _pathService = pathService;
         }
 
-        /* Common properties should be removed and re organized & viewModel need to re-designed */
-        public async Task<IActionResult> Index()
+        /* Redesign the index page */
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 1)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            var model = (await _postService.GetAllIncludePropertiesAsync()).Select(p => new PostViewModel()
-            {
-                Post = p,
-                IsLikedBy = p.Likes.Where(l => l.AuthorId == user.Id).Any()
-            }).ToList();
+            var posts = await _postService.GetAllPostsPaginatedAsync(pageIndex, pageSize);
+            var postViewModels = posts.Select(post => PreparePostViewModel(post, loggedInUser)).ToList();
+            int totalRecords = await _postService.GetCountAsync();
 
-            model.ForEach(p =>
-            {
-                p.Post.AuthorImageUrl = $"{_pathService.PictureFolder}{p.Post.AuthorImageUrl}";
-                p.Post.Comments.ToList().ForEach(c =>
-                {
-                    c.AuthorImageUrl = $"{_pathService.PictureFolder}{c.AuthorImageUrl}";
-                    c.Replays.ToList().ForEach(r =>
-                    {
-                        r.AuthorImageUrl = $"{_pathService.PictureFolder}{r.AuthorImageUrl}";
-                    });
-                });
-            });
+            var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords);
 
-            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+            loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
             return View(model);
         }
@@ -101,6 +89,89 @@ namespace tourBD.Web.Controllers
             }
 
             return View("CreatePost", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPost(string postId)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
+            loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
+            Post post = null;
+
+            try
+            {
+                post = await _postService.GetAsync(new Guid(postId));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            var model = new EditPostViewModel
+            {
+                PostId = postId,
+                Message = post.Message
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPostAsync(EditPostViewModel model)
+        {
+            try
+            {
+                var post = await _postService.GetAsync(new Guid(model.PostId));
+                post.Message = model.Message;
+                await _postService.EditAsync(post);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return RedirectToAction("ViewPost", new { postId = model.PostId });
+        }
+
+        public async Task<IActionResult> DeletePostAsync(string postId)
+        {
+            try
+            {
+                var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
+                foreach (var comment in post.Comments.ToList())
+                {
+                    foreach (var replay in comment.Replays.ToList())
+                    {
+                        await _postService.DeleteReplayAsync(replay.Id);
+                    }
+                    await _postService.DeleteCommentAsync(comment);
+                }
+
+                foreach (var like in post.Likes.ToList())
+                {
+                    await _postService.DeleteLikeAsync(like);
+                }
+
+                await _postService.DeleteAsync(post);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return RedirectToAction("Index", "Forum");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewPost(string postId)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
+
+            var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
+            var model = PreparePostViewModel(post, loggedInUser);
+
+            loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
+
+            return View(model);
         }
 
         public async Task<IActionResult> AddLikeAsync(string postId)
@@ -152,9 +223,54 @@ namespace tourBD.Web.Controllers
             return RedirectToAction("Index", "Forum");
         }
 
+
+        public async Task<IActionResult> DeleteReplay (string replayId)
+        {
+            await _postService.DeleteReplayAsync(new Guid(replayId));
+            return RedirectToAction("Index", "Forum");
+        }
+
         private string GetImageName(string imageUrl)
         {
             return imageUrl.Contains(_pathService.PictureFolder) ? imageUrl.Substring(_pathService.PictureFolder.Length) : imageUrl;
+        }
+
+        private PostViewModel PreparePostViewModel(Post post, ApplicationUser loggedInUser)
+        {
+            return new PostViewModel
+            {
+                PostId = post.Id,
+                AuthorId = post.AuthorId,
+                AuthorName = post.AuthorName,
+                AuthorImageUrl = $"{_pathService.PictureFolder}{post.AuthorImageUrl}",
+                CreationDate = GeneralUtilityMethods.GetFormattedDate(post.CreationDate),
+                Message = post.Message,
+                Likes = post.Likes.Count,
+                IsLikedBy = post.Likes.Where(l => l.AuthorId == loggedInUser.Id).Any(),
+                IsPostAuthor = post.AuthorId == loggedInUser.Id,
+                Comments = post.Comments.Select(cmt => new CommentViewModel
+                {
+                    CommentId = cmt.Id,
+                    PostId = cmt.PostId,
+                    AuthorId = cmt.AuthorId,
+                    AuthorName = cmt.AuthorName,
+                    AuthorImageUrl = $"{_pathService.PictureFolder}{cmt.AuthorImageUrl}",
+                    CreationDate = GeneralUtilityMethods.GetFormattedDate(cmt.CreationDate),
+                    Message = cmt.Message,
+                    IsCommentAuthor = cmt.AuthorId == loggedInUser.Id,
+                    Replays = cmt.Replays.Select(rpl => new ReplayViewModel
+                    {
+                        ReplayId = rpl.Id,
+                        CommentId = rpl.CommentId,
+                        AuthorId = rpl.AuthorId,
+                        AuthorName = rpl.AuthorName,
+                        AuthorImageUrl = $"{_pathService.PictureFolder}{rpl.AuthorImageUrl}",
+                        CreationDate = GeneralUtilityMethods.GetFormattedDate(rpl.CreationDate),
+                        Message = rpl.Message,
+                        IsReplayAuthor = rpl.AuthorId == loggedInUser.Id
+                    }).ToList()
+                }).ToList()
+            };
         }
 
         public IActionResult Privacy()
