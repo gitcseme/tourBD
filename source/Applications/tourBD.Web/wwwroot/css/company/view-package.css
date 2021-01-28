@@ -5,10 +5,7 @@ label.packageLabel {
 
 .color-ml-3 {
     color: chocolate;
-}
-
-span.main-area-name.color-ml-3 {
-    margin-left: 95px;
+    font-weight: 700;
 }
 
 .spot-list .col-sm-auto:hover {
@@ -22,3 +19,50 @@ span.main-area-name.color-ml-3 {
     border: none;
 }
 
+label.packageLabel {
+    width: 120px;
+    background-color: beige;
+}
+
+span.color-ml-3 {
+    font-weight: 600;
+    color: maroon;
+}
+
+a.company-name {
+    margin-left: 13px;
+    font-weight: 600;
+    font-size: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.companyInfo {
+    margin-left: 7px;
+}
+
+i.fas.fa-heart {
+    margin-top: 5px;
+    font-size: 22px;
+    margin-left: -1px;
+    color: white;
+}
+
+.float-right.love-warpper {
+    padding-right: 18px;
+    text-align: center;
+}
+
+.afterLove {
+    color: red !important;
+}
+
+button.btn.love-react {
+    cursor: pointer;
+    opacity: 1;
+    background-color: brown;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    text-align: center;
+}

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tourBD.Membership.Contexts;
 
 namespace tourBD.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201207020844_Modified_Company_RelatedEntities")]
+    partial class Modified_Company_RelatedEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,25 +167,6 @@ namespace tourBD.Web.Data.Migrations
                     b.ToTable("CompanyRequests");
                 });
 
-            modelBuilder.Entity("tourBD.Membership.Entities.Love", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TourPackageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TourPackageId");
-
-                    b.ToTable("Loves");
-                });
-
             modelBuilder.Entity("tourBD.Membership.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -263,6 +246,7 @@ namespace tourBD.Web.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Availability")
+                        .IsRequired()
                         .HasColumnType("nvarchar(15)")
                         .HasMaxLength(15);
 
@@ -281,6 +265,7 @@ namespace tourBD.Web.Data.Migrations
                         .HasMaxLength(30);
 
                     b.Property<string>("PackageCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
@@ -369,15 +354,6 @@ namespace tourBD.Web.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("tourBD.Membership.Entities.Love", b =>
-                {
-                    b.HasOne("tourBD.Membership.Entities.TourPackage", "TourPackage")
-                        .WithMany("Loves")
-                        .HasForeignKey("TourPackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourBD.Membership.Entities.RoleClaim", b =>

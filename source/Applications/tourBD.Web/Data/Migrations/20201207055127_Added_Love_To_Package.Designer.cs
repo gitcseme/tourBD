@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tourBD.Membership.Contexts;
 
 namespace tourBD.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201207055127_Added_Love_To_Package")]
+    partial class Added_Love_To_Package
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,7 +183,7 @@ namespace tourBD.Web.Data.Migrations
 
                     b.HasIndex("TourPackageId");
 
-                    b.ToTable("Loves");
+                    b.ToTable("Love");
                 });
 
             modelBuilder.Entity("tourBD.Membership.Entities.Role", b =>
