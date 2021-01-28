@@ -10,6 +10,8 @@
     <Compile Remove="Data\Migrations\20200729161154_Changed_RequestStatus_Type.Designer.cs" />
     <Compile Remove="Data\Migrations\20201207054856_Adding_SchoolContext.cs" />
     <Compile Remove="Data\Migrations\20201207054856_Adding_SchoolContext.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210128152002_Adding_NotificationChannel.cs" />
+    <Compile Remove="Data\Migrations\20210128152002_Adding_NotificationChannel.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\tourBD.Forum\tourBD.Forum.csproj" />
     <ProjectReference Include="..\..\Libraries\tourBD.Membership\tourBD.Membership.csproj" />
+    <ProjectReference Include="..\..\Libraries\tourBD.NotificationChannel\tourBD.NotificationChannel.csproj" />
   </ItemGroup>
 
 </Project>

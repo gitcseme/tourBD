@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tourBD.Core", "Libraries\to
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tourBD.Membership", "Libraries\tourBD.Membership\tourBD.Membership.csproj", "{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tourBD.Forum", "Libraries\tourBD.Forum\tourBD.Forum.csproj", "{6F7843C8-CB9E-4F3B-ACAA-D2296B11C9C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tourBD.Forum", "Libraries\tourBD.Forum\tourBD.Forum.csproj", "{6F7843C8-CB9E-4F3B-ACAA-D2296B11C9C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tourBD.NotificationChannel", "Libraries\tourBD.NotificationChannel\tourBD.NotificationChannel.csproj", "{63EDD23C-2126-494B-B033-1E5A20FD228D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{6F7843C8-CB9E-4F3B-ACAA-D2296B11C9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F7843C8-CB9E-4F3B-ACAA-D2296B11C9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F7843C8-CB9E-4F3B-ACAA-D2296B11C9C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63EDD23C-2126-494B-B033-1E5A20FD228D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63EDD23C-2126-494B-B033-1E5A20FD228D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63EDD23C-2126-494B-B033-1E5A20FD228D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63EDD23C-2126-494B-B033-1E5A20FD228D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{C9BE0FA7-B0DA-40A5-94A3-DE522306FD9E} = {F7D3EB4A-087E-427C-BD23-7391E6940C9C}
 		{E3358C1F-EBB2-4AF2-8B1A-97F78E4E53DD} = {F7D3EB4A-087E-427C-BD23-7391E6940C9C}
 		{6F7843C8-CB9E-4F3B-ACAA-D2296B11C9C6} = {F7D3EB4A-087E-427C-BD23-7391E6940C9C}
+		{63EDD23C-2126-494B-B033-1E5A20FD228D} = {F7D3EB4A-087E-427C-BD23-7391E6940C9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F55E09FD-7475-4D6E-8575-42038B8609DC}
