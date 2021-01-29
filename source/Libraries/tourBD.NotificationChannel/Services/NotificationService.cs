@@ -48,5 +48,19 @@ namespace tourBD.NotificationChannel.Services
         {
             return await _notificationUnitOfWork.NotificationRepository.GetAsync(Id);
         }
+
+        public async Task CreatePostNotificationAsync(string postId, Guid userId, string NotifierImageUrl, string Message)
+        {
+            var notification = new Notification()
+            {
+                SourceLink = postId,
+                UserId = userId,
+                NotifierImageUrl = NotifierImageUrl,
+                Message = Message,
+                Seen = false
+            };
+
+            await CreateAsync(notification);
+        }
     }
 }

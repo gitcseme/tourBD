@@ -12,6 +12,8 @@
     <Compile Remove="Data\Migrations\20201207054856_Adding_SchoolContext.Designer.cs" />
     <Compile Remove="Data\Migrations\20210128152002_Adding_NotificationChannel.cs" />
     <Compile Remove="Data\Migrations\20210128152002_Adding_NotificationChannel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210129210927_Notification_Modified.cs" />
+    <Compile Remove="Data\Migrations\20210129210927_Notification_Modified.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

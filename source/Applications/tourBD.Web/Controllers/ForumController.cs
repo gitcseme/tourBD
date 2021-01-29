@@ -12,6 +12,7 @@ using tourBD.Forum.Entities;
 using tourBD.Forum.Services;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
+using tourBD.NotificationChannel.Services;
 using tourBD.Web.Models;
 using tourBD.Web.Models.PostModels;
 
@@ -25,19 +26,22 @@ namespace tourBD.Web.Controllers
         private readonly ILogger<ForumController> _logger;
         private IPostService _postService;
         private readonly IPathService _pathService;
+        private readonly INotificationService _notificationService;
 
         public ForumController(
             ILogger<ForumController> logger, 
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IPostService postService,
-            IPathService pathService)
+            IPathService pathService,
+            INotificationService notificationService)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _postService = postService;
             _pathService = pathService;
+            _notificationService = notificationService;
         }
 
         /* Redesign the index page */
@@ -202,6 +206,7 @@ namespace tourBD.Web.Controllers
             };
 
             await _postService.AddCommentAsync(comment);
+            await Notify(postId, loggedInUser);
 
             return RedirectToAction("Index", "Forum");
         }
@@ -271,6 +276,34 @@ namespace tourBD.Web.Controllers
                     }).ToList()
                 }).ToList()
             };
+        }
+
+        private async Task Notify(string postId, ApplicationUser loggedInUser)
+        {
+            var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
+
+            if (post.AuthorId != loggedInUser.Id)
+            {
+                string Message = $"{loggedInUser.FullName} commented in your post";
+                await _notificationService.CreatePostNotificationAsync(postId, post.AuthorId, loggedInUser.ImageUrl, Message);
+            }
+
+            foreach (var comment in post.Comments)
+            {
+                if (comment.AuthorId != loggedInUser.Id)
+                {
+                    string Message = $"{loggedInUser.FullName} commented in a post you commented";
+                    await _notificationService.CreatePostNotificationAsync(postId, comment.AuthorId, loggedInUser.ImageUrl, Message);
+                }
+                foreach (var replay in comment.Replays)
+                {
+                    if (replay.AuthorId != loggedInUser.Id)
+                    {
+                        string Message = $"{loggedInUser.FullName} commented in a post you commented";
+                        await _notificationService.CreatePostNotificationAsync(postId, replay.AuthorId, loggedInUser.ImageUrl, Message);
+                    }
+                }
+            }
         }
 
         public IActionResult Privacy()

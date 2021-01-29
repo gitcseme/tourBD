@@ -8,10 +8,14 @@ namespace tourBD.NotificationChannel.Entities
     {
         [Required]
         public Guid UserId { get; set; }
+
+        [Required]
+        [MaxLength(200)]
+        public string NotifierImageUrl { get; set; }
         
         [StringLength(100)]
         public string Message { get; set; }
-
+        
         [StringLength(100)]
         public string SourceLink { get; set; }
 
