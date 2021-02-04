@@ -121,5 +121,11 @@ namespace tourBD.Forum.Services
         {
             return await _postUnitOfWork.PostRepository.GetCountAsync();
         }
+
+        public string GetRelatedPost(string commentId)
+        {
+            var comment = _postUnitOfWork.CommentRepository.Get(new Guid(commentId));
+            return comment.PostId.ToString();
+        }
     }
 }

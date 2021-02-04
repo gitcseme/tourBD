@@ -206,7 +206,7 @@ namespace tourBD.Web.Controllers
             };
 
             await _postService.AddCommentAsync(comment);
-            await Notify(postId, loggedInUser);
+            await NotifyAsync(postId, loggedInUser);
 
             return RedirectToAction("Index", "Forum");
         }
@@ -224,7 +224,11 @@ namespace tourBD.Web.Controllers
                 CommentId = new Guid(commentId)
             };
 
+            var postId = _postService.GetRelatedPost(commentId);
+
             await _postService.AddReplayAsync(replay);
+            await NotifyAsync(postId, loggedInUser);
+
             return RedirectToAction("Index", "Forum");
         }
 
@@ -278,31 +282,28 @@ namespace tourBD.Web.Controllers
             };
         }
 
-        private async Task Notify(string postId, ApplicationUser loggedInUser)
+        private async Task NotifyAsync(string postId, ApplicationUser loggedInUser)
         {
             var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
+            HashSet<Guid> PostIdCollection = new HashSet<Guid>();
 
             if (post.AuthorId != loggedInUser.Id)
-            {
-                string Message = $"{loggedInUser.FullName} commented in your post";
-                await _notificationService.CreatePostNotificationAsync(postId, post.AuthorId, loggedInUser.ImageUrl, Message);
-            }
+                PostIdCollection.Add(post.AuthorId);
 
             foreach (var comment in post.Comments)
             {
                 if (comment.AuthorId != loggedInUser.Id)
-                {
-                    string Message = $"{loggedInUser.FullName} commented in a post you commented";
-                    await _notificationService.CreatePostNotificationAsync(postId, comment.AuthorId, loggedInUser.ImageUrl, Message);
-                }
+                    PostIdCollection.Add(comment.AuthorId);
+                
                 foreach (var replay in comment.Replays)
-                {
                     if (replay.AuthorId != loggedInUser.Id)
-                    {
-                        string Message = $"{loggedInUser.FullName} commented in a post you commented";
-                        await _notificationService.CreatePostNotificationAsync(postId, replay.AuthorId, loggedInUser.ImageUrl, Message);
-                    }
-                }
+                        PostIdCollection.Add(replay.AuthorId);
+            }
+
+            foreach (var userId in PostIdCollection)
+            {
+                string Message = $"{loggedInUser.FullName} commented in your post";
+                await _notificationService.CreatePostNotificationAsync(postId, userId, loggedInUser.ImageUrl, Message);
             }
         }
 

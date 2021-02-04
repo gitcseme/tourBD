@@ -19,6 +19,7 @@ namespace tourBD.Forum.Services
         Task DeleteCommentAsync(Comment comment);
         Task AddReplayAsync(Replay replay);
         Task DeleteReplayAsync(Guid replayId);
+        string GetRelatedPost(string commentId);
 
         Task<IEnumerable<Post>> GetAllPostsPaginatedAsync(int pageIndex = 1, int pageSize = 10, bool isTrackingOff = true);
         (IEnumerable<Post>, int, int) GetPosts(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
