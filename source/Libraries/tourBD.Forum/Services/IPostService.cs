@@ -26,6 +26,7 @@ namespace tourBD.Forum.Services
         Task<(IEnumerable<Post>, int, int)> GetPostsAsync(int pageIndex, int pageSize, bool isTrackingOff, string searchText, string orderingColumn, string orderDirection);
 
         Task<Post> GetPostIncludePropertiesAsync(Guid id);
+        Task<Comment> GetCommentIncludePropertiesAsync(Guid id);
         Task<int> GetCountAsync();
     }
 }
