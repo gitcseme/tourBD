@@ -9,6 +9,9 @@
     <div class="row" style="padding-left: 8px;">
         <div class="col-md-4 card">
             <div class="company-description">
+                <div class="company-logo">
+                    <img src="@Model.CompanyLogo" alt="Company Logo" />
+                </div>
                 <div class="cnd">
                     <p>@Model.Name</p>
                 </div>
@@ -24,16 +27,16 @@
                             <span class="value-text">@Model.PhoneNumber</span>
                         </li>
                         <li>
-                            <label class="single-info">Address: </label>
-                            <span class="value-text">@Model.Address</span>
-                        </li>
-                        <li>
                             <label class="single-info">Stars: </label>
                             <span class="value-text">@Model.Star</span>
                         </li>
                         <li>
                             <label class="single-info">Packages: </label>
                             <span class="value-text">@Model.TourPackages.Count packages</span>
+                        </li>
+                        <li>
+                            <label class="single-info">Address: </label>
+                            <span class="value-text">@Model.Address</span>
                         </li>
                     </ul>
                 </div>

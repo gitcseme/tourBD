@@ -10,19 +10,12 @@
         <div class="row justify-content-center">
             @foreach (var company in Model)
             {
-                <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.CompanyId" class="col-md-4 card">
+                <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.CompanyId" class="col-md-4 card" style="margin: 2px">
                     <div class="row">
                         <div class="logo col-md-5">
                             <img src="@company.CompanyLogo" alt="Company Logo" style="width: 100%; height: 100%" ; />
                         </div>
                         <div class="details col-md-7">
-                            @*<ul style="list-style: none; margin: 0; padding: 0;" class="cInfo">
-                                <li>Name: <span class="ml-3" style="color: coral">@company.Name</span></li>
-                                <li>Packages: <span class="ml-3" style="color: coral">@company.Packages</span></li>
-                                <li>Stars: <span class="ml-3" style="color: coral">@company.Stars</span></li>
-                                <li>Address: <span class="ml-3" style="color: coral">@company.Address</span></li>
-                            </ul>*@
-
                             <label style="width: 80px">Name:</label><span style="color: coral; font-weight: 700">@company.Name</span><br />
                             <label style="width: 80px">Packages:</label><span style="color: coral; font-weight: 700">@company.Packages</span><br />
                             <label style="width: 80px">Stars:</label><span style="color: coral; font-weight: 700">@company.Stars</span><br />
