@@ -44,6 +44,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a asp-controller="Home" asp-action="Services" class="nav-link">Services</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
+                    <a asp-controller="Company" asp-action="Index" class="nav-link">Tour Providers</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#" class="nav-link">Popular Packages</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
                 </li>
             </ul>
@@ -219,9 +225,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     }
 
                                     <li class="nav-item">
-                                        <a asp-controller="Company" asp-action="Index" class="nav-link">
+                                        <a asp-controller="Company" asp-action="UserCompany" class="nav-link">
                                             <i class="fa fa-cubes nav-icon" aria-hidden="true"></i>
-                                            <p>My companies</p>
+                                            <p>My company</p>
                                         </a>
                                     </li>
 
