@@ -108,7 +108,24 @@ function DeleteReplayAjax(item, replayId) {
             console.log(status);
         }
     })
+}
 
+function DeleteCommentAjax(item, commentId) {
+    item = $(item).parent().parent().parent().parent().parent();
+
+    $.ajax({
+        url: '/Forum/DeleteComment',
+        type: 'POST',
+        dataType: 'text',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: { commentId: commentId },
+        success: function (response) {
+            item.remove();
+        },
+        error: function (data, status, xhr) {
+            console.log(status);
+        }
+    })
 }
 
 function countLikesAjax(btn, postId) {
@@ -154,7 +171,7 @@ function DeletePostAjax(btn, postId) {
             })
         },
         error: function (data, status, xhr) {
-            
+            console.log(status);
         }
     });
 }

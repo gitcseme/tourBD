@@ -44,7 +44,7 @@ namespace tourBD.Web.Controllers
             _notificationService = notificationService;
         }
 
-        /* Redesign the index page */
+        
         public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 1)
         {
             var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -236,6 +236,19 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> DeleteReplay (string replayId)
         {
             await _postService.DeleteReplayAsync(new Guid(replayId));
+            return RedirectToAction("Index", "Forum");
+        }
+
+        public async Task<IActionResult> DeleteComment(string commentId)
+        {
+            var comment = await _postService.GetCommentIncludePropertiesAsync(new Guid(commentId));
+
+            foreach (var replay in comment.Replays.ToList())
+            {
+                await _postService.DeleteReplayAsync(replay.Id);
+            }
+            await _postService.DeleteCommentAsync(comment);
+
             return RedirectToAction("Index", "Forum");
         }
 

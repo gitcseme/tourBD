@@ -111,7 +111,7 @@
                                         @if (comment.IsCommentAuthor)
                                         {
                                             <li>
-                                                <a class="delete-comment">Delete</a>
+                                                <a onclick="DeleteCommentAjax(this, '@comment.CommentId.ToString()')" class="delete-comment">Delete</a>
                                             </li>
                                         }
                                     </ul>

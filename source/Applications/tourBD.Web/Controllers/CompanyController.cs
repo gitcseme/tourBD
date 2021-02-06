@@ -47,6 +47,26 @@ namespace tourBD.Web.Controllers
         {
             await GetLoggedInUser();
 
+            var companies = await _companyService.GetAllIncludePropertiesAsync();
+            var model = companies.Select(c => new CompanyViewModel
+            {
+                Name = c.Name,
+                Packages = c.TourPackages.Count(),
+                Address = c.Address,
+                Stars = c.Star,
+                CompanyId = c.Id.ToString(),
+                CompanyLogo = c.CompanyLogo != null ? $"{_pathService.LogoFolder}{c.CompanyLogo}" : $"{_pathService.LogoFolder}{_pathService.DummyCompanyLogo}"
+            }).ToList();
+
+            model.Sort((c1, c2) => c1.Stars.CompareTo(c2.Stars));
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> UserCompany()
+        {
+            await GetLoggedInUser();
+
             var model = new CompanyIndexModel
             {
                 Companies = (await _companyService.GetUserCompaniesAsync(user.Id)).ToList(),
