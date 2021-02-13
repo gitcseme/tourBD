@@ -1,0 +1,31 @@
+﻿@model tourBD.Web.Models.CompanyModels.PackageAjaxViewModel
+
+@section Styles {
+    <link href="~/css/company/company-public-view.css" rel="stylesheet" />
+
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9">
+            @foreach (var package in Model.Packages)
+            {
+                <div class="row justify-content-center mb-3 mt-3">
+                    <div class="col-md-8">
+                        <partial name="_PackagePartial" model="package" />
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <p>sort options</p>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/SpotSearch.js"></script>
+
+}

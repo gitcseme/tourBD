@@ -52,7 +52,7 @@ namespace tourBD.Web.Controllers
             {
                 Name = c.Name,
                 Packages = c.TourPackages.Count(),
-                Address = c.Address,
+                Address = c.Address.Length > 20 ? c.Address.Substring(0, 18) + "..." : c.Address,
                 Stars = c.Star,
                 CompanyId = c.Id.ToString(),
                 CompanyLogo = c.CompanyLogo != null ? $"{_pathService.LogoFolder}{c.CompanyLogo}" : $"{_pathService.LogoFolder}{_pathService.DummyCompanyLogo}"
@@ -302,6 +302,45 @@ namespace tourBD.Web.Controllers
             });
 
             return View(company);
+        }
+
+        public async Task<IActionResult> PopularPackages(int pageIndex = 1, string division = "Dhaka", string priceDirection = "UP")
+        {
+            int pageSize = 10;
+            BangladeshDivisions selectedDivision = GetDivision(division);
+
+            var paginatedPackages = await _tourPackageService.GetPackagesPaginatedAsync(pageIndex, pageSize, selectedDivision);
+            if (priceDirection == "UP")
+                paginatedPackages.Sort((tp1, tp2) => {
+                    return (tp1.Price > tp2.Price) ? 1 : 0;
+                });
+            else
+                paginatedPackages.Sort((tp1, tp2) => tp1.Price.CompareTo(tp2.Price));
+
+            paginatedPackages.Sort((tp1, tp2) => {
+                return (tp1.Loves.Count() > tp2.Loves.Count()) ? 1 : 0;
+            });
+
+            var totalRecords = await _tourPackageService.GetCountAsync();
+
+            var model = new PackageAjaxViewModel(paginatedPackages, pageIndex, pageSize, totalRecords);
+
+            return View(model);
+        }
+
+        private BangladeshDivisions GetDivision(string division)
+        {
+            var Divisions = Enum.GetValues(typeof(BangladeshDivisions)).Cast<BangladeshDivisions>().ToList();
+            BangladeshDivisions bangladeshDivision = BangladeshDivisions.Dhaka;
+            foreach (var div in Divisions)
+            {
+                if (div.ToString() == division) {
+                    bangladeshDivision = div;
+                    break;
+                }
+            }
+
+            return bangladeshDivision;
         }
 
         private async Task GetLoggedInUser()

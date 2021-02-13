@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tourBD.Core;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Enums;
 
 namespace tourBD.Membership.Services
 {
@@ -12,6 +13,8 @@ namespace tourBD.Membership.Services
         Task AddSpot(Spot spot);
         Task DeleteSpotAsync(Spot spot);
         Task AddLoveAsync(Love love);
+        Task<int> GetCountAsync();
         Task<TourPackage> GetPackageWithRelatedSpotsAsync(Guid packageId);
+        Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision);
     }
 }
