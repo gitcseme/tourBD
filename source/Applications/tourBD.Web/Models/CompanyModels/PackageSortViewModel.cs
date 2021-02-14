@@ -10,7 +10,7 @@ namespace tourBD.Web.Models.CompanyModels
     public class PackageSortViewModel
     {
         public int TotalRecords { get; set; }
-        private int TotalPages { get; set; }
+        public int TotalPages { get; set; }
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
         public List<TourPackage> Packages { get; set; } = new List<TourPackage>();
@@ -24,7 +24,7 @@ namespace tourBD.Web.Models.CompanyModels
         public PackageSortViewModel()
         {
             PageIndex = 1;
-            PageSize = 5;
+            PageSize = 2;
             BangladeshDivision = BangladeshDivisions.ALL;
             PriceUP = PriceDN = false;
             LoveUP = LoveDN = false;
@@ -41,6 +41,8 @@ namespace tourBD.Web.Models.CompanyModels
 
         public bool PreviousPage
         {
+            private set { }
+
             get
             {
                 return (PageIndex > 1);
@@ -49,10 +51,20 @@ namespace tourBD.Web.Models.CompanyModels
 
         public bool NextPage
         {
+            private set { }
+
             get
             {
                 return (PageIndex < TotalPages);
             }
+        }
+
+        public void setDefaultPagingInfo(int totalRecords)
+        {
+            TotalPages = (int)Math.Ceiling((double)totalRecords / PageSize);
+
+            PreviousPage = PageIndex > 1;
+            NextPage = PageIndex < TotalPages;
         }
     }
 }

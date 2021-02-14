@@ -46,10 +46,10 @@
                     </div>
                     <div class="col-auto price-arow-fix">
                         <div>
-                            <input class="Price" asp-for="PriceUP" checked="@Model.PriceUP"/> <i class="fas fa-arrow-up"></i>
+                            <input class="Price" asp-for="PriceUP" checked="@Model.PriceUP" /> <i class="fas fa-arrow-up"></i>
                         </div>
                         <div>
-                            <input class="Price" asp-for="PriceDN" checked="@Model.PriceDN"/> <i class="fas fa-arrow-down"></i>
+                            <input class="Price" asp-for="PriceDN" checked="@Model.PriceDN" /> <i class="fas fa-arrow-down"></i>
                         </div>
                     </div>
                 </div>
@@ -59,18 +59,42 @@
                     </div>
                     <div class="col-auto">
                         <div>
-                            <input class="Love" asp-for="LoveUP" checked="@Model.LoveUP"/> <i class="fas fa-arrow-up"></i>
+                            <input class="Love" asp-for="LoveUP" checked="@Model.LoveUP" /> <i class="fas fa-arrow-up"></i>
                         </div>
                         <div>
-                            <input class="Love" asp-for="LoveDN" checked="@Model.LoveDN"/> <i class="fas fa-arrow-down"></i>
+                            <input class="Love" asp-for="LoveDN" checked="@Model.LoveDN" /> <i class="fas fa-arrow-down"></i>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row record-history">
-                    <p>Showing @Model.PageSize of total @Model.TotalRecords records</p>
+                    <p>Showing @Model.Packages.Count() of total @Model.TotalRecords records</p>
                 </div>
                 <div class="row search-button">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button onclick="resetPages()" type="submit" class="btn btn-primary">Search</button>
+                </div>
+
+                @{
+                    var prevDisabled = !Model.PreviousPage ? "disabled" : "";
+                    var nextDisabled = !Model.NextPage ? "disabled" : "";
+                }
+
+                <!-- Paging -->
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-8">
+                        <div class="row justify-content-md-center">
+                            <div aria-label="Page navigation example" class="next-prev">
+                                <input asp-for="PageIndex" value="@Model.PageIndex" hidden/>
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <button onclick="pageRender('dec')" id="prev-button" type="submit" class="page-link btn" aria-labelledby="Previous" @prevDisabled>Previous <span aria-hidden="true">&laquo;</span></button>
+                                    </li>
+                                    <li class="page-item">
+                                        <button onclick="pageRender('inc')" id="next-button" type="submit" class="page-link btn" aria-labelledby="Next" @nextDisabled><span aria-hidden="true">&raquo;</span> Next</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -91,6 +115,19 @@
         $('input.Love').on('change', function () {
             $('input.Love').not(this).prop('checked', false);
         });
+
+        function pageRender(change) {
+            var val = parseInt($('input#PageIndex')[0].value);
+            if (change == 'inc') ++val;
+            else --val;
+
+            $('input#PageIndex')[0].value = val;
+            console.log($('input#PageIndex')[0].value);
+        }
+
+        function resetPages() {
+            $('input#PageIndex')[0].value = 1;
+        }
 
     </script>
 

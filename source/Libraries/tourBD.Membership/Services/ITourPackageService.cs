@@ -15,6 +15,6 @@ namespace tourBD.Membership.Services
         Task AddLoveAsync(Love love);
         Task<int> GetCountAsync();
         Task<TourPackage> GetPackageWithRelatedSpotsAsync(Guid packageId);
-        Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision);
+        Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision, bool priceASC);
     }
 }

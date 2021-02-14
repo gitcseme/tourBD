@@ -17,20 +17,42 @@ namespace tourBD.Membership.Repositories
         {
         }
 
-        public async Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision)
+        public async Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision, bool priceASC)
         {
             List<TourPackage> query;
-            if (selectedDivision != BangladeshDivisions.ALL)
-                query = await _DbSet
-                    .Include(tp => tp.Spots)
-                    .Include(tp => tp.Loves)
-                    .Where(tp => tp.Division == selectedDivision.ToString())
-                    .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+
+            if (!priceASC)
+            {
+                if (selectedDivision != BangladeshDivisions.ALL)
+                    query = await _DbSet
+                        .Include(tp => tp.Spots)
+                        .Include(tp => tp.Loves)
+                        .Where(tp => tp.Division == selectedDivision.ToString())
+                        .OrderBy(tp => tp.Price)
+                        .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+                else
+                    query = await _DbSet
+                        .Include(tp => tp.Spots)
+                        .Include(tp => tp.Loves)
+                        .OrderBy(tp => tp.Price)
+                        .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            }
             else
-                query = await _DbSet
-                    .Include(tp => tp.Spots)
-                    .Include(tp => tp.Loves)
-                    .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            {
+                if (selectedDivision != BangladeshDivisions.ALL)
+                    query = await _DbSet
+                        .Include(tp => tp.Spots)
+                        .Include(tp => tp.Loves)
+                        .Where(tp => tp.Division == selectedDivision.ToString())
+                        .OrderByDescending(tp => tp.Price)
+                        .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+                else
+                    query = await _DbSet
+                        .Include(tp => tp.Spots)
+                        .Include(tp => tp.Loves)
+                        .OrderByDescending(tp => tp.Price)
+                        .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            }
 
             return query;
         }

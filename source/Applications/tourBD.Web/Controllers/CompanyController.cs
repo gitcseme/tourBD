@@ -310,8 +310,9 @@ namespace tourBD.Web.Controllers
             await GetLoggedInUser();
 
             PackageSortViewModel model = new PackageSortViewModel();
-            model.Packages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision);
+            model.Packages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision, model.PriceUP);
             model.TotalRecords = await _tourPackageService.GetCountAsync();
+            model.TotalPages = (int)Math.Ceiling((double)model.TotalRecords / model.PageSize);
 
             return View(model);
         }
@@ -321,19 +322,7 @@ namespace tourBD.Web.Controllers
         {
             await GetLoggedInUser();
 
-            var paginatedPackages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision);
-            if (model.PriceUP) { 
-                paginatedPackages.Sort((tp1, tp2) =>
-                {
-                    return (tp1.Price < tp2.Price) ? 1 : 0;
-                });
-            }
-            else if (model.PriceDN) {
-                paginatedPackages.Sort((tp1, tp2) =>
-                {
-                    return (tp1.Price > tp2.Price) ? 1 : 0;
-                });
-            }
+            var paginatedPackages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision, model.PriceUP);
 
             if (model.LoveUP) { 
                 paginatedPackages.Sort((tp1, tp2) =>
@@ -353,22 +342,6 @@ namespace tourBD.Web.Controllers
             var result = new PackageSortViewModel(paginatedPackages, model.PageIndex, model.PageSize, totalRecords); 
 
             return View(result);
-        }
-
-        private BangladeshDivisions GetDivision(string division)
-        {
-            var Divisions = Enum.GetValues(typeof(BangladeshDivisions)).Cast<BangladeshDivisions>().ToList();
-            BangladeshDivisions bangladeshDivision = BangladeshDivisions.ALL;
-            foreach (var div in Divisions)
-            {
-                if (div.ToString() == division)
-                {
-                    bangladeshDivision = div;
-                    break;
-                }
-            }
-
-            return bangladeshDivision;
         }
 
         private async Task GetLoggedInUser()

@@ -73,9 +73,9 @@ namespace tourBD.Membership.Services
             await _tourPackageUnitOfWork.SaveAsync();
         }
 
-        public async Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision)
+        public async Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision, bool priceASC)
         {
-            return await _tourPackageUnitOfWork.TourPackageRepository.GetPackagesPaginatedAsync(pageIndex, pageSize, selectedDivision);
+            return await _tourPackageUnitOfWork.TourPackageRepository.GetPackagesPaginatedAsync(pageIndex, pageSize, selectedDivision, priceASC);
         }
 
         public async Task<int> GetCountAsync()

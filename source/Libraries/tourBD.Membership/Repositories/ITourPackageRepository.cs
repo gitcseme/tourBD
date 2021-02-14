@@ -11,6 +11,6 @@ namespace tourBD.Membership.Repositories
     public interface ITourPackageRepository : IRepositoryBase<TourPackage, Guid>
     {
         Task<TourPackage> GetPackageWithRelatedSpotsAsync(Guid packageId);
-        Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision);
+        Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision, bool priceASC);
     }
 }
