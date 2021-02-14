@@ -117,7 +117,8 @@ namespace tourBD.Web.Areas.Admin.Controllers
                 Email = "not set",
                 CompanyImageUrl = _pathService.DummyCompanyImageUrl,
                 Star = 0,
-                UserId = companyRequestEntity.UserId
+                UserId = companyRequestEntity.UserId,
+                CompanyLogo = _pathService.DummyCompanyLogo
             };
 
             await _companyService.CreateAsync(company);

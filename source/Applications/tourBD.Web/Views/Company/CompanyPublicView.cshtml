@@ -9,6 +9,9 @@
     <div class="row" style="padding-left: 8px;">
         <div class="col-md-4 card">
             <div class="company-description">
+                <div class="company-logo">
+                    <img src="@Model.CompanyLogo" alt="Company Logo" />
+                </div>
                 <div class="cnd">
                     <p>@Model.Name</p>
                 </div>
@@ -24,16 +27,16 @@
                             <span class="value-text">@Model.PhoneNumber</span>
                         </li>
                         <li>
-                            <label class="single-info">Address: </label>
-                            <span class="value-text">@Model.Address</span>
-                        </li>
-                        <li>
                             <label class="single-info">Stars: </label>
                             <span class="value-text">@Model.Star</span>
                         </li>
                         <li>
                             <label class="single-info">Packages: </label>
                             <span class="value-text">@Model.TourPackages.Count packages</span>
+                        </li>
+                        <li>
+                            <label class="single-info">Address: </label>
+                            <span class="value-text">@Model.Address</span>
                         </li>
                     </ul>
                 </div>
@@ -59,52 +62,7 @@
         @foreach (var package in Model.TourPackages)
         {
             <div class="col-md-4">
-                <div class="card single-package">
-                    <div class="card-header p-2">
-                        <div class="header-left float-left">
-
-                            <label class="packageLabel">Package code: </label> <span class="color-ml-3">@package.PackageCode</span> <br />
-                            <label class="main-area-label packageLabel">Division: </label> <span class="main-area-name color-ml-3">@package.Division</span> <br />
-                            <label class="packageLabel">Days: </label><span class="color-ml-3"> @package.Days days</span> <br />
-
-                            @if (package.Discount == 0)
-                            {
-                                <label class="packageLabel">Price: </label><span class="color-ml-3"> @package.Price tk</span> <small>(per adalt)</small> <br />
-                            }
-                            else
-                            {
-                                double discountedPrice = package.Price - (package.Price * package.Discount) / 100;
-                                <label class="packageLabel">Price: </label><span class="color-ml-3" style="color: red"><s> @package.Price tk</s></span><span style="color: blue" class="ml-2 color-ml-3">@discountedPrice tk</span><small>(per adalt)</small> <br />
-                            }
-
-                            <label class="packageLabel">Popularity: </label><span class="color-ml-3"> <i class="fas fa-heart text-danger"></i> @package.Loves.Count</span>
-                        </div>
-                        <div class="header-right float-right">
-                            @if (package.Availability == tourBD.Membership.Enums.AvailabilityStatus.Available.ToString())
-                            {
-                                <button class="btn btn-sm btn-success available">Available</button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-sm btn-danger available">Not Available</button>
-                            }
-                        </div>
-                    </div>
-                    <div class="card-body p-2">
-                        <label class="mb-2"><span style="color: darkgoldenrod; font-weight: 600; font-size: 20px;">@package.Spots.Count</span> spots</label>
-                        <div class="spot-list">
-                            @foreach (var spot in package.Spots)
-                            {
-                                <div class="col-sm-auto float-left btn btn-sm btn-dark mr-1 mb-1">
-                                    @spot.Name
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div class="card-footer p-2" style="text-align: center">
-                        <a class="btn btn-primary btn-sm" asp-controller="Company" asp-action="ViewPackage" asp-route-packageId="@package.Id.ToString()">View Package Details</a>
-                    </div>
-                </div>
+                <partial name="_PackagePartial" model="package" />
             </div>
         }
     </div>

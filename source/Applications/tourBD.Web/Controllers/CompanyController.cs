@@ -52,7 +52,7 @@ namespace tourBD.Web.Controllers
             {
                 Name = c.Name,
                 Packages = c.TourPackages.Count(),
-                Address = c.Address,
+                Address = c.Address.Length > 20 ? c.Address.Substring(0, 18) + "..." : c.Address,
                 Stars = c.Star,
                 CompanyId = c.Id.ToString(),
                 CompanyLogo = c.CompanyLogo != null ? $"{_pathService.LogoFolder}{c.CompanyLogo}" : $"{_pathService.LogoFolder}{_pathService.DummyCompanyLogo}"
@@ -101,7 +101,7 @@ namespace tourBD.Web.Controllers
                 };
 
                 await _companyRequestService.CreateAsync(request);
-                return RedirectToAction("Index", "Company");
+                return RedirectToAction("UserCompany", "Company");
             }
 
             return View(model);
@@ -117,6 +117,7 @@ namespace tourBD.Web.Controllers
                 Company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId))
             };
             model.Company.CompanyImageUrl = $"{_pathService.PictureFolder}{model.Company.CompanyImageUrl}";
+            model.Company.CompanyLogo = $"{_pathService.LogoFolder}{model.Company.CompanyLogo}";
 
             model.Company.TourPackages.ForEach(tp =>
             {
@@ -134,8 +135,13 @@ namespace tourBD.Web.Controllers
                 string imagePath = _pathService.PictureFolder;
                 string physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
                 string demoImage = _pathService.DummyCompanyImageUrl;
-
                 model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, demoImage);
+
+                imagePath = _pathService.LogoFolder;
+                physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
+                demoImage = _pathService.DummyCompanyLogo;
+                model.Company.CompanyLogo = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.LogoFile, physicalUploadPath, demoImage);
+
                 await _companyService.EditAsync(model.Company);
 
                 return RedirectToAction("CompanyPublicView", "Company", new { companyId = model.Company.Id.ToString() });
@@ -154,7 +160,7 @@ namespace tourBD.Web.Controllers
                 Package = package,
                 Company = _companyService.Get(package.CompanyId),
                 Loves = package.Loves.Count,
-                IsLoved = package.Loves.Where(l => l.AuthorId == user.Id).Any(),
+                IsLoved = user == null ? true : package.Loves.Where(l => l.AuthorId == user.Id).Any(),
             };
             return View(model);
         }
@@ -288,6 +294,7 @@ namespace tourBD.Web.Controllers
 
             var company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId));
             company.CompanyImageUrl = $"{_pathService.PictureFolder}{company.CompanyImageUrl}";
+            company.CompanyLogo = $"{_pathService.LogoFolder}{company.CompanyLogo}";
 
             company.TourPackages.ForEach(tp =>
             {
@@ -297,10 +304,51 @@ namespace tourBD.Web.Controllers
             return View(company);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> PopularPackages()
+        {
+            await GetLoggedInUser();
+
+            PackageSortViewModel model = new PackageSortViewModel();
+            model.Packages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision, model.PriceUP);
+            model.TotalRecords = await _tourPackageService.GetCountAsync();
+            model.TotalPages = (int)Math.Ceiling((double)model.TotalRecords / model.PageSize);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PopularPackages(PackageSortViewModel model)
+        {
+            await GetLoggedInUser();
+
+            var paginatedPackages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision, model.PriceUP);
+
+            if (model.LoveUP) { 
+                paginatedPackages.Sort((tp1, tp2) =>
+                {
+                    return (tp1.Loves.Count() < tp2.Loves.Count()) ? 1 : 0;
+                });
+            }
+            else if (model.LoveDN) { 
+                paginatedPackages.Sort((tp1, tp2) =>
+                {
+                    return (tp1.Loves.Count() > tp2.Loves.Count()) ? 1 : 0;
+                });
+            }
+
+            var totalRecords = await _tourPackageService.GetCountAsync();
+
+            var result = new PackageSortViewModel(paginatedPackages, model.PageIndex, model.PageSize, totalRecords); 
+
+            return View(result);
+        }
+
         private async Task GetLoggedInUser()
         {
             user = await _userManager.GetUserAsync(HttpContext.User);
-            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+            if (user != null)
+                user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
         }
     }
 }
