@@ -36,6 +36,9 @@ label span.color-ml-3 {
 
 .single-info {
     width: 100px;
+    background-color: cornsilk;
+    margin: 1px;
+    line-height: 1;
 }
 
 .value-text {
@@ -44,12 +47,12 @@ label span.color-ml-3 {
 
 .description-as-list {
     list-style: none;
-    margin-top: 50px;
     padding-left: 15px;
+    margin: 0;
 }
 
 .cnd {
-    background-color: darkcyan;
+    background-color: darkgoldenrod;
     text-align: center;
     font-size: 45px;
     color: currentcolor;
@@ -60,8 +63,13 @@ label span.color-ml-3 {
     font-family: Algerian, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.company-info {
-    background-color: azure;
+.company-logo {
+    text-align: center;
+}
+
+.company-logo img {
+    max-width: 100%;
+    max-height: 180px;
 }
 
 .cnd p {
@@ -87,4 +95,26 @@ label.packageLabel {
 span.color-ml-3 {
     font-weight: 600;
     color: maroon;
+}
+
+
+/* PopularPackages view */
+
+.col-auto.price-arow-fix {
+    margin-left: 39px;
+}
+
+.inputBox.col-auto.division-fix {
+    margin-left: 17px;
+}
+
+.sort-packages-heading {
+    background-color: white;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.sort-header h3 {
+    font-size: 40px;
+    font-weight: 800;
 }

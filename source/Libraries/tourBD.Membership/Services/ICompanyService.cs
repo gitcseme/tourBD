@@ -12,5 +12,6 @@ namespace tourBD.Membership.Services
         Task<IEnumerable<Company>> GetUserCompaniesAsync(Guid userId);
         Task CreateTourPackage(TourPackage tourPackage);
         Task<Company> GetCompanyWithAllIncludePropertiesAsync(Guid companyId);
+        Task<List<Company>> GetAllIncludePropertiesAsync();
     }
 }

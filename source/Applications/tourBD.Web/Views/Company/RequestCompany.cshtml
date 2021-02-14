@@ -21,7 +21,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <form method="post" asp-controller="Company" asp-action="RequestCompany">
+                    <form method="post" asp-controller="Company" asp-action="RequestCompany" id="request-form">
                         <div class="form-group">
                             <div class="card-header">
                                 <div class="request-title">
@@ -34,7 +34,7 @@
                                 <textarea name="Description" cols="20" rows="7" class="form-control" id="Description" placeholder="Write your company details"></textarea>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit request</button>
+                                <button class="btn btn-primary" onclick="Notify()">Submit request</button>
                             </div>
                         </div>
                     </form>
@@ -43,3 +43,24 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script type="text/javascript">
+        function Notify() {
+
+            $('#request-form').submit(function () {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Your request is submitted, please wait',
+                    showConfirmButton: true,
+                    timer: 2000
+                })
+            });
+
+        }
+    </script>
+
+}

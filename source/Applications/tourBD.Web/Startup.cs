@@ -18,6 +18,9 @@ using tourBD.Forum.Seeds;
 using Autofac.Core;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.AspNetCore.Authentication;
+using tourBD.NotificationChannel.Contexts;
+using tourBD.NotificationChannel;
+using tourBD.NotificationChannel.Seeds;
 
 namespace tourBD.Web
 {
@@ -54,6 +57,10 @@ namespace tourBD.Web
 
             services.AddDbContext<ForumContext>(options =>
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName))
+            );
+
+            services.AddDbContext<NotificationContext>(option =>
+                option.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName))
             );
 
             services
@@ -109,12 +116,14 @@ namespace tourBD.Web
             // Register your own things directly with Autofac, like:
             builder.RegisterModule(new MembershipModule(connectionString, migrationAssemblyName));
             builder.RegisterModule(new ForumModule(connectionString, migrationAssemblyName));
+            builder.RegisterModule(new NotificationModule(connectionString, migrationAssemblyName));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
             AuthoritySeed authoritySeed,
-            ForumSeed forumSeed)
+            ForumSeed forumSeed,
+            NotificationSeed notificationSeed)
         {
             this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
@@ -149,11 +158,13 @@ namespace tourBD.Web
                 endpoints.MapRazorPages();
             });
 
-            // calling seed data.
+            // Automating migration and seeding data
             authoritySeed.MigrateAsync().Wait();
             authoritySeed.SeedAsync().Wait();
 
             forumSeed.MigrateAsync().Wait();
+
+            notificationSeed.MigrateAsync().Wait();
         }
     }
 }

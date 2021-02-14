@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using tourBD.Membership.Entities;
+using tourBD.Membership.Enums;
 using tourBD.Membership.UnitOfWorks;
 
 namespace tourBD.Membership.Services
@@ -70,6 +71,16 @@ namespace tourBD.Membership.Services
         {
             await _tourPackageUnitOfWork.LoveRepository.AddAsync(love);
             await _tourPackageUnitOfWork.SaveAsync();
+        }
+
+        public async Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision, bool priceASC)
+        {
+            return await _tourPackageUnitOfWork.TourPackageRepository.GetPackagesPaginatedAsync(pageIndex, pageSize, selectedDivision, priceASC);
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _tourPackageUnitOfWork.TourPackageRepository.GetCountAsync();
         }
     }
 }

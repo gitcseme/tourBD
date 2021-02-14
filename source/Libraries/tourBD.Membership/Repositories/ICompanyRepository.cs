@@ -10,5 +10,6 @@ namespace tourBD.Membership.Repositories
     public interface ICompanyRepository : IRepositoryBase<Company, Guid>
     {
         Task<Company> GetWithAllIncludePropertiesAsync(Guid companyId);
+        Task<List<Company>> GetAllIncludePropertiesAsync();
     }
 }

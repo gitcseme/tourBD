@@ -16,17 +16,23 @@ namespace tourBD.Membership.Repositories
         {
         }
 
+        public async Task<List<Company>> GetAllIncludePropertiesAsync()
+        {
+            return await _DbSet
+                .Include(c => c.TourPackages)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<Company> GetWithAllIncludePropertiesAsync(Guid companyId)
         {
-            return await Task.Run(() =>
-            {
-                return _DbSet
-                        .Where(c => c.Id == companyId)
-                        .Include(c => c.TourPackages).ThenInclude(tp => tp.Spots)
-                        .Include(c => c.TourPackages).ThenInclude(tp => tp.Loves)
-                        .AsNoTracking()
-                        .FirstOrDefault();
-            });
+            
+            return await _DbSet
+                .Where(c => c.Id == companyId)
+                .Include(c => c.TourPackages).ThenInclude(tp => tp.Spots)
+                .Include(c => c.TourPackages).ThenInclude(tp => tp.Loves)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
         }
     }
 }

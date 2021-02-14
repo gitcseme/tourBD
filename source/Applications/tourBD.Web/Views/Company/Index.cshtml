@@ -1,79 +1,28 @@
-﻿@model tourBD.Web.Models.CompanyModels.CompanyIndexModel
+﻿@model List<tourBD.Web.Models.CompanyModels.CompanyViewModel>
 
-@section Styles {
-
-    <link href="~/css/company/user-company.css" rel="stylesheet" type="text/css"/>
-}
-
-<!-- Main content -->
 <div class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6 left-side">
-                <div class="user-companies">
-                    <h3>Authorized companies</h3>
-                </div>
-            </div>
-            <div class="col-md-6 right-side">
-                <div class="request-link">
-                    <a asp-controller="Company" asp-action="RequestCompany">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        Request for a company
-                    </a>
-                </div>
-            </div>
+        <div class="row justify-content-center">
+            <h3>TOP TOUR PROVIDERS</h3>
         </div>
-        <div class="current-status row">
-            <div class="col-md-12">
-                <hr />
-                <hr />
-                @if (Model.Companies.Count() == 0 && !Model.HasPendingRequest)
-                {
-                    <ul>
-                        <li>No company is created by user yet!</li>
-                        <li>Click the button top-right corner for making a company request</li>
-                    </ul>
-                }
-                else if (Model.HasPendingRequest)
-                {
-                    <ul>
-                        <li>You have a company request <span style="color: blue; font-style: italic; font-weight: 600">pending</span></li>
-                        <li>We will evaluate your request within <span style="color: blueviolet; font-weight:600">72 hours</span> and inform by sending you email.</li>
-                    </ul>
-                }
-            </div>
-        </div>
-        <div class="row">
-            @foreach (var company in Model.Companies)
+        <hr />
+
+        <div class="row justify-content-center">
+            @foreach (var company in Model)
             {
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-header" style="text-align: center">
-                            <div>
-                                <img src="@company.CompanyImageUrl" alt="" style="width: 100%; height: 170px" />
-                            </div>
+                <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.CompanyId" class="col-md-4 card" style="margin: 2px">
+                    <div class="row">
+                        <div class="logo col-md-5">
+                            <img src="@company.CompanyLogo" alt="Company Logo" style="width: 100%; height: 100%" ; />
                         </div>
-                        <div class="card-body company-details">
-                            <ul style="list-style: none; margin-bottom: 0" class="detail-list">
-                                <li>Name: <span class="ml-3">@company.Name</span></li>
-                                <li>Packages: <span class="ml-3">@company.TourPackages.Count</span></li>
-                                <li>Stars: <span class="ml-3">@company.Star</span></li>
-                                <li>Address: <span class="ml-3">@company.Address</span></li>
-                            </ul>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="footer">
-                                    <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
-                                    <a asp-controller="Company" asp-action="EditCompany" asp-route-companyId="@company.Id.ToString()" class="btn btn-primary ml-2"><i class="fas fa-edit"></i> Edit</a>
-                                </div>
-                            </div>
+                        <div class="details col-md-7">
+                            <label style="width: 80px">Name:</label><span style="color: coral; font-weight: 700">@company.Name</span><br />
+                            <label style="width: 80px">Packages:</label><span style="color: coral; font-weight: 700">@company.Packages</span><br />
+                            <label style="width: 80px">Stars:</label><span style="color: coral; font-weight: 700">@company.Stars</span><br />
+                            <label style="width: 80px">Address:</label><span style="color: coral; font-weight: 700">@company.Address</span>
                         </div>
                     </div>
-                </div>
+                </a>
             }
         </div>
     </div>

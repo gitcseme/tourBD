@@ -2,7 +2,7 @@
 .top-content {
     background: url('../../img/bg/winter-boat.jpg') no-repeat center center fixed;
     background-size: cover;
-    height: 650px;
+    height: 500px;
     transition: 8s;
 
     animation-name: animate;
@@ -58,7 +58,7 @@ p.quote-author {
 
 /* Companies */
 .conpanies {
-    padding: 60px 0;
+    padding: 5px 0;
 }
 
 .conpany-section {
@@ -98,6 +98,27 @@ p.quote-author {
     text-align: center;
     padding: 3px 0;
     margin-bottom: 15px;
+}
+
+.recent-posts-heading, .top-blogs-heading {
+    width: 100%;
+    text-align: center;
+    margin: 2px;
+}
+
+.recent-posts-heading h4, .top-blogs-heading h4 {
+    font-family: monospace;
+    margin: 0;
+    padding: 5px 50px;
+    font-weight: 600;
+}
+
+.recent-posts-heading h4 {
+    background-color: bisque;
+}
+
+.top-blogs-heading h4 {
+    background-color: aquamarine;
 }
 
 .company-logo {
