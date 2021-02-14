@@ -96,3 +96,25 @@ span.color-ml-3 {
     font-weight: 600;
     color: maroon;
 }
+
+
+/* PopularPackages view */
+
+.col-auto.price-arow-fix {
+    margin-left: 39px;
+}
+
+.inputBox.col-auto.division-fix {
+    margin-left: 17px;
+}
+
+.sort-packages-heading {
+    background-color: white;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.sort-header h3 {
+    font-size: 40px;
+    font-weight: 800;
+}

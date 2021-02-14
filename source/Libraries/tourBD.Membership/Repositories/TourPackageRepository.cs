@@ -19,14 +19,20 @@ namespace tourBD.Membership.Repositories
 
         public async Task<List<TourPackage>> GetPackagesPaginatedAsync(int pageIndex, int pageSize, BangladeshDivisions selectedDivision)
         {
-            var query = _DbSet
-                .Include(tp => tp.Spots)
-                .Include(tp => tp.Loves)
-                .Where(tp => tp.Division == selectedDivision.ToString()).AsNoTracking();
+            List<TourPackage> query;
+            if (selectedDivision != BangladeshDivisions.ALL)
+                query = await _DbSet
+                    .Include(tp => tp.Spots)
+                    .Include(tp => tp.Loves)
+                    .Where(tp => tp.Division == selectedDivision.ToString())
+                    .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            else
+                query = await _DbSet
+                    .Include(tp => tp.Spots)
+                    .Include(tp => tp.Loves)
+                    .Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
 
-            var result = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
-
-            return await result.ToListAsync();
+            return query;
         }
 
         public async Task<TourPackage> GetPackageWithRelatedSpotsAsync(Guid packageId)

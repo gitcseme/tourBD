@@ -304,37 +304,65 @@ namespace tourBD.Web.Controllers
             return View(company);
         }
 
-        public async Task<IActionResult> PopularPackages(int pageIndex = 1, string division = "Dhaka", string priceDirection = "UP")
+        [HttpGet]
+        public async Task<IActionResult> PopularPackages()
         {
-            int pageSize = 10;
-            BangladeshDivisions selectedDivision = GetDivision(division);
+            await GetLoggedInUser();
 
-            var paginatedPackages = await _tourPackageService.GetPackagesPaginatedAsync(pageIndex, pageSize, selectedDivision);
-            if (priceDirection == "UP")
-                paginatedPackages.Sort((tp1, tp2) => {
+            PackageSortViewModel model = new PackageSortViewModel();
+            model.Packages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision);
+            model.TotalRecords = await _tourPackageService.GetCountAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PopularPackages(PackageSortViewModel model)
+        {
+            await GetLoggedInUser();
+
+            var paginatedPackages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision);
+            if (model.PriceUP) { 
+                paginatedPackages.Sort((tp1, tp2) =>
+                {
+                    return (tp1.Price < tp2.Price) ? 1 : 0;
+                });
+            }
+            else if (model.PriceDN) {
+                paginatedPackages.Sort((tp1, tp2) =>
+                {
                     return (tp1.Price > tp2.Price) ? 1 : 0;
                 });
-            else
-                paginatedPackages.Sort((tp1, tp2) => tp1.Price.CompareTo(tp2.Price));
+            }
 
-            paginatedPackages.Sort((tp1, tp2) => {
-                return (tp1.Loves.Count() > tp2.Loves.Count()) ? 1 : 0;
-            });
+            if (model.LoveUP) { 
+                paginatedPackages.Sort((tp1, tp2) =>
+                {
+                    return (tp1.Loves.Count() < tp2.Loves.Count()) ? 1 : 0;
+                });
+            }
+            else if (model.LoveDN) { 
+                paginatedPackages.Sort((tp1, tp2) =>
+                {
+                    return (tp1.Loves.Count() > tp2.Loves.Count()) ? 1 : 0;
+                });
+            }
 
             var totalRecords = await _tourPackageService.GetCountAsync();
 
-            var model = new PackageAjaxViewModel(paginatedPackages, pageIndex, pageSize, totalRecords);
+            var result = new PackageSortViewModel(paginatedPackages, model.PageIndex, model.PageSize, totalRecords); 
 
-            return View(model);
+            return View(result);
         }
 
         private BangladeshDivisions GetDivision(string division)
         {
             var Divisions = Enum.GetValues(typeof(BangladeshDivisions)).Cast<BangladeshDivisions>().ToList();
-            BangladeshDivisions bangladeshDivision = BangladeshDivisions.Dhaka;
+            BangladeshDivisions bangladeshDivision = BangladeshDivisions.ALL;
             foreach (var div in Divisions)
             {
-                if (div.ToString() == division) {
+                if (div.ToString() == division)
+                {
                     bangladeshDivision = div;
                     break;
                 }

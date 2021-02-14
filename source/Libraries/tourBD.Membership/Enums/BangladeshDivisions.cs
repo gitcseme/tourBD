@@ -6,6 +6,7 @@ namespace tourBD.Membership.Enums
 {
     public enum BangladeshDivisions
     {
+        ALL,
         Barishal,
         Chittagong,
         Dhaka,
