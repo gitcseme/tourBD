@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
+using tourBD.Web.Models.Home;
 
 namespace tourBD.Web.Controllers
 {
@@ -13,11 +15,13 @@ namespace tourBD.Web.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IPathService _pathService;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(UserManager<ApplicationUser> userManager, IPathService pathService)
+        public HomeController(UserManager<ApplicationUser> userManager, IPathService pathService, IConfiguration configuration)
         {
             _userManager = userManager;
             _pathService = pathService;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
@@ -39,6 +43,15 @@ namespace tourBD.Web.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
                 user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+        }
+
+        public IActionResult Contact()
+        {
+            var tourBDInfo = new TourBDInfo();
+            _configuration.Bind(nameof(tourBDInfo), tourBDInfo);
+            tourBDInfo.Developer.ImageUrl = $"{_pathService.PictureFolder}/{tourBDInfo.Developer.ImageUrl}";
+
+            return View(tourBDInfo);
         }
     }
 }

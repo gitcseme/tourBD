@@ -20,6 +20,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link href="~/admin/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <!-- Theme style -->
     <link href="~/admin/css/adminlte.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     @RenderSection("Styles", false)
@@ -30,7 +31,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" id="top-navigations">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
@@ -41,16 +42,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a asp-controller="Forum" asp-action="Index" class="nav-link">Forum</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a asp-controller="Home" asp-action="Services" class="nav-link">Services</a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
                     <a asp-controller="Company" asp-action="Index" class="nav-link">Tour Providers</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a asp-controller="Company" asp-action="PopularPackages" class="nav-link">Popular Packages</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
+                    <a asp-controller="Home" asp-action="Services" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
                 </li>
             </ul>
 
@@ -315,6 +316,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             if (linkAction == pathAction) {
                 $(this).addClass('active');
+                return false;
+            }
+        });
+
+        $('ul#top-navigations li.d-sm-inline-block a').each(function () {
+
+            let linkHref = $(this).attr('href').split(/[\/,?]/);
+            let linkAction = linkHref[linkHref.length - 1];
+
+            if (linkAction == pathAction) {
+                $(this).addClass('active-nav-item');
                 return false;
             }
         });

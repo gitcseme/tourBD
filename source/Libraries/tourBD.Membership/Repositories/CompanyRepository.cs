@@ -20,6 +20,7 @@ namespace tourBD.Membership.Repositories
         {
             return await _DbSet
                 .Include(c => c.TourPackages)
+                    .ThenInclude(tp => tp.Loves)
                 .AsNoTracking()
                 .ToListAsync();
         }
