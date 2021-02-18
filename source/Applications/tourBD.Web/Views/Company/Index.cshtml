@@ -1,29 +1,40 @@
 ﻿@model List<tourBD.Web.Models.CompanyModels.CompanyViewModel>
 
+<style>
+    h3.header {
+        font-weight: 800;
+        word-spacing: 10px;
+        font-size: xx-large;
+    }
+</style>
+
 <div class="content">
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <h3>TOP TOUR PROVIDERS</h3>
+            <h3 class="header">TOP TOUR PROVIDERS</h3>
         </div>
-        <hr />
 
         <div class="row justify-content-center">
-            @foreach (var company in Model)
-            {
-                <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.CompanyId" class="col-md-4 card" style="margin: 2px">
+            <div class="col-md-6">
+                @foreach (var company in Model)
+                {
                     <div class="row">
-                        <div class="logo col-md-5">
-                            <img src="@company.CompanyLogo" alt="Company Logo" style="width: 100%; height: 100%" ; />
-                        </div>
-                        <div class="details col-md-7">
-                            <label style="width: 80px">Name:</label><span style="color: coral; font-weight: 700">@company.Name</span><br />
-                            <label style="width: 80px">Packages:</label><span style="color: coral; font-weight: 700">@company.Packages</span><br />
-                            <label style="width: 80px">Stars:</label><span style="color: coral; font-weight: 700">@company.Stars</span><br />
-                            <label style="width: 80px">Address:</label><span style="color: coral; font-weight: 700">@company.Address</span>
-                        </div>
+                        <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.CompanyId" class="col-md-12 card m-2" style="margin: 2px">
+                            <div class="row">
+                                <div class="logo col-md-5">
+                                    <img src="@company.CompanyLogo" alt="Company Logo" style="width: 100%; height: 100%" ; />
+                                </div>
+                                <div class="details col-md-7">
+                                    <label style="width: 80px">Name:</label><span style="color: coral; font-weight: 700">@company.Name</span><br />
+                                    <label style="width: 80px">Packages:</label><span style="color: coral; font-weight: 700">@company.Packages</span><br />
+                                    <label style="width: 80px">Stars:</label><span style="color: coral; font-weight: 700">@company.Stars</span><br />
+                                    <label style="width: 80px">Address:</label><span style="color: coral; font-weight: 700">@company.Address</span>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                </a>
-            }
+                }
+            </div>
         </div>
     </div>
 </div>

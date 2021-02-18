@@ -53,12 +53,12 @@ namespace tourBD.Web.Controllers
                 Name = c.Name,
                 Packages = c.TourPackages.Count(),
                 Address = c.Address.Length > 20 ? c.Address.Substring(0, 18) + "..." : c.Address,
-                Stars = c.Star,
+                Stars = c.CalculateStars(),
                 CompanyId = c.Id.ToString(),
                 CompanyLogo = c.CompanyLogo != null ? $"{_pathService.LogoFolder}{c.CompanyLogo}" : $"{_pathService.LogoFolder}{_pathService.DummyCompanyLogo}"
             }).ToList();
 
-            model.Sort((c1, c2) => c1.Stars.CompareTo(c2.Stars));
+            model.Sort((c1, c2) => c2.Stars.CompareTo(c1.Stars));
 
             return View(model);
         }
@@ -82,7 +82,7 @@ namespace tourBD.Web.Controllers
         {
             await GetLoggedInUser();
 
-            var model = new CompanyRequestModel() { OfficialEmail = _configuration["Company:OfficialEmail"] };
+            var model = new CompanyRequestModel() { OfficialEmail = _configuration["TourBDInfo:OfficialEmail"] };
             return View(model);
         }
 

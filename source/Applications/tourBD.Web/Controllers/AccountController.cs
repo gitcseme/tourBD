@@ -123,7 +123,7 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RegistrationForm(IdentityUser user)
+        public IActionResult RegistrationForm(IdentityUser user)
         {
             ViewBag.Name = user.Email;
             ViewBag.ImageUrl = $"{_pathService.PictureFolder}{_pathService.DummyUserImageUrl}";
@@ -296,8 +296,11 @@ namespace tourBD.Web.Controllers
             }
         }
 
-        public IActionResult AccessDenied()
+        public async Task<IActionResult> AccessDenied()
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
             return View();
         }
 

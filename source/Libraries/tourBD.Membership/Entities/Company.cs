@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using tourBD.Core;
 
@@ -30,5 +31,12 @@ namespace tourBD.Membership.Entities
         public string Email { get; set; }
 
         public List<TourPackage> TourPackages { get; set; } = new List<TourPackage>();
+
+        public int CalculateStars()
+        {
+            int stars = 0;
+            TourPackages?.ForEach(tp => stars += tp.Loves.Count());
+            return stars;
+        }
     }
 }

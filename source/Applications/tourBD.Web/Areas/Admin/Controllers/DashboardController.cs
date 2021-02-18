@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using tourBD.Core;
+using tourBD.Forum.Services;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Enums;
 using tourBD.Membership.Services;
@@ -21,24 +22,38 @@ namespace tourBD.Web.Areas.Admin.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICompanyService _companyService;
         private readonly IPathService _pathService;
+        private readonly ITourPackageService _tourPackageService;
+        private readonly IPostService _postService;
 
         public DashboardController(
             UserManager<ApplicationUser> userManager, 
             ICompanyRequestService companyRequestService,
             ICompanyService companyService,
-            IPathService pathService)
+            IPathService pathService,
+            ITourPackageService tourPackageService,
+            IPostService postService)
         {
             _companyRequestService = companyRequestService;
             _userManager = userManager;
             _companyService = companyService;
             _pathService = pathService;
+            _tourPackageService = tourPackageService;
+            _postService = postService;
         }
 
         public async Task<IActionResult> Index()
         {
             await GetLoggedInUser();
 
-            return View();
+            var model = new AdminHomeModel
+            {
+                TotalCompanies = await _companyService.GetCountAsync(),
+                TotalPackages = await _tourPackageService.GetCountAsync(),
+                TotalPosts = await _postService.GetCountAsync(),
+                TotalRegisteredUsers = _userManager.Users.Count()
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> RequestList()

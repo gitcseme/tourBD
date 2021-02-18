@@ -1,0 +1,62 @@
+﻿@model tourBD.Web.Models.Home.TourBDInfo
+
+<style>
+    .developer .profile-pic img {
+        width: 300px;
+    }
+
+    .tourBD-logo img {
+        width: 100%;
+        height: 100%;
+    }
+
+    ul.dev-info {
+        list-style: none;
+        margin-top: 15px;
+    }
+
+    span.lebel {
+        font-weight: 800;
+        color: brown;
+        margin-right: 15px;
+    }
+
+    ul.dev-info li {
+        font-weight: 800;
+    }
+
+</style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 tourBD-logo">
+                            <img src="@Model.Logo" alt="TourBD Logo" />
+                        </div>
+                        <div class="col-md-6 developer">
+                            <div class="row justify-content-center">
+                                <H4 class="headline" style="font-weight: bold">Developer Info</H4>
+                            </div>
+                            <div class="row profile-pic justify-content-center">
+                                <img src="@Model.Developer.ImageUrl" alt="" />
+                            </div>
+                            <div class="row justify-content-center">
+                                <ul class="dev-info">
+                                    <li><span class="lebel">Name:</span> @Model.Developer.Name</li>
+                                    <li><span class="lebel">Title:</span> @Model.Developer.Description</li>
+                                    <li><span class="lebel">Mobile:</span> @Model.Developer.Mobile</li>
+                                    <li><span class="lebel">Education:</span> @Model.Developer.Education</li>
+                                    <li><span class="lebel">Institution:</span> @Model.Developer.Institution</li>
+                                    <li><span class="lebel">Email:</span> @Model.OfficialEmail</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
