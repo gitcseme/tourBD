@@ -42,7 +42,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
                 </li>
             </ul>
 
@@ -181,7 +181,7 @@
                                 <img src="@user.ImageUrl" class="img-circle elevation-2" alt="User Image" style="height: 40px; width: 40px;">
                             </div>
                             <div class="info">
-                                <a asp-controller="Account" asp-action="Profile" asp-route-userId="@user.Id.ToString()" class="d-block">@user.FullName</a>
+                                <a asp-area="" asp-controller="Account" asp-action="Profile" asp-route-userId="@user.Id.ToString()" class="d-block">@user.FullName</a>
                             </div>
                         }
                     }
@@ -204,7 +204,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/admin/Dashboard/Index" class="nav-link active">
+                                    <a href="/admin/Dashboard/Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Home</p>
                                     </a>
@@ -795,3 +795,28 @@
     @RenderSection("Scripts", false);
 </body>
 </html>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        let url = window.location.pathname.split(/[\/,?]/);
+        let pathAction = url[url.length - 1];
+        if (pathAction == "" || pathAction == "Admin" || pathAction == "admin") pathAction = "Index";
+
+        $('ul.nav-treeview li.nav-item a').each(function () {
+
+            let linkHref = $(this).attr('href').split(/[\/,?]/);
+            let linkAction = linkHref[linkHref.length - 1];
+
+            console.log(pathAction + ' ' + linkAction);
+
+            if (linkAction == pathAction) {
+                $(this).addClass('active');
+                return false;
+            }
+        });
+
+    });
+
+</script>

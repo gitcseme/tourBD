@@ -223,6 +223,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                 <p>Create Post</p>
                                             </a>
                                         </li>
+
+                                        if (await _userManager.IsInRoleAsync(user, "Admin"))
+                                        {
+                                            <li class="nav-item">
+                                                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="nav-link">
+                                                    <i class="fas fa-user-shield nav-icon" aria-hidden="true"></i>
+                                                    <p>Admin Deshboard</p>
+                                                </a>
+                                            </li>
+                                        }
                                     }
 
                                     <li class="nav-item">

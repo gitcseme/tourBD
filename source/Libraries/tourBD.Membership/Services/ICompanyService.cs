@@ -9,6 +9,7 @@ namespace tourBD.Membership.Services
 {
     public interface ICompanyService : IService<Company>
     {
+        Task<int> GetCountAsync();
         Task<IEnumerable<Company>> GetUserCompaniesAsync(Guid userId);
         Task CreateTourPackage(TourPackage tourPackage);
         Task<Company> GetCompanyWithAllIncludePropertiesAsync(Guid companyId);
