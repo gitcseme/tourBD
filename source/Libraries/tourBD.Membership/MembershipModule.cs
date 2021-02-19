@@ -88,6 +88,10 @@ namespace tourBD.Membership
                 .As<IPathService>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<AccountService>()
+                .As<IAccountService>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<AuthoritySeed>().SingleInstance();
             base.Load(builder);
         }
