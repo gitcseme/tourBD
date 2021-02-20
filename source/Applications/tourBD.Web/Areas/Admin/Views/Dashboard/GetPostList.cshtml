@@ -20,15 +20,14 @@
                 'processing': true,
                 'paging': true,
                 'ajax': {
-                    url: '/Admin/Dashboard/GetUsers',
+                    url: '/Admin/Dashboard/GetPosts',
                     type: 'GET',
                     dataType: 'json'
                 },
                 'columns': [
-                    { name: 'FullName' },
-                    { name: 'Email' },
-                    { name: 'PhoneNumber' },
-                    { name: 'Address' },
+                    { name: 'AuthorName' },
+                    { name: 'Message' },
+                    { name: 'CreationDate' }
                 ],
                 'columnDefs': [
                     {
@@ -41,9 +40,9 @@
                     },
                     {
                         'orderable': false,
-                        'targets': 4,
+                        'targets': 3,
                         'render': function (data, type, row) {
-                            return data == "True" ? `<button type="button" class="btn btn-sm btn-success">Varified</button>` : `<button type="button" class="btn btn-sm btn-danger">Not Varified</button>`;
+                            return `<a class="btn btn-sm btn-primary" href="/Forum/ViewPost?postId=${data}">View</a>`;
                         }
                     }
                 ]
@@ -64,21 +63,19 @@
                 <table id="userTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Address</th>
-                            <th>Status</th>
+                            <th>Author</th>
+                            <th>Message</th>
+                            <th>Creation Date</th>
+                            <th>Details Link</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                     <tfoot>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Address</th>
-                            <th>Status</th>
+                            <th>Author</th>
+                            <th>Message</th>
+                            <th>Creation Date</th>
+                            <th>Details Link</th>
                         </tr>
                     </tfoot>
                 </table>

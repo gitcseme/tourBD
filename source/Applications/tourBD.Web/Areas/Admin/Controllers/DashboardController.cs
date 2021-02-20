@@ -102,10 +102,10 @@ namespace tourBD.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public JsonResult GetUsers()
+        public async Task<JsonResult> GetUsers()
         {
             DatatableAjaxRequestModel request = new DatatableAjaxRequestModel(Request);
-            var requestData = _accountService.GetUsers(request.PageIndex, request.PageSize, true, request.SearchText, request.SortColumnName, request.OrderDirection);
+            var requestData = await _accountService.GetUsersAsync(request.PageIndex, request.PageSize, true, request.SearchText, request.SortColumnName, request.OrderDirection);
 
             var result = new
             {
@@ -121,7 +121,41 @@ namespace tourBD.Web.Areas.Admin.Controllers
                         u.Email,
                         u.PhoneNumber,
                         u.Address,
-                        u.Id.ToString()
+                        u.IsVarified.ToString()
+                    };
+                })
+            };
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetPostList()
+        {
+            await GetLoggedInUser();
+
+            return View();
+        }
+
+        public async Task<JsonResult> GetPosts()
+        {
+            DatatableAjaxRequestModel request = new DatatableAjaxRequestModel(Request);
+            var requestData = await _postService.GetPostsAsync(request.PageIndex, request.PageSize, true, request.SearchText, request.SortColumnName, request.OrderDirection);
+
+            var result = new
+            {
+                recordsTotal = requestData.Item2,
+                recordsFiltered = requestData.Item3,
+                data = requestData.Item1.Select(post =>
+                {
+                    string userData = post.AuthorName + "$" + $"{_pathService.PictureFolder}{post.AuthorImageUrl}" + "$" + post.AuthorId.ToString();
+                    string message = post.Message.Length < 50 ? post.Message : post.Message.Substring(0, 50) + "...";
+
+                    return new string[]
+                    {
+                        userData,
+                        message,
+                        post.CreationDate.ToString(),
+                        post.Id.ToString()
                     };
                 })
             };
