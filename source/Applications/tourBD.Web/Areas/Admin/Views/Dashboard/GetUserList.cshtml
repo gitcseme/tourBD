@@ -1,0 +1,92 @@
+﻿
+@section Styles {
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+}
+
+@section Scripts {
+    <!-- DataTables -->
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#userTable').DataTable({
+                'responsive': true,
+                'serverSide': true,
+                'processing': true,
+                'paging': true,
+                'ajax': {
+                    url: '/Admin/Dashboard/GetUsers',
+                    type: 'GET',
+                    dataType: 'json'
+                },
+                'columns': [
+                    { name: 'FullName' },
+                    { name: 'Email' },
+                    { name: 'PhoneNumber' },
+                    { name: 'Address' },
+                ],
+                'columnDefs': [
+                    {
+                        'orderable': true,
+                        'targets': 0,
+                        'render': function (data, type, row) {
+                            var arr = data.split('$');
+                            return `<img src="` + arr[1] + `" alt="" style="height: 30px; width: 30px" class="img-circle elevation-2"/> <span class="text-bold"><a href="/Account/Profile?userId=` + arr[2] + `">` + arr[0] + `</a></span>`;
+                        }
+                    },
+                    {
+                        'orderable': false,
+                        'targets': 4,
+                        'render': function (data, type, row) {
+                            return data == "True" ? `<button type="button" class="btn btn-sm btn-success">Varified</button>` : `<button type="button" class="btn btn-sm btn-danger">Not Varified</button>`;
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">List of registered users</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="userTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->

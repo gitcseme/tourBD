@@ -24,6 +24,7 @@ namespace tourBD.Web.Areas.Admin.Controllers
         private readonly IPathService _pathService;
         private readonly ITourPackageService _tourPackageService;
         private readonly IPostService _postService;
+        private readonly IAccountService _accountService;
 
         public DashboardController(
             UserManager<ApplicationUser> userManager, 
@@ -31,7 +32,8 @@ namespace tourBD.Web.Areas.Admin.Controllers
             ICompanyService companyService,
             IPathService pathService,
             ITourPackageService tourPackageService,
-            IPostService postService)
+            IPostService postService,
+            IAccountService accountService)
         {
             _companyRequestService = companyRequestService;
             _userManager = userManager;
@@ -39,6 +41,7 @@ namespace tourBD.Web.Areas.Admin.Controllers
             _pathService = pathService;
             _tourPackageService = tourPackageService;
             _postService = postService;
+            _accountService = accountService;
         }
 
         public async Task<IActionResult> Index()
@@ -87,6 +90,74 @@ namespace tourBD.Web.Areas.Admin.Controllers
                                r.Id.ToString()
                            };
                        })
+            };
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetUserList()
+        {
+            await GetLoggedInUser();
+
+            return View();
+        }
+
+        public async Task<JsonResult> GetUsers()
+        {
+            DatatableAjaxRequestModel request = new DatatableAjaxRequestModel(Request);
+            var requestData = await _accountService.GetUsersAsync(request.PageIndex, request.PageSize, true, request.SearchText, request.SortColumnName, request.OrderDirection);
+
+            var result = new
+            {
+                recordsTotal = requestData.Item2,
+                recordsFiltered = requestData.Item3,
+                data = requestData.Item1.Select(u =>
+                {
+                    string userData = u.FullName + "$" + $"{_pathService.PictureFolder}{u.ImageUrl}" + "$" + u.Id.ToString();
+
+                    return new string[]
+                    {
+                        userData,
+                        u.Email,
+                        u.PhoneNumber,
+                        u.Address,
+                        u.IsVarified.ToString()
+                    };
+                })
+            };
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetPostList()
+        {
+            await GetLoggedInUser();
+
+            return View();
+        }
+
+        public async Task<JsonResult> GetPosts()
+        {
+            DatatableAjaxRequestModel request = new DatatableAjaxRequestModel(Request);
+            var requestData = await _postService.GetPostsAsync(request.PageIndex, request.PageSize, true, request.SearchText, request.SortColumnName, request.OrderDirection);
+
+            var result = new
+            {
+                recordsTotal = requestData.Item2,
+                recordsFiltered = requestData.Item3,
+                data = requestData.Item1.Select(post =>
+                {
+                    string userData = post.AuthorName + "$" + $"{_pathService.PictureFolder}{post.AuthorImageUrl}" + "$" + post.AuthorId.ToString();
+                    string message = post.Message.Length < 50 ? post.Message : post.Message.Substring(0, 50) + "...";
+
+                    return new string[]
+                    {
+                        userData,
+                        message,
+                        post.CreationDate.ToString(),
+                        post.Id.ToString()
+                    };
+                })
             };
 
             return Json(result);

@@ -1,0 +1,89 @@
+﻿
+@section Styles {
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+}
+
+@section Scripts {
+    <!-- DataTables -->
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#userTable').DataTable({
+                'responsive': true,
+                'serverSide': true,
+                'processing': true,
+                'paging': true,
+                'ajax': {
+                    url: '/Admin/Dashboard/GetPosts',
+                    type: 'GET',
+                    dataType: 'json'
+                },
+                'columns': [
+                    { name: 'AuthorName' },
+                    { name: 'Message' },
+                    { name: 'CreationDate' }
+                ],
+                'columnDefs': [
+                    {
+                        'orderable': true,
+                        'targets': 0,
+                        'render': function (data, type, row) {
+                            var arr = data.split('$');
+                            return `<img src="` + arr[1] + `" alt="" style="height: 30px; width: 30px" class="img-circle elevation-2"/> <span class="text-bold"><a href="/Account/Profile?userId=` + arr[2] + `">` + arr[0] + `</a></span>`;
+                        }
+                    },
+                    {
+                        'orderable': false,
+                        'targets': 3,
+                        'render': function (data, type, row) {
+                            return `<a class="btn btn-sm btn-primary" href="/Forum/ViewPost?postId=${data}">View</a>`;
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">List of registered users</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="userTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Author</th>
+                            <th>Message</th>
+                            <th>Creation Date</th>
+                            <th>Details Link</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Author</th>
+                            <th>Message</th>
+                            <th>Creation Date</th>
+                            <th>Details Link</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
