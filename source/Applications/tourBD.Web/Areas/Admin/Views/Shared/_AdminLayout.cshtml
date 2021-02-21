@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 3 | Dashboard</title>
+    <title>tourBD</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Font Awesome -->
@@ -777,7 +777,7 @@
     <!-- ChartJS -->
     <script src="~/admin/plugins/chart.js/Chart.min.js"></script>
     <!-- Sparkline -->
-    <script src="~/admin/plugins/sparklines/sparkline.js"></script>
+    @*<script src="~/admin/plugins/sparklines/sparkline.js"></script>*@
     <!-- JQVMap -->
     <script src="~/admin/plugins/jqvmap/jquery.vmap.min.js"></script>
     <script src="~/admin/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
@@ -795,7 +795,7 @@
     <!-- AdminLTE App -->
     <script src="~/admin/js/adminlte.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="~/admin/js/pages/dashboard.js"></script>
+    @*<script src="~/admin/js/pages/dashboard.js"></script>*@
     <!-- AdminLTE for demo purposes -->
     <script src="~/admin/js/demo.js"></script>
     @RenderSection("Scripts", false);
@@ -814,8 +814,6 @@
 
             let linkHref = $(this).attr('href').split(/[\/,?]/);
             let linkAction = linkHref[linkHref.length - 1];
-
-            console.log(pathAction + ' ' + linkAction);
 
             if (linkAction == pathAction) {
                 $(this).addClass('active');

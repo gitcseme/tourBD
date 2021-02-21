@@ -54,8 +54,6 @@ namespace tourBD.Membership.Seeds
                 {
                     if (await CheckAndCreateRoleAsync(_adminRole))
                         await _userManager.AddToRoleAsync(_adminUser, _adminRole.Name);
-                    if (await CheckAndCreateRoleAsync(_supportRole))
-                        await _userManager.AddToRoleAsync(_adminUser, _supportRole.Name);
                 }
             }
 
