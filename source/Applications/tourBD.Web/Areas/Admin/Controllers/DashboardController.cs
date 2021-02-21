@@ -20,6 +20,7 @@ namespace tourBD.Web.Areas.Admin.Controllers
     {
         private readonly ICompanyRequestService _companyRequestService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager _roleManager;
         private readonly ICompanyService _companyService;
         private readonly IPathService _pathService;
         private readonly ITourPackageService _tourPackageService;
@@ -27,7 +28,8 @@ namespace tourBD.Web.Areas.Admin.Controllers
         private readonly IAccountService _accountService;
 
         public DashboardController(
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
+            RoleManager roleManager,
             ICompanyRequestService companyRequestService,
             ICompanyService companyService,
             IPathService pathService,
@@ -42,19 +44,36 @@ namespace tourBD.Web.Areas.Admin.Controllers
             _tourPackageService = tourPackageService;
             _postService = postService;
             _accountService = accountService;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index()
         {
             await GetLoggedInUser();
+            var userRoles = _roleManager.Roles.Select(r => r.Name).ToList();
+            Dictionary<string, List<Person>> dictionary = new Dictionary<string, List<Person>>();
+            foreach (var role in userRoles)
+            {
+                var applicationUsers = (await _userManager.GetUsersInRoleAsync(role)).ToList();
+                var persons = applicationUsers.Select(au => new Person
+                {
+                    Id = au.Id.ToString(),
+                    Name = au.FullName,
+                    ImageUrl = au.ImageUrl.Contains("img") ? au.ImageUrl : $"{_pathService.PictureFolder}/{au.ImageUrl}"
+                }).ToList();
+
+                dictionary.Add(role, persons);
+            }
 
             var model = new AdminHomeModel
             {
                 TotalCompanies = await _companyService.GetCountAsync(),
                 TotalPackages = await _tourPackageService.GetCountAsync(),
                 TotalPosts = await _postService.GetCountAsync(),
-                TotalRegisteredUsers = _userManager.Users.Count()
+                TotalRegisteredUsers = _userManager.Users.Count(),
+                Authorities = dictionary
             };
+
 
             return View(model);
         }

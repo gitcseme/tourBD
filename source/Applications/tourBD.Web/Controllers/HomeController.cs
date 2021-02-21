@@ -45,8 +45,10 @@ namespace tourBD.Web.Controllers
                 user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
+            await PrepareLoggedInUserAsync();
+
             var tourBDInfo = new TourBDInfo();
             _configuration.Bind(nameof(tourBDInfo), tourBDInfo);
             tourBDInfo.Developer.ImageUrl = $"{_pathService.PictureFolder}/{tourBDInfo.Developer.ImageUrl}";
