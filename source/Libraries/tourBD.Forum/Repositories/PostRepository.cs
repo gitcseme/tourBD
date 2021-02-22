@@ -22,7 +22,8 @@ namespace tourBD.Forum.Repositories
             query = query
                     .Include(post => post.Comments)
                         .ThenInclude(cmt => cmt.Replays)
-                    .Include(post => post.Likes);
+                    .Include(post => post.Likes)
+                    .OrderByDescending(post => post.CreationDate);
 
             var result = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
             IEnumerable<Post> data;
@@ -33,6 +34,17 @@ namespace tourBD.Forum.Repositories
                 data = await result.ToListAsync();
 
             return data;
+        }
+
+        public async Task<List<Post>> GetRecentPostsAsync(int numberOfPosts = 5)
+        {
+            IQueryable<Post> query = _DbSet.AsNoTracking()
+                .OrderByDescending(post => post.CreationDate)
+                .Take(numberOfPosts);
+
+            var result =  await query.ToListAsync();
+
+            return result;
         }
 
         public async Task<Post> GetPostIncludePropertiesAsync(Guid id)

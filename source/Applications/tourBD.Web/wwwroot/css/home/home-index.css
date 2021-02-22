@@ -145,3 +145,33 @@ footer.main-footer {
     background-color: slategrey;
     color: white;
 }
+
+img#author-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+a.row.single-post {
+    margin: 5px;
+    background-color: beige;
+    padding: 5px;
+    border: 1px solid cadetblue;
+    border-radius: 5px;
+    transition: .5s;
+}
+
+span.author-user-name {
+    color: coral;
+    font-weight: 600;
+}
+
+.message p {
+    color: black;
+    font-family: monospace;
+}
+
+a.row.single-post:hover {
+    background-color: cadetblue;
+    transition: .5s;
+}

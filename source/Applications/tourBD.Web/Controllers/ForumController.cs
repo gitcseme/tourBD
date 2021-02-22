@@ -45,7 +45,7 @@ namespace tourBD.Web.Controllers
         }
 
         
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 1)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 2)
         {
             var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
 

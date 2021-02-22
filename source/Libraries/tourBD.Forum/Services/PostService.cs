@@ -132,5 +132,10 @@ namespace tourBD.Forum.Services
             var comment = _postUnitOfWork.CommentRepository.Get(new Guid(commentId));
             return comment.PostId.ToString();
         }
+
+        public async Task<List<Post>> GetRecentPostsAsync(int numberOfPosts = 5)
+        {
+            return await _postUnitOfWork.PostRepository.GetRecentPostsAsync(numberOfPosts);
+        }
     }
 }
