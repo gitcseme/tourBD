@@ -58,126 +58,26 @@
 
         <div class="row conpany-section">
             <div class="col-md-12">
-                <h3>OUR SPONSORS</h3>
+                <h3>OUR TOUR PROVIDERS</h3>
             </div>
         </div>
-        <div class="row section-content-wrapper">
-            <div class="col-md-6 all-companies">
-                <div class="row justify-content-center">
-                    <div class="sponsors">
-                        <h4>TOP TOUR PROVIDERS</h4>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-
-                    <div class="col-md-2">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c1.jpg" alt="name" class="img-fluid" />
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="row">
+                    @foreach (var company in Model.Companies)
+                    {
+                        <div class="col-md-4">
+                            <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.Id.ToString()" class="company-logo">
+                                <img src="@company.CompanyLogoUrl" alt="LOGO" title="@company.CompanyName" />
                             </a>
                         </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c2.jpg" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c3.jpg" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c4.png" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c5.png" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c6.png" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c7.png" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-md-6 top-sponsors">
-                <div class="row justify-content-center">
-                    <div class="sponsors">
-                        <h4>TOP SPONSORS</h4>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-
-                    <div class="col-md-3">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c4.png" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c1.jpg" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="company-logo">
-                            <a href="#">
-                                <img src="~/img/upload/clogo/c6.png" alt="name" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-
+                    }
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="topBloggers">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6">
-                <p>List of blogger profiles</p>
-            </div>
-            <div class="col-md-6 tour-event">
-                <p>Tour Events Announcement</p>
-            </div>
-        </div>
-    </div>
-</section>
 
 @section Scripts {
 
