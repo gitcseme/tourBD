@@ -15,16 +15,19 @@
     text-align: center;
 }
 
-    .user-companies h3 {
-        display: inline-block;
-        margin-top: 5%;
-        margin-bottom: 0px;
-        text-transform: uppercase;
-        font-weight: 600;
-    }
+.user-companies h3 {
+    display: inline-block;
+    margin-top: 5%;
+    margin-bottom: 0px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.footer-container {
+    margin: 0 auto;
+}
 
 /* Request button */
-
 .request-link a {
     position: absolute;
     top: 50%;
@@ -39,25 +42,25 @@
     overflow: hidden;
 }
 
-    .request-link a::before {
-        content: '';
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        bottom: 2px;
-        width: 50%;
-        background: rgba(255,255,255,0.085);
-    }
+.request-link a::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    bottom: 2px;
+    width: 50%;
+    background: rgba(255,255,255,0.085);
+}
 
-    .request-link a span:nth-child(1) {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(to right, #0c002b, #1779ff);
-        animation: animate1 2s linear infinite;
-    }
+.request-link a span:nth-child(1) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #0c002b, #1779ff);
+    animation: animate1 2s linear infinite;
+}
 
 @keyframes animate1 {
     0% {

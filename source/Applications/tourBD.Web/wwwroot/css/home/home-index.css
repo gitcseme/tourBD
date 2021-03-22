@@ -72,71 +72,9 @@ p.quote-author {
     font-size: 40px;
 }
 
-.row.section-content-wrapper {
-    min-height: 400px;
-    max-height: 600px;
-}
-
-.all-companies .sponsors h4 {
-    font-family: monospace;
-    background-color: bisque;
-    margin: 0;
-    padding: 5px 50px;
-    font-weight: 600;
-}
-
-.top-sponsors .sponsors h4 {
-    font-family: monospace;
-    background-color: azure;
-    margin: 0;
-    padding: 5px 50px;
-    font-weight: 600;
-}
-
-.row .sponsors {
-    border-radius: 3px;
-    text-align: center;
-    padding: 3px 0;
-    margin-bottom: 15px;
-}
-
-.recent-posts-heading, .top-blogs-heading {
+a.company-logo img {
+    height: 100%;
     width: 100%;
-    text-align: center;
-    margin: 2px;
-}
-
-.recent-posts-heading h4, .top-blogs-heading h4 {
-    font-family: monospace;
-    margin: 0;
-    padding: 5px 50px;
-    font-weight: 600;
-}
-
-.recent-posts-heading h4 {
-    background-color: bisque;
-}
-
-.top-blogs-heading h4 {
-    background-color: aquamarine;
-}
-
-.company-logo {
-    text-align: center;
-}
-
-.col-md-4.all-companies {
-    background: beige;
-    border: 1px solid azure;
-}
-
-.col-md-4.top-sponsors {
-    border: 1px solid gainsboro;
-}
-
-.col-md-4.hot-feeds {
-    background: darkgray;
-    padding: 5px 1px 3px 10px;
 }
 
 /* Footer */
@@ -144,4 +82,34 @@ footer.main-footer {
     height: 500px;
     background-color: slategrey;
     color: white;
+}
+
+img#author-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+a.row.single-post {
+    margin: 5px;
+    background-color: beige;
+    padding: 5px;
+    border: 1px solid cadetblue;
+    border-radius: 5px;
+    transition: .5s;
+}
+
+span.author-user-name {
+    color: coral;
+    font-weight: 600;
+}
+
+.message p {
+    color: black;
+    font-family: monospace;
+}
+
+a.row.single-post:hover {
+    background-color: cadetblue;
+    transition: .5s;
 }

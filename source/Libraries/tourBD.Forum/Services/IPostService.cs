@@ -27,6 +27,7 @@ namespace tourBD.Forum.Services
 
         Task<Post> GetPostIncludePropertiesAsync(Guid id);
         Task<Comment> GetCommentIncludePropertiesAsync(Guid id);
+        Task<List<Post>> GetRecentPostsAsync(int numberOfPosts = 5);
         Task<int> GetCountAsync();
     }
 }

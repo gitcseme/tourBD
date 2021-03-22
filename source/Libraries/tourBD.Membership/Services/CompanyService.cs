@@ -81,5 +81,10 @@ namespace tourBD.Membership.Services
         {
             return await _companyUnitOfWork.CompanyRepository.GetCountAsync();
         }
+
+        public async Task<IEnumerable<Company>> GetAllAsync()
+        {
+            return await _companyUnitOfWork.CompanyRepository.GetAllAsync();
+        }
     }
 }
