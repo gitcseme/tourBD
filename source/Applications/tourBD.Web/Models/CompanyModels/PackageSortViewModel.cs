@@ -7,7 +7,7 @@ using tourBD.Membership.Enums;
 
 namespace tourBD.Web.Models.CompanyModels
 {
-    public class PackageSortViewModel
+    public class PackageSortViewModel : LayoutBaseModel
     {
         public int TotalRecords { get; set; }
         public int TotalPages { get; set; }

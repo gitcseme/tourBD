@@ -53,21 +53,8 @@ namespace tourBD.Web.Controllers
             var postViewModels = posts.Select(post => PreparePostViewModel(post, loggedInUser)).ToList();
             int totalRecords = await _postService.GetCountAsync();
 
-            var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords)
-            {
-                NewNotifications = await _notificationService.GetUnseenNotificationCount(loggedInUser.Id),
-
-                UserNotifications = (await _notificationService.GetUserNotifications(loggedInUser.Id)).Select(n =>
-                    new NotificationViewModel
-                    {
-                        Name = n.NotifierName,
-                        ImageUrl = $"{_pathService.PictureFolder}{n.NotifierImageUrl}",
-                        Message = n.Message.Length > 25 ? n.Message.Substring(0, 25) + "..." : n.Message,
-                        Time = n.Time.ToShortTimeString() + ", " + n.Time.ToShortDateString(),
-                        SourceLink = n.SourceLink,
-                        IsSeen = n.Seen
-                    }).ToList()
-            };
+            var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords);
+            await LayoutBaseModelLoaderHelper.LoadBase(model, loggedInUser.Id, _notificationService, _pathService);
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
@@ -84,6 +71,7 @@ namespace tourBD.Web.Controllers
                 AuthorImageUrl = user.ImageUrl
             };
             user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -129,6 +117,7 @@ namespace tourBD.Web.Controllers
                 PostId = postId,
                 Message = post.Message
             };
+            await LayoutBaseModelLoaderHelper.LoadBase(model, loggedInUser.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -186,6 +175,7 @@ namespace tourBD.Web.Controllers
 
             var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
             var model = PreparePostViewModel(post, loggedInUser);
+            await LayoutBaseModelLoaderHelper.LoadBase(model, loggedInUser.Id, _notificationService, _pathService);
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 

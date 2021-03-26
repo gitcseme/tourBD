@@ -10,6 +10,8 @@ using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Enums;
 using tourBD.Membership.Services;
+using tourBD.NotificationChannel.Services;
+using tourBD.Web.Models;
 using tourBD.Web.Models.CompanyModels;
 
 namespace tourBD.Web.Controllers
@@ -23,16 +25,18 @@ namespace tourBD.Web.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPathService _pathService;
         private readonly IConfiguration _configuration;
+        private readonly INotificationService _notificationService;
         ApplicationUser user;
 
         public CompanyController(
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
             ICompanyRequestService companyRequestService,
             ICompanyService companyService,
             ITourPackageService tourPackageService,
             IWebHostEnvironment webHostEnvironment,
             IPathService pathService,
-            IConfiguration configuration)
+            IConfiguration configuration, 
+            INotificationService notificationService)
         {
             _userManager = userManager;
             _companyRequestService = companyRequestService;
@@ -41,6 +45,7 @@ namespace tourBD.Web.Controllers
             _webHostEnvironment = webHostEnvironment;
             _pathService = pathService;
             _configuration = configuration;
+            _notificationService = notificationService;
         }
 
         public async Task<IActionResult> Index()
@@ -48,17 +53,24 @@ namespace tourBD.Web.Controllers
             await GetLoggedInUser();
 
             var companies = await _companyService.GetAllIncludePropertiesAsync();
-            var model = companies.Select(c => new CompanyViewModel
+            var model = new CompanyIndexModel
             {
-                Name = c.Name,
-                Packages = c.TourPackages.Count(),
-                Address = c.Address.Length > 20 ? c.Address.Substring(0, 18) + "..." : c.Address,
-                Stars = c.CalculateStars(),
-                CompanyId = c.Id.ToString(),
-                CompanyLogo = c.CompanyLogo != null ? $"{_pathService.LogoFolder}{c.CompanyLogo}" : $"{_pathService.LogoFolder}{_pathService.DummyCompanyLogo}"
-            }).ToList();
+                Companies = companies.Select(c => new CompanyViewModel
+                {
+                    Name = c.Name,
+                    Packages = c.TourPackages.Count(),
+                    Address = c.Address.Length > 20 ? c.Address.Substring(0, 18) + "..." : c.Address,
+                    Stars = c.CalculateStars(),
+                    CompanyId = c.Id.ToString(),
+                    CompanyLogo = c.CompanyLogo != null ? $"{_pathService.LogoFolder}{c.CompanyLogo}" : $"{_pathService.LogoFolder}{_pathService.DummyCompanyLogo}"
+                }).ToList()
+            };
 
-            model.Sort((c1, c2) => c2.Stars.CompareTo(c1.Stars));
+            model.Companies.Sort((c1, c2) => c2.Stars.CompareTo(c1.Stars));
+            if (user != null)
+            {
+                await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+            }
 
             return View(model);
         }
@@ -67,12 +79,13 @@ namespace tourBD.Web.Controllers
         {
             await GetLoggedInUser();
 
-            var model = new CompanyIndexModel
+            var model = new UserCompanyModel
             {
                 Companies = (await _companyService.GetUserCompaniesAsync(user.Id)).ToList(),
                 HasPendingRequest = await _companyRequestService.HastPendingReques(user.Id)
             };
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
+            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -83,6 +96,8 @@ namespace tourBD.Web.Controllers
             await GetLoggedInUser();
 
             var model = new CompanyRequestModel() { OfficialEmail = _configuration["TourBDInfo:OfficialEmail"] };
+            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+
             return View(model);
         }
 
@@ -313,6 +328,8 @@ namespace tourBD.Web.Controllers
             model.Packages = await _tourPackageService.GetPackagesPaginatedAsync(model.PageIndex, model.PageSize, model.BangladeshDivision, model.PriceUP);
             model.TotalRecords = await _tourPackageService.GetCountAsync();
             model.TotalPages = (int)Math.Ceiling((double)model.TotalRecords / model.PageSize);
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -339,16 +356,20 @@ namespace tourBD.Web.Controllers
 
             var totalRecords = await _tourPackageService.GetCountAsync();
 
-            var result = new PackageSortViewModel(paginatedPackages, model.PageIndex, model.PageSize, totalRecords); 
+            var result = new PackageSortViewModel(paginatedPackages, model.PageIndex, model.PageSize, totalRecords);
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBase(result, user.Id, _notificationService, _pathService);
 
             return View(result);
         }
 
-        private async Task GetLoggedInUser()
+        private async Task<ApplicationUser> GetLoggedInUser()
         {
             user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
                 user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
+            return user;
         }
     }
 }

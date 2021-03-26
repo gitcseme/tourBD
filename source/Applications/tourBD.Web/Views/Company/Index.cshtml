@@ -1,4 +1,4 @@
-﻿@model List<tourBD.Web.Models.CompanyModels.CompanyViewModel>
+﻿@model tourBD.Web.Models.CompanyModels.CompanyIndexModel
 
 <style>
     h3.header {
@@ -16,7 +16,7 @@
 
         <div class="row justify-content-center">
             <div class="col-md-6">
-                @foreach (var company in Model)
+                @foreach (var company in Model.Companies)
                 {
                     <div class="row">
                         <a asp-controller="Company" asp-action="CompanyPublicView" asp-route-companyId="@company.CompanyId" class="col-md-12 card m-2" style="margin: 2px">

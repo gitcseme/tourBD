@@ -64,17 +64,7 @@ namespace tourBD.Web.Controllers
 
             if (loggedinUser != null)
             {
-                model.NewNotifications = await _notificationService.GetUnseenNotificationCount(loggedinUser.Id);
-                model.UserNotifications = (await _notificationService.GetUserNotifications(loggedinUser.Id)).Select(n =>
-                    new NotificationViewModel
-                    {
-                        Name = n.NotifierName,
-                        ImageUrl = $"{_pathService.PictureFolder}{n.NotifierImageUrl}",
-                        Message = n.Message.Length > 25 ? n.Message.Substring(0, 25) + "..." : n.Message,
-                        Time = n.Time.ToShortTimeString() + ", " + n.Time.ToShortDateString(),
-                        SourceLink = n.SourceLink,
-                        IsSeen = n.Seen
-                    }).ToList();
+                await LayoutBaseModelLoaderHelper.LoadBase(model, loggedinUser.Id, _notificationService, _pathService);
             }
 
             return View(model);
@@ -82,9 +72,12 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> Services()
         {
-            await PrepareLoggedInUserAsync();
+            var user = await PrepareLoggedInUserAsync();
+            var model = new LayoutBaseModel();
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
 
-            return View();
+            return View(model);
         }
 
         private async Task<ApplicationUser> PrepareLoggedInUserAsync()
@@ -98,11 +91,14 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> Contact()
         {
-            await PrepareLoggedInUserAsync();
+            var user = await PrepareLoggedInUserAsync();
 
             var tourBDInfo = new TourBDInfo();
             _configuration.Bind(nameof(tourBDInfo), tourBDInfo);
             tourBDInfo.Developer.ImageUrl = $"{_pathService.PictureFolder}/{tourBDInfo.Developer.ImageUrl}";
+
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBase(tourBDInfo, user.Id, _notificationService, _pathService);
 
             return View(tourBDInfo);
         }

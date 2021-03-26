@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using tourBD.Core.Utilities;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
+using tourBD.NotificationChannel.Services;
 using tourBD.Web.Models;
 using tourBD.Web.Models.UserModel;
 
@@ -27,15 +28,16 @@ namespace tourBD.Web.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ICompanyService _companyService;
         private readonly IPathService _pathService;
-        private readonly IConfiguration _configuration;
+        private readonly INotificationService _notificationService;
 
         public AccountController(
-            SignInManager<ApplicationUser> signInManager, 
-            UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
             ILogger<AccountController> logger,
             IWebHostEnvironment environment,
             ICompanyService companyService,
-            IPathService pathService)
+            IPathService pathService, 
+            INotificationService notificationService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -43,6 +45,7 @@ namespace tourBD.Web.Controllers
             _webHostEnvironment = environment;
             _companyService = companyService;
             _pathService = pathService;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -175,6 +178,7 @@ namespace tourBD.Web.Controllers
                 model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
 
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
+            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }

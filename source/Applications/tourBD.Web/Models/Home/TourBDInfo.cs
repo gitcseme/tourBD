@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace tourBD.Web.Models.Home
 {
-    public class TourBDInfo
+    public class TourBDInfo : LayoutBaseModel
     {
         public string OfficialEmail { get; set; }
         public string Logo { get; set; }
