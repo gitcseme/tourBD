@@ -53,8 +53,21 @@ namespace tourBD.Web.Controllers
             var postViewModels = posts.Select(post => PreparePostViewModel(post, loggedInUser)).ToList();
             int totalRecords = await _postService.GetCountAsync();
 
-            var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords);
-            //model.UserNotifications
+            var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords)
+            {
+                NewNotifications = await _notificationService.GetUnseenNotificationCount(loggedInUser.Id),
+
+                UserNotifications = (await _notificationService.GetUserNotifications(loggedInUser.Id)).Select(n =>
+                    new NotificationViewModel
+                    {
+                        Name = n.NotifierName,
+                        ImageUrl = $"{_pathService.PictureFolder}{n.NotifierImageUrl}",
+                        Message = n.Message.Length > 25 ? n.Message.Substring(0, 25) + "..." : n.Message,
+                        Time = n.Time.ToShortTimeString() + ", " + n.Time.ToShortDateString(),
+                        SourceLink = n.SourceLink,
+                        IsSeen = n.Seen
+                    }).ToList()
+            };
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
@@ -207,7 +220,7 @@ namespace tourBD.Web.Controllers
             };
 
             await _postService.AddCommentAsync(comment);
-            await NotifyAsync(postId, loggedInUser);
+            await NotifyAsync(postId, loggedInUser, message);
 
             return RedirectToAction("Index", "Forum");
         }
@@ -228,7 +241,7 @@ namespace tourBD.Web.Controllers
             var postId = _postService.GetRelatedPost(commentId);
 
             await _postService.AddReplayAsync(replay);
-            await NotifyAsync(postId, loggedInUser);
+            await NotifyAsync(postId, loggedInUser, message);
 
             return RedirectToAction("Index", "Forum");
         }
@@ -296,28 +309,27 @@ namespace tourBD.Web.Controllers
             };
         }
 
-        private async Task NotifyAsync(string postId, ApplicationUser loggedInUser)
+        private async Task NotifyAsync(string postId, ApplicationUser loggedInUser, string message)
         {
             var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
-            HashSet<Guid> PostIdCollectionRelatedUsers = new HashSet<Guid>();
+            HashSet<Guid> PostIdCollectionOfRelatedUsers = new HashSet<Guid>();
 
             if (post.AuthorId != loggedInUser.Id)
-                PostIdCollectionRelatedUsers.Add(post.AuthorId);
+                PostIdCollectionOfRelatedUsers.Add(post.AuthorId);
 
             foreach (var comment in post.Comments)
             {
                 if (comment.AuthorId != loggedInUser.Id)
-                    PostIdCollectionRelatedUsers.Add(comment.AuthorId);
+                    PostIdCollectionOfRelatedUsers.Add(comment.AuthorId);
                 
                 foreach (var replay in comment.Replays)
                     if (replay.AuthorId != loggedInUser.Id)
-                        PostIdCollectionRelatedUsers.Add(replay.AuthorId);
+                        PostIdCollectionOfRelatedUsers.Add(replay.AuthorId);
             }
 
-            foreach (var userId in PostIdCollectionRelatedUsers)
+            foreach (var userId in PostIdCollectionOfRelatedUsers)
             {
-                string Message = "Commented in your post";
-                await _notificationService.CreatePostNotificationAsync(loggedInUser.Id, loggedInUser.FullName, loggedInUser.ImageUrl, Message, userId);
+                await _notificationService.CreatePostNotificationAsync(loggedInUser.Id, loggedInUser.FullName, loggedInUser.ImageUrl, message, userId, postId);
             }
         }
 

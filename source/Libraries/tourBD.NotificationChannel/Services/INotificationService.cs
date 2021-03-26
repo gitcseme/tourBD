@@ -9,7 +9,8 @@ namespace tourBD.NotificationChannel.Services
 {
     public interface INotificationService : IService<Notification>
     {
+        Task<int> GetUnseenNotificationCount(Guid userId);
         Task<List<Notification>> GetUserNotifications(Guid userId);
-        Task CreatePostNotificationAsync(Guid notifierId, string notifierName, string notifierImageUrl, string message, Guid receiverId);
+        Task CreatePostNotificationAsync(Guid notifierId, string notifierName, string notifierImageUrl, string message, Guid receiverId, string sourceLink);
     }
 }

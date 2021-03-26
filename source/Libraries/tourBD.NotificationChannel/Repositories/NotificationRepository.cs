@@ -18,7 +18,7 @@ namespace tourBD.NotificationChannel.Repositories
 
         public async Task<List<Notification>> GetUserNotificationsAsync(Guid userId)
         {
-            return await _DbSet.Where(n => n.Id == userId).ToListAsync();
+            return await _DbSet.Where(n => n.ReceiverId == userId).Take(5).ToListAsync();
         }
     }
 }

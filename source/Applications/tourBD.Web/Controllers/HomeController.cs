@@ -40,7 +40,7 @@ namespace tourBD.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await PrepareLoggedInUserAsync();
+            var loggedinUser = await PrepareLoggedInUserAsync();
             int numberOfPost = 5;
 
             var model = new HomeModel
@@ -62,17 +62,20 @@ namespace tourBD.Web.Controllers
                     }).ToList()
             };
 
-            //if (user != null)
-            //{
-            //    model.UserNotifications = (await _notificationService.GetUserNotifications(user.Id)).Select(n =>
-            //        new NotificationViewModel
-            //        {
-            //            Name = _userManager.FindByIdAsync(user.Id.ToString()).Result.FullName,
-            //            ImageUrl = n.NotifierImageUrl,
-            //            Info = n.Message,
-            //            Time = n.Time.ToShortTimeString()
-            //        }).ToList();
-            //}
+            if (loggedinUser != null)
+            {
+                model.NewNotifications = await _notificationService.GetUnseenNotificationCount(loggedinUser.Id);
+                model.UserNotifications = (await _notificationService.GetUserNotifications(loggedinUser.Id)).Select(n =>
+                    new NotificationViewModel
+                    {
+                        Name = n.NotifierName,
+                        ImageUrl = $"{_pathService.PictureFolder}{n.NotifierImageUrl}",
+                        Message = n.Message.Length > 25 ? n.Message.Substring(0, 25) + "..." : n.Message,
+                        Time = n.Time.ToShortTimeString() + ", " + n.Time.ToShortDateString(),
+                        SourceLink = n.SourceLink,
+                        IsSeen = n.Seen
+                    }).ToList();
+            }
 
             return View(model);
         }
