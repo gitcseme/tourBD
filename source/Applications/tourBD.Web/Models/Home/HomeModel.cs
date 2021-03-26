@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace tourBD.Web.Models.Home
 {
-    public class HomeModel
+    public class HomeModel : LayoutBaseModel
     {
         public List<PostModel> Posts { get; set; }
         public List<CompanyModel> Companies { get; set; }

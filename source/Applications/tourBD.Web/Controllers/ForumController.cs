@@ -54,6 +54,7 @@ namespace tourBD.Web.Controllers
             int totalRecords = await _postService.GetCountAsync();
 
             var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords);
+            //model.UserNotifications
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
@@ -298,25 +299,25 @@ namespace tourBD.Web.Controllers
         private async Task NotifyAsync(string postId, ApplicationUser loggedInUser)
         {
             var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
-            HashSet<Guid> PostIdCollection = new HashSet<Guid>();
+            HashSet<Guid> PostIdCollectionRelatedUsers = new HashSet<Guid>();
 
             if (post.AuthorId != loggedInUser.Id)
-                PostIdCollection.Add(post.AuthorId);
+                PostIdCollectionRelatedUsers.Add(post.AuthorId);
 
             foreach (var comment in post.Comments)
             {
                 if (comment.AuthorId != loggedInUser.Id)
-                    PostIdCollection.Add(comment.AuthorId);
+                    PostIdCollectionRelatedUsers.Add(comment.AuthorId);
                 
                 foreach (var replay in comment.Replays)
                     if (replay.AuthorId != loggedInUser.Id)
-                        PostIdCollection.Add(replay.AuthorId);
+                        PostIdCollectionRelatedUsers.Add(replay.AuthorId);
             }
 
-            foreach (var userId in PostIdCollection)
+            foreach (var userId in PostIdCollectionRelatedUsers)
             {
-                string Message = $"{loggedInUser.FullName} commented in your post";
-                await _notificationService.CreatePostNotificationAsync(postId, userId, loggedInUser.ImageUrl, Message);
+                string Message = "Commented in your post";
+                await _notificationService.CreatePostNotificationAsync(loggedInUser.Id, loggedInUser.FullName, loggedInUser.ImageUrl, Message, userId);
             }
         }
 

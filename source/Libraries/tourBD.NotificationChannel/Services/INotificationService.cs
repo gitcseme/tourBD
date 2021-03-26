@@ -9,6 +9,7 @@ namespace tourBD.NotificationChannel.Services
 {
     public interface INotificationService : IService<Notification>
     {
-        Task CreatePostNotificationAsync(string postId, Guid userId, string NotifierImageUrl, string Message);
+        Task<List<Notification>> GetUserNotifications(Guid userId);
+        Task CreatePostNotificationAsync(Guid notifierId, string notifierName, string notifierImageUrl, string message, Guid receiverId);
     }
 }

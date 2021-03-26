@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tourBD.NotificationChannel.Contexts;
 
-namespace tourBD.Web.Migrations.Notification
+namespace tourBD.Web.Data.Migrations
 {
     [DbContext(typeof(NotificationContext))]
-    [Migration("20210129224728_AddedImageUrl_ToNotification")]
-    partial class AddedImageUrl_ToNotification
+    [Migration("20210326002931_Added_MoreProperties_ToNotification")]
+    partial class Added_MoreProperties_ToNotification
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,10 +31,21 @@ namespace tourBD.Web.Migrations.Notification
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<Guid>("NotifierId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("NotifierImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
+
+                    b.Property<string>("NotifierName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Seen")
                         .HasColumnType("bit");
@@ -43,8 +54,8 @@ namespace tourBD.Web.Migrations.Notification
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
