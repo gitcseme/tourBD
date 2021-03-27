@@ -1,4 +1,4 @@
-﻿@model tourBD.Membership.Entities.Company
+﻿@model tourBD.Web.Models.CompanyModels.CompanyPublicViewModel
 
 @section Styles {
 
@@ -10,33 +10,33 @@
         <div class="col-md-4 card">
             <div class="company-description">
                 <div class="company-logo">
-                    <img src="@Model.CompanyLogo" alt="Company Logo" />
+                    <img src="@Model.Company.CompanyLogo" alt="Company Logo" />
                 </div>
                 <div class="cnd">
-                    <p>@Model.Name</p>
+                    <p>@Model.Company.Name</p>
                 </div>
 
                 <div class="company-info">
                     <ul class="description-as-list">
                         <li>
                             <label class="single-info">Email: </label>
-                            <span class="value-text">@Model.Email</span>
+                            <span class="value-text">@Model.Company.Email</span>
                         </li>
                         <li>
                             <label class="single-info">Mobile: </label>
-                            <span class="value-text">@Model.PhoneNumber</span>
+                            <span class="value-text">@Model.Company.PhoneNumber</span>
                         </li>
                         <li>
                             <label class="single-info">Stars: </label>
-                            <span class="value-text">@Model.Star</span>
+                            <span class="value-text">@Model.Company.Star</span>
                         </li>
                         <li>
                             <label class="single-info">Packages: </label>
-                            <span class="value-text">@Model.TourPackages.Count packages</span>
+                            <span class="value-text">@Model.Company.TourPackages.Count packages</span>
                         </li>
                         <li>
                             <label class="single-info">Address: </label>
-                            <span class="value-text">@Model.Address</span>
+                            <span class="value-text">@Model.Company.Address</span>
                         </li>
                     </ul>
                 </div>
@@ -45,7 +45,7 @@
 
         <div class="col-md-8">
             <div class="cover card">
-                <img src="@Model.CompanyImageUrl"
+                <img src="@Model.Company.CompanyImageUrl"
                      alt="Company image"
                      id="cover-photo" />
             </div>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="row">
-        @foreach (var package in Model.TourPackages)
+        @foreach (var package in Model.Company.TourPackages)
         {
             <div class="col-md-4">
                 <partial name="_PackagePartial" model="package" />

@@ -29,10 +29,21 @@ namespace tourBD.Web.Data.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<Guid>("NotifierId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("NotifierImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
+
+                    b.Property<string>("NotifierName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Seen")
                         .HasColumnType("bit");
@@ -41,8 +52,8 @@ namespace tourBD.Web.Data.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

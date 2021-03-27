@@ -49,18 +49,31 @@ namespace tourBD.NotificationChannel.Services
             return await _notificationUnitOfWork.NotificationRepository.GetAsync(Id);
         }
 
-        public async Task CreatePostNotificationAsync(string postId, Guid userId, string NotifierImageUrl, string Message)
+        public async Task CreatePostNotificationAsync(Guid notifierId, string notifierName, string notifierImageUrl, string message, Guid receiverId, string sourceLink)
         {
             var notification = new Notification()
             {
-                SourceLink = postId,
-                UserId = userId,
-                NotifierImageUrl = NotifierImageUrl,
-                Message = Message,
+                NotifierId = notifierId,
+                NotifierName = notifierName,
+                NotifierImageUrl = notifierImageUrl,
+                Message = message,
+                ReceiverId = receiverId,
+                SourceLink = sourceLink,
+                Time = DateTime.Now,
                 Seen = false
             };
 
             await CreateAsync(notification);
+        }
+
+        public async Task<List<Notification>> GetUserNotifications(Guid userId)
+        {
+            return await _notificationUnitOfWork.NotificationRepository.GetUserNotificationsAsync(userId);
+        }
+
+        public async Task<int> GetUnseenNotificationCount(Guid userId)
+        {
+            return await _notificationUnitOfWork.NotificationRepository.GetCountAsync(n => n.ReceiverId == userId && n.Seen == false);
         }
     }
 }

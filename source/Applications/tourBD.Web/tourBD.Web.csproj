@@ -14,6 +14,10 @@
     <Compile Remove="Data\Migrations\20210128152002_Adding_NotificationChannel.Designer.cs" />
     <Compile Remove="Data\Migrations\20210129210927_Notification_Modified.cs" />
     <Compile Remove="Data\Migrations\20210129210927_Notification_Modified.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210129224728_AddedImageUrl_ToNotification.cs" />
+    <Compile Remove="Data\Migrations\20210129224728_AddedImageUrl_ToNotification.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210325141114_Adding_Time_To_Notification.cs" />
+    <Compile Remove="Data\Migrations\20210325141114_Adding_Time_To_Notification.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,7 +6,7 @@ using tourBD.Membership.Entities;
 
 namespace tourBD.Web.Models.CompanyModels
 {
-    public class PackageViewModel
+    public class PackageViewModel : LayoutBaseModel
     {
         public Company Company { get; set; }
         public TourPackage Package { get; set; }

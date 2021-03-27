@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using tourBD.Membership.Entities;
 
 namespace tourBD.Web.Models.CompanyModels
 {
-    public class CompanyIndexModel : LayoutBaseModel
+    public class CompanyPublicViewModel : LayoutBaseModel
     {
-        public List<CompanyViewModel> Companies { get; set; } = new List<CompanyViewModel>();
+        public Company Company { get; set; }
     }
 }

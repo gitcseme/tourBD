@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace tourBD.Web.Models.PostModels
 {
-    public class PostViewModel
+    public class PostViewModel : LayoutBaseModel
     {
         public Guid PostId { get; set; }
         public Guid AuthorId { get; set; }

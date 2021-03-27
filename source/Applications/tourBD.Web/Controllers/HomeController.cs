@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using tourBD.Forum.Services;
 using tourBD.Membership.Entities;
 using tourBD.Membership.Services;
+using tourBD.NotificationChannel.Services;
+using tourBD.Web.Models;
 using tourBD.Web.Models.Home;
 
 namespace tourBD.Web.Controllers
@@ -19,24 +21,26 @@ namespace tourBD.Web.Controllers
         private readonly IConfiguration _configuration;
         private readonly IPostService _postService;
         private readonly ICompanyService _companyService;
+        private readonly INotificationService _notificationService;
 
         public HomeController(
-            UserManager<ApplicationUser> userManager, 
-            IPathService pathService, 
-            IConfiguration configuration, 
-            IPostService postService, 
-            ICompanyService companyService)
+            UserManager<ApplicationUser> userManager,
+            IPathService pathService,
+            IConfiguration configuration,
+            IPostService postService,
+            ICompanyService companyService, INotificationService notificationService)
         {
             _userManager = userManager;
             _pathService = pathService;
             _configuration = configuration;
             _postService = postService;
             _companyService = companyService;
+            _notificationService = notificationService;
         }
 
         public async Task<IActionResult> Index()
         {
-            await PrepareLoggedInUserAsync();
+            var loggedinUser = await PrepareLoggedInUserAsync();
             int numberOfPost = 5;
 
             var model = new HomeModel
@@ -58,30 +62,43 @@ namespace tourBD.Web.Controllers
                     }).ToList()
             };
 
+            if (loggedinUser != null)
+            {
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedinUser.Id, _notificationService, _pathService);
+            }
+
             return View(model);
         }
 
         public async Task<IActionResult> Services()
         {
-            await PrepareLoggedInUserAsync();
+            var user = await PrepareLoggedInUserAsync();
+            var model = new LayoutBaseModel();
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
-            return View();
+            return View(model);
         }
 
-        private async Task PrepareLoggedInUserAsync()
+        private async Task<ApplicationUser> PrepareLoggedInUserAsync()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
                 user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+
+            return user;
         }
 
         public async Task<IActionResult> Contact()
         {
-            await PrepareLoggedInUserAsync();
+            var user = await PrepareLoggedInUserAsync();
 
             var tourBDInfo = new TourBDInfo();
             _configuration.Bind(nameof(tourBDInfo), tourBDInfo);
             tourBDInfo.Developer.ImageUrl = $"{_pathService.PictureFolder}/{tourBDInfo.Developer.ImageUrl}";
+
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(tourBDInfo, user.Id, _notificationService, _pathService);
 
             return View(tourBDInfo);
         }

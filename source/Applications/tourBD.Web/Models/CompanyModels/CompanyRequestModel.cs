@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tourBD.Web.Models.CompanyModels
 {
-    public class CompanyRequestModel
+    public class CompanyRequestModel : LayoutBaseModel
     {
         [Required(ErrorMessage = "Description needed")]
         public string Description { get; set; }

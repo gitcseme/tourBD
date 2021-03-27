@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace tourBD.Web.Models.PostModels
 {
-    public class ForumModel
+    public class ForumModel : LayoutBaseModel
     {
         private int TotalPages { get; set; }
         public int PageIndex { get; set; }

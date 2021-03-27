@@ -54,6 +54,7 @@ namespace tourBD.Web.Controllers
             int totalRecords = await _postService.GetCountAsync();
 
             var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedInUser.Id, _notificationService, _pathService);
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
@@ -70,6 +71,7 @@ namespace tourBD.Web.Controllers
                 AuthorImageUrl = user.ImageUrl
             };
             user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -115,6 +117,7 @@ namespace tourBD.Web.Controllers
                 PostId = postId,
                 Message = post.Message
             };
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedInUser.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -172,10 +175,23 @@ namespace tourBD.Web.Controllers
 
             var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
             var model = PreparePostViewModel(post, loggedInUser);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedInUser.Id, _notificationService, _pathService);
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
             return View(model);
+        }
+
+        public async Task<IActionResult> ViewNotification(string sourceLink, string notificationId)
+        {
+            var notification = await _notificationService.GetAsync(new Guid(notificationId));
+            if (!notification.Seen)
+            {
+                notification.Seen = true;
+                await _notificationService.EditAsync(notification);
+            }
+
+            return RedirectToAction("ViewPost", "Forum", new { postId = sourceLink });
         }
 
         public async Task<IActionResult> AddLikeAsync(string postId)
@@ -206,7 +222,7 @@ namespace tourBD.Web.Controllers
             };
 
             await _postService.AddCommentAsync(comment);
-            await NotifyAsync(postId, loggedInUser);
+            await NotifyAsync(postId, loggedInUser, message);
 
             return RedirectToAction("Index", "Forum");
         }
@@ -227,7 +243,7 @@ namespace tourBD.Web.Controllers
             var postId = _postService.GetRelatedPost(commentId);
 
             await _postService.AddReplayAsync(replay);
-            await NotifyAsync(postId, loggedInUser);
+            await NotifyAsync(postId, loggedInUser, message);
 
             return RedirectToAction("Index", "Forum");
         }
@@ -295,28 +311,27 @@ namespace tourBD.Web.Controllers
             };
         }
 
-        private async Task NotifyAsync(string postId, ApplicationUser loggedInUser)
+        private async Task NotifyAsync(string postId, ApplicationUser loggedInUser, string message)
         {
             var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
-            HashSet<Guid> PostIdCollection = new HashSet<Guid>();
+            HashSet<Guid> PostIdCollectionOfRelatedUsers = new HashSet<Guid>();
 
             if (post.AuthorId != loggedInUser.Id)
-                PostIdCollection.Add(post.AuthorId);
+                PostIdCollectionOfRelatedUsers.Add(post.AuthorId);
 
             foreach (var comment in post.Comments)
             {
                 if (comment.AuthorId != loggedInUser.Id)
-                    PostIdCollection.Add(comment.AuthorId);
+                    PostIdCollectionOfRelatedUsers.Add(comment.AuthorId);
                 
                 foreach (var replay in comment.Replays)
                     if (replay.AuthorId != loggedInUser.Id)
-                        PostIdCollection.Add(replay.AuthorId);
+                        PostIdCollectionOfRelatedUsers.Add(replay.AuthorId);
             }
 
-            foreach (var userId in PostIdCollection)
+            foreach (var userId in PostIdCollectionOfRelatedUsers)
             {
-                string Message = $"{loggedInUser.FullName} commented in your post";
-                await _notificationService.CreatePostNotificationAsync(postId, userId, loggedInUser.ImageUrl, Message);
+                await _notificationService.CreatePostNotificationAsync(loggedInUser.Id, loggedInUser.FullName, loggedInUser.ImageUrl, message, userId, postId);
             }
         }
 
