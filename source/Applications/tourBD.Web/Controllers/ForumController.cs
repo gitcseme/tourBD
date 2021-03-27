@@ -182,6 +182,18 @@ namespace tourBD.Web.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ViewNotification(string sourceLink, string notificationId)
+        {
+            var notification = await _notificationService.GetAsync(new Guid(notificationId));
+            if (!notification.Seen)
+            {
+                notification.Seen = true;
+                await _notificationService.EditAsync(notification);
+            }
+
+            return RedirectToAction("ViewPost", "Forum", new { postId = sourceLink });
+        }
+
         public async Task<IActionResult> AddLikeAsync(string postId)
         {
             var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);

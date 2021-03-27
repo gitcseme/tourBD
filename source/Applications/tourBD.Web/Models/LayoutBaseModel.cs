@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace tourBD.Web.Models
 {
@@ -10,6 +11,7 @@ namespace tourBD.Web.Models
 
     public class NotificationViewModel
     {
+        public Guid NotificationId { get; set; }
         public string ImageUrl { get; set; }
         public string Name { get; set; }
         public string Message { get; set; }

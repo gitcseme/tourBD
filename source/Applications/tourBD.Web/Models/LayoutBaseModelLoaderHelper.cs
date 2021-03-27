@@ -15,6 +15,7 @@ namespace tourBD.Web.Models
             model.UserNotifications = (await _notificationService.GetUserNotifications(userId)).Select(n =>
                 new NotificationViewModel
                 {
+                    NotificationId = n.Id,
                     Name = n.NotifierName,
                     ImageUrl = $"{_pathService.PictureFolder}{n.NotifierImageUrl}",
                     Message = n.Message.Length > 25 ? n.Message.Substring(0, 25) + "..." : n.Message,

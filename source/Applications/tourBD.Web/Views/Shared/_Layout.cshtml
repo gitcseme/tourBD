@@ -74,7 +74,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             {
                                 var textColor = notification.IsSeen ? "black" : "blue";
                                 var background = notification.IsSeen ? "white" : "beige";
-                                <a asp-controller="Forum" asp-action="ViewPost" asp-route-postId="@notification.SourceLink" class="dropdown-item" style="background-color: @background">
+                                <a asp-controller="Forum" asp-action="ViewNotification" asp-route-sourceLink="@notification.SourceLink" asp-route-notificationId="@notification.NotificationId.ToString()" 
+                                   class="dropdown-item" style="background-color: @background">
                                     <!-- Message Start -->
                                     <div class="media" style="width: max-content">
                                         <img src="@notification.ImageUrl" alt="User Avatar" style="height:45px; width: 45px;" class="mr-2 img-circle">
