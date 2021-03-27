@@ -9,7 +9,7 @@ namespace tourBD.Web.Models
 {
     public static class LayoutBaseModelLoaderHelper
     {
-        public static async Task LoadBase(LayoutBaseModel model, Guid userId, INotificationService _notificationService, IPathService _pathService)
+        public static async Task LoadBaseAsync(LayoutBaseModel model, Guid userId, INotificationService _notificationService, IPathService _pathService)
         {
             model.NewNotifications = await _notificationService.GetUnseenNotificationCount(userId);
             model.UserNotifications = (await _notificationService.GetUserNotifications(userId)).Select(n =>

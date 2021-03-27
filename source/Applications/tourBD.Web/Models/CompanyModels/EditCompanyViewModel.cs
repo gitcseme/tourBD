@@ -3,7 +3,7 @@ using tourBD.Membership.Entities;
 
 namespace tourBD.Web.Models.CompanyModels
 {
-    public class EditCompanyViewModel
+    public class EditCompanyViewModel : LayoutBaseModel
     {
         public IFormFile ImageFile { get; set; }
 

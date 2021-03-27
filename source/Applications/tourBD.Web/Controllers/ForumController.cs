@@ -54,7 +54,7 @@ namespace tourBD.Web.Controllers
             int totalRecords = await _postService.GetCountAsync();
 
             var model = new ForumModel(postViewModels, pageIndex, pageSize, totalRecords);
-            await LayoutBaseModelLoaderHelper.LoadBase(model, loggedInUser.Id, _notificationService, _pathService);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedInUser.Id, _notificationService, _pathService);
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 
@@ -71,7 +71,7 @@ namespace tourBD.Web.Controllers
                 AuthorImageUrl = user.ImageUrl
             };
             user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
-            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -117,7 +117,7 @@ namespace tourBD.Web.Controllers
                 PostId = postId,
                 Message = post.Message
             };
-            await LayoutBaseModelLoaderHelper.LoadBase(model, loggedInUser.Id, _notificationService, _pathService);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedInUser.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -175,7 +175,7 @@ namespace tourBD.Web.Controllers
 
             var post = await _postService.GetPostIncludePropertiesAsync(new Guid(postId));
             var model = PreparePostViewModel(post, loggedInUser);
-            await LayoutBaseModelLoaderHelper.LoadBase(model, loggedInUser.Id, _notificationService, _pathService);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedInUser.Id, _notificationService, _pathService);
 
             loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
 

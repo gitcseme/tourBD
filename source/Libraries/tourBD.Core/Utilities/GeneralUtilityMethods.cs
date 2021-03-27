@@ -9,9 +9,9 @@ namespace tourBD.Core.Utilities
 {
     public static class GeneralUtilityMethods
     {
-        public static async Task<string> GetSavedImageUrlAsync(IFormFile file, string physicalUploadPath, string demoImage)
+        public static async Task<string> GetSavedImageUrlAsync(IFormFile file, string physicalUploadPath)
         {
-            if (file != null && file.Length > 0)
+            try
             {
                 // Create directory
                 if (!Directory.Exists(physicalUploadPath))
@@ -30,8 +30,11 @@ namespace tourBD.Core.Utilities
 
                 return uniqueFileName;
             }
-            else
-                return demoImage;
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public static string GeneratePackageCode()

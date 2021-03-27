@@ -64,7 +64,7 @@ namespace tourBD.Web.Controllers
 
             if (loggedinUser != null)
             {
-                await LayoutBaseModelLoaderHelper.LoadBase(model, loggedinUser.Id, _notificationService, _pathService);
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedinUser.Id, _notificationService, _pathService);
             }
 
             return View(model);
@@ -75,7 +75,7 @@ namespace tourBD.Web.Controllers
             var user = await PrepareLoggedInUserAsync();
             var model = new LayoutBaseModel();
             if (user != null)
-                await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -98,7 +98,7 @@ namespace tourBD.Web.Controllers
             tourBDInfo.Developer.ImageUrl = $"{_pathService.PictureFolder}/{tourBDInfo.Developer.ImageUrl}";
 
             if (user != null)
-                await LayoutBaseModelLoaderHelper.LoadBase(tourBDInfo, user.Id, _notificationService, _pathService);
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(tourBDInfo, user.Id, _notificationService, _pathService);
 
             return View(tourBDInfo);
         }

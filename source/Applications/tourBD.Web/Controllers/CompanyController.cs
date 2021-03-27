@@ -69,7 +69,7 @@ namespace tourBD.Web.Controllers
             model.Companies.Sort((c1, c2) => c2.Stars.CompareTo(c1.Stars));
             if (user != null)
             {
-                await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
             }
 
             return View(model);
@@ -85,7 +85,7 @@ namespace tourBD.Web.Controllers
                 HasPendingRequest = await _companyRequestService.HastPendingReques(user.Id)
             };
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
-            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -96,7 +96,7 @@ namespace tourBD.Web.Controllers
             await GetLoggedInUser();
 
             var model = new CompanyRequestModel() { OfficialEmail = _configuration["TourBDInfo:OfficialEmail"] };
-            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -138,6 +138,7 @@ namespace tourBD.Web.Controllers
             {
                 tp.Spots.Sort((s1, s2) => s1.Name.Length.CompareTo(s2.Name.Length));
             });
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -147,19 +148,25 @@ namespace tourBD.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var company = await _companyService.GetAsync(model.Company.Id);
+
                 string imagePath = _pathService.PictureFolder;
                 string physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                string demoImage = _pathService.DummyCompanyImageUrl;
-                model.Company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath, demoImage);
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    company.CompanyImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, physicalUploadPath);
+                }
 
                 imagePath = _pathService.LogoFolder;
                 physicalUploadPath = _webHostEnvironment.WebRootPath + imagePath;
-                demoImage = _pathService.DummyCompanyLogo;
-                model.Company.CompanyLogo = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.LogoFile, physicalUploadPath, demoImage);
+                if (model.LogoFile != null && model.LogoFile.Length > 0)
+                {
+                    company.CompanyLogo = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.LogoFile, physicalUploadPath);
+                }
 
-                await _companyService.EditAsync(model.Company);
+                await _companyService.EditAsync(company);
 
-                return RedirectToAction("CompanyPublicView", "Company", new { companyId = model.Company.Id.ToString() });
+                return RedirectToAction("CompanyPublicView", "Company", new { companyId = company.Id.ToString() });
             }
 
             return View(model);
@@ -177,6 +184,10 @@ namespace tourBD.Web.Controllers
                 Loves = package.Loves.Count,
                 IsLoved = user == null ? true : package.Loves.Where(l => l.AuthorId == user.Id).Any(),
             };
+
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
+
             return View(model);
         }
 
@@ -198,28 +209,33 @@ namespace tourBD.Web.Controllers
         public async Task<IActionResult> CreatePackage(string companyId)
         {
             await GetLoggedInUser();
+            var model = new CreatePackageViewModel { CompanyId = new Guid(companyId) };
 
-            TourPackage tourPackage = new TourPackage() { CompanyId = new Guid(companyId) };
-            ViewBag.companyId = companyId;
-            return View(tourPackage);
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePackage(TourPackage tourPackage)
+        public async Task<IActionResult> CreatePackage(CreatePackageViewModel model)
         {
             if (ModelState.IsValid)
             {
-                tourPackage.Id = Guid.NewGuid();
-                tourPackage.PackageCode = GeneralUtilityMethods.GeneratePackageCode();
-                tourPackage.Availability = AvailabilityStatus.Available.ToString();
-                var Spots = tourPackage.Spots;
-                tourPackage.Spots = null; // creates PK_Spot conflict otherwise
-
+                TourPackage tourPackage = new TourPackage()
+                {
+                    Id = Guid.NewGuid(),
+                    PackageCode = GeneralUtilityMethods.GeneratePackageCode(),
+                    Availability = AvailabilityStatus.Available.ToString(),
+                    CompanyId = model.CompanyId,
+                    Days = model.Days,
+                    Discount = model.Discount,
+                    Division = model.Division,
+                    Price = model.Price
+                };
+                
                 // Create the tourPackage first.
                 await _companyService.CreateTourPackage(tourPackage);
 
                 // Add the spots
-                foreach (var spot in Spots)
+                foreach (var spot in model.Spots)
                 {
                     spot.TourPackage = null; // Create PK_Company conflict otherwise
                     spot.TourPackageId = tourPackage.Id;
@@ -229,7 +245,7 @@ namespace tourBD.Web.Controllers
                 return RedirectToAction("CompanyPublicView", "Company", new { companyId = tourPackage.CompanyId });
             }
 
-            return View(tourPackage);
+            return View(model);
         }
 
         public async Task<IActionResult> DeletePackage(string packageId)
@@ -262,6 +278,8 @@ namespace tourBD.Web.Controllers
                 Spots = (from s in tourPackage.Spots
                         select s.Name).ToList()
             };
+
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -307,16 +325,23 @@ namespace tourBD.Web.Controllers
         {
             await GetLoggedInUser();
 
-            var company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId));
-            company.CompanyImageUrl = $"{_pathService.PictureFolder}{company.CompanyImageUrl}";
-            company.CompanyLogo = $"{_pathService.LogoFolder}{company.CompanyLogo}";
+            var model = new CompanyPublicViewModel
+            {
+                Company = await _companyService.GetCompanyWithAllIncludePropertiesAsync(new Guid(companyId))
+            };
 
-            company.TourPackages.ForEach(tp =>
+            model.Company.CompanyImageUrl = $"{_pathService.PictureFolder}{model.Company.CompanyImageUrl}";
+            model.Company.CompanyLogo = $"{_pathService.LogoFolder}{model.Company.CompanyLogo}";
+
+            model.Company.TourPackages.ForEach(tp =>
             {
                 tp.Spots.Sort((s1, s2) => s1.Name.Length.CompareTo(s2.Name.Length));
             });
 
-            return View(company);
+            if (user != null)
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
+
+            return View(model);
         }
 
         [HttpGet]
@@ -329,7 +354,7 @@ namespace tourBD.Web.Controllers
             model.TotalRecords = await _tourPackageService.GetCountAsync();
             model.TotalPages = (int)Math.Ceiling((double)model.TotalRecords / model.PageSize);
             if (user != null)
-                await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -358,7 +383,7 @@ namespace tourBD.Web.Controllers
 
             var result = new PackageSortViewModel(paginatedPackages, model.PageIndex, model.PageSize, totalRecords);
             if (user != null)
-                await LayoutBaseModelLoaderHelper.LoadBase(result, user.Id, _notificationService, _pathService);
+                await LayoutBaseModelLoaderHelper.LoadBaseAsync(result, user.Id, _notificationService, _pathService);
 
             return View(result);
         }

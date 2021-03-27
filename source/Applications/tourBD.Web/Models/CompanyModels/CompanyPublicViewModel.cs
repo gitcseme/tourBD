@@ -6,12 +6,8 @@ using tourBD.Membership.Entities;
 
 namespace tourBD.Web.Models.CompanyModels
 {
-    public class PackageViewModel : LayoutBaseModel
+    public class CompanyPublicViewModel : LayoutBaseModel
     {
         public Company Company { get; set; }
-        public TourPackage Package { get; set; }
-
-        public bool IsLoved { get; set; }
-        public int Loves { get; set; }
     }
 }

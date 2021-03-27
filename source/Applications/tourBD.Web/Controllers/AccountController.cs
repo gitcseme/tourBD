@@ -152,7 +152,12 @@ namespace tourBD.Web.Controllers
                     user.Email = model.Email;
                     user.PhoneNumber = model.Mobile;
                     user.Address = model.Address;
-                    user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, demoImage);
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath);
+                    }
+                    else
+                        user.ImageUrl = demoImage;
 
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
@@ -178,7 +183,7 @@ namespace tourBD.Web.Controllers
                 model.User.ImageUrl = $"{_pathService.PictureFolder}{model.User.ImageUrl}";
 
             model.Companies.ForEach(c => c.CompanyImageUrl = $"{_pathService.PictureFolder}{c.CompanyImageUrl}");
-            await LayoutBaseModelLoaderHelper.LoadBase(model, user.Id, _notificationService, _pathService);
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
 
             return View(model);
         }
@@ -218,7 +223,7 @@ namespace tourBD.Web.Controllers
                     user.Address = model.Address;
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath, demoImage);
+                        user.ImageUrl = await GeneralUtilityMethods.GetSavedImageUrlAsync(model.ImageFile, uploadPath);
                     }
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
