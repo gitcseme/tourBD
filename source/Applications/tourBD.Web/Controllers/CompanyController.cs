@@ -169,6 +169,9 @@ namespace tourBD.Web.Controllers
                 return RedirectToAction("CompanyPublicView", "Company", new { companyId = company.Id.ToString() });
             }
 
+            await GetLoggedInUser();
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
+
             return View(model);
         }
 

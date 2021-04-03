@@ -13,14 +13,15 @@ function AjaxComment(btn, postId, folderPath, imageUrl, name) {
     if (!imageUrl.includes(folderPath))
         imageUrl = folderPath + imageUrl;
 
-    $.ajax({
-        url: '/Forum/AddComment',
-        type: 'POST',
-        dataType: 'text',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: { postId: postId, message: message },
-        success: function (response) {
-            let commentHtml = `<div class="row">
+    if (!(message.length == 0) && message.length <= 500) {
+        $.ajax({
+            url: '/Forum/AddComment',
+            type: 'POST',
+            dataType: 'text',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: { postId: postId, message: message },
+            success: function (response) {
+                let commentHtml = `<div class="row">
                                                 <div class="comment-autor-pic col-auto">
                                                     <img src="`+ imageUrl + `" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">` + name + `</span>
                                                 </div>
@@ -29,12 +30,14 @@ function AjaxComment(btn, postId, folderPath, imageUrl, name) {
                                                 </div>
                                             </div>`;
 
-            $(btn).parent().parent().siblings('.comment-container').append(commentHtml);
-        },
-        error: function (data, status, xhr) {
-            console.log(status);
-        }
-    });
+                $(btn).parent().parent().siblings('.comment-container').append(commentHtml);
+            },
+            error: function (data, status, xhr) {
+                console.log(status);
+            }
+        });
+    }
+    console.log('empty message!!!');
 }
 
 let cmtId = '', imgUrl = '', fName = '';
@@ -67,14 +70,15 @@ function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
         imageUrl = folderPath + imageUrl;
     let message = $(item).parent().siblings('.comment-box').children()[0].value;
 
-    $.ajax({
-        url: '/Forum/AddReplay',
-        type: 'POST',
-        dataType: 'text',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: { commentId: commentId, message: message },
-        success: function (response) {
-            let replayHtml = `<div class="row">
+    if (!(message.length == 0) && message.length <= 500) {
+        $.ajax({
+            url: '/Forum/AddReplay',
+            type: 'POST',
+            dataType: 'text',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: { commentId: commentId, message: message },
+            success: function (response) {
+                let replayHtml = `<div class="row">
                                                 <div class="replay-autor-pic col-auto offset-1">
                                                     <img src="`+ imageUrl + `" alt="profile-pic" id="author-profile-pic" /> <span class="commment-user-name">` + name + `</span>
                                                 </div>
@@ -83,13 +87,14 @@ function AjaxReplay(item, commentId, folderPath, imageUrl, name) {
                                                 </div>
                                             </div>`;
 
-            $(item).parent().parent().parent().append(replayHtml);
-            $(item).parent().parent().remove(); // delete replay box.
-        },
-        error: function (data, status, xhr) {
-            console.log(status);
-        }
-    });
+                $(item).parent().parent().parent().append(replayHtml);
+                $(item).parent().parent().remove(); // delete replay box.
+            },
+            error: function (data, status, xhr) {
+                console.log(status);
+            }
+        });
+    }
 }
 
 function DeleteReplayAjax(item, replayId) {
