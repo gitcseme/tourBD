@@ -94,7 +94,12 @@ namespace tourBD.Web.Controllers
                 return RedirectToAction("Index", "Forum");
             }
 
-            return View("CreatePost", model);
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            user.ImageUrl = $"{_pathService.PictureFolder}{user.ImageUrl}";
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, user.Id, _notificationService, _pathService);
+
+            //return View("CreatePost", model);
+            return View(model);
         }
 
         [HttpGet]
@@ -125,18 +130,25 @@ namespace tourBD.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> EditPostAsync(EditPostViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var post = await _postService.GetAsync(new Guid(model.PostId));
-                post.Message = model.Message;
-                await _postService.EditAsync(post);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                try
+                {
+                    var post = await _postService.GetAsync(new Guid(model.PostId));
+                    post.Message = model.Message;
+                    await _postService.EditAsync(post);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
 
-            return RedirectToAction("ViewPost", new { postId = model.PostId });
+                return RedirectToAction("ViewPost", new { postId = model.PostId });
+            }
+            var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
+            loggedInUser.ImageUrl = $"{_pathService.PictureFolder}{loggedInUser.ImageUrl}";
+            await LayoutBaseModelLoaderHelper.LoadBaseAsync(model, loggedInUser.Id, _notificationService, _pathService);
+            return View(model);
         }
 
         public async Task<IActionResult> DeletePostAsync(string postId)

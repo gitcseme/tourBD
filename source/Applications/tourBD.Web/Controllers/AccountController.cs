@@ -49,7 +49,7 @@ namespace tourBD.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
+        public async Task<IActionResult> Register(string returnUrl = null)
         {
             var model = new RegisterModel
             {

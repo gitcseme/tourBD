@@ -14,7 +14,6 @@ namespace tourBD.Forum.Entities
 
         public DateTime CreationDate { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Post can't be empty")]
         public string Message { get; set; }
 
         public virtual IList<Comment> Comments { get; set; } = new List<Comment>();

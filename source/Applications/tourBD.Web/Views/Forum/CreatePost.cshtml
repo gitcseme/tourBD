@@ -4,6 +4,7 @@
     <div class="container-fluid">
         <div class="row justify-content-md-center">
             <div class="col-md-8">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="card">
                     <form method="post" asp-controller="Forum" asp-action="CreatePost">
                         <div class="form-group">
@@ -15,6 +16,7 @@
                             </div>
                             <div class="card-body">
                                 <textarea name="Message" cols="15" rows="5" class="form-control" id="Message" placeholder="Describe your tour plan/offer"></textarea>
+                                <span asp-validation-for="Message" class="text-danger"></span>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Create post</button>
