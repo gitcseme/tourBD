@@ -272,9 +272,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <aside class="control-sidebar control-sidebar-dark">
             <!-- Control sidebar content goes here -->
             <div class="p-3">
-                <h5>Title</h5>
-                <p>Sidebar content</p>
+                <h5>Navigations</h5>
+                <ul class="navbar-nav" id="top-navigations">
+                    <li>
+                        <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Forum" asp-action="Index" class="nav-link">Forum</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Company" asp-action="Index" class="nav-link">Tour Providers</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Company" asp-action="PopularPackages" class="nav-link">Popular Packages</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home" asp-action="Services" class="nav-link">Services</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
             </div>
+
         </aside>
         <!-- /.control-sidebar -->
         <!-- Main Footer -->
